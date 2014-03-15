@@ -1,0 +1,24 @@
+{
+  "name": "guzzlehttp/guzzle-services",
+  "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Michael Dowling",
+      "email": "mtdowling@gmail.com",
+      "homepage": "https://github.com/mtdowling"
+    }
+  ],
+  "require": {
+    "guzzlehttp/command": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "GuzzleHttp\\Command\\Guzzle\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
