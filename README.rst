@@ -42,4 +42,18 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
     echo $result['args']['foo'];
     // bar
 
+Installing
+==========
+
+This project can be installed using Composer. Add the following to your
+composer.json:
+
+.. code-block:: javascript
+
+    {
+        "require": {
+            "guzzlehttp/guzzle-services": "0.1.0"
+        }
+    }
+
 More documentation coming soon.
