@@ -9,7 +9,7 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
     use GuzzleHttp\Client;
     use GuzzleHttp\Command\Guzzle\GuzzleClient;
     use GuzzleHttp\Command\Guzzle\Description;
-    
+
     $client = new Client();
     $description = new Description([
         'baseUrl' => 'http://httpbin.org/',
@@ -21,7 +21,7 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
                 'parameters' => [
                     'foo' => [
                         'type' => 'string',
-                        'location' => 'query
+                        'location' => 'query'
                     ]
                 ]
             ]
@@ -35,9 +35,9 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
             ]
         ]
     ]);
-    
+
     $guzzleClient = new GuzzleClient($client, $description);
-    
+
     $result = $guzzleClient->testing(['foo' => 'bar']);
     echo $result['args']['foo'];
     // bar
