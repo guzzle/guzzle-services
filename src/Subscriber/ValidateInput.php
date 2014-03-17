@@ -3,7 +3,7 @@
 namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
 use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Command\CommandException;
+use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
 use GuzzleHttp\Command\Event\PrepareEvent;
