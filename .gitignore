@@ -1,6 +1,4 @@
-.idea
-.DS_STORE
-coverage
-phpunit.xml
-composer.lock
-vendor/
+/coverage
+/phpunit.xml
+/composer.lock
+/vendor
