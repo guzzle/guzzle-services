@@ -7,6 +7,13 @@ namespace GuzzleHttp\Command\Guzzle;
  */
 class SchemaFormatter
 {
+    const DATE_TIME = 'date-time';
+    const DATE_TIME_HTTP = 'date-time-http';
+    const DATE = 'date';
+    const TIME = 'time';
+    const TIMESTAMP = 'timestamp';
+    const BOOLEAN_STRING = 'boolean-string';
+
     /**
      * Format a value by a registered format name
      *
@@ -18,17 +25,17 @@ class SchemaFormatter
     public function format($format, $value)
     {
         switch ($format) {
-            case 'date-time':
+            case self::DATE_TIME:
                 return $this->formatDateTime($value);
-            case 'date-time-http':
+            case self::DATE_TIME_HTTP:
                 return $this->formatDateTimeHttp($value);
-            case 'date':
+            case self::DATE:
                 return $this->formatDate($value);
-            case 'time':
+            case self::TIME:
                 return $this->formatTime($value);
-            case 'timestamp':
+            case self::TIMESTAMP:
                 return $this->formatTimestamp($value);
-            case 'boolean-string':
+            case self::BOOLEAN_STRING:
                 return $this->formatBooleanAsString($value);
             default:
                 return $value;
