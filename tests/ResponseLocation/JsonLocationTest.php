@@ -42,12 +42,13 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $command = new Command($operation, []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
-        $response = new Response(200, [], Stream::factory('{"vim":"bar"}'));
+        $response = new Response(200, [], Stream::factory('{"vim":"bar","qux":[1,2]}'));
         $result = [];
         $l->before($command, $response, $parameter, $result);
         $l->visit($command, $response, $parameter, $result);
         $l->after($command, $response, $model, $result);
         $this->assertEquals('bar', $result['vim']);
+        $this->assertEquals([1, 2], $result['qux']);
     }
 
     public function jsonProvider()

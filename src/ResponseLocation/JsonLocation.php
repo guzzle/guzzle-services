@@ -38,7 +38,10 @@ class JsonLocation extends AbstractLocation
         ) {
             foreach ($this->json as $prop => $val) {
                 if (!isset($result[$prop])) {
-                    $result[$prop] = $this->recurse($additional, $val);
+                    // Only recurse if there is a type specified
+                    $result[$prop] = $additional->getType()
+                        ? $this->recurse($additional, $val)
+                        : $val;
                 }
             }
         }
