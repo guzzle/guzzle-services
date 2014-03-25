@@ -1,6 +1,7 @@
 {
     "name": "guzzlehttp/guzzle-services",
     "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {

@@ -38,7 +38,7 @@ class GuzzleClient extends AbstractClient implements GuzzleClientInterface
      *   ResponseLocationInterface objects.
      *
      * @param ClientInterface   $client      Client used to send HTTP requests
-     * @param Description $description Guzzle service description
+     * @param Description       $description Guzzle service description
      * @param array             $config      Configuration options
      */
     public function __construct(
