@@ -54,7 +54,19 @@ class Description
         }
 
         // Set the baseUrl
-        $this->baseUrl = Url::fromString(isset($config['baseUrl']) ? $config['baseUrl'] : '');
+        // Set the baseUrl
+        if (!isset($config['baseUrl'])) {
+            $this->baseUrl = new Url('', '');
+        } elseif (is_array($config['baseUrl'])) {
+            $this->baseUrl = Url::fromString(
+                \GuzzleHttp\uri_template(
+                    $config['baseUrl'][0],
+                    $config['baseUrl'][1]
+                )
+            );
+        } else {
+            $this->baseUrl = Url::fromString($config['baseUrl']);
+        }
 
         // Ensure that the models and operations properties are always arrays
         $this->models = (array) $this->models;
