@@ -93,7 +93,7 @@ class XmlLocation extends AbstractLocation
         }
 
         // Filter out the value
-        if ($result) {
+        if (isset($result)) {
             $result = $param->filter($result);
         }
 
