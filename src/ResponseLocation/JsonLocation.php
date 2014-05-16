@@ -21,7 +21,7 @@ class JsonLocation extends AbstractLocation
         &$result,
         array $context = []
     ) {
-        $this->json = $response->json();
+        $this->json = $response->json() ?: [];
     }
 
     public function after(

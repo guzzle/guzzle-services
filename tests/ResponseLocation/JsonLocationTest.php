@@ -51,6 +51,21 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([1, 2], $result['qux']);
     }
 
+    public function testVisitsAdditionalPropertiesWithEmptyResponse()
+    {
+        $l = new JsonLocation('json');
+        $operation = new Operation([], new Description([]));
+        $command = new Command($operation, []);
+        $parameter = new Parameter();
+        $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
+        $response = new Response(204);
+        $result = [];
+        $l->before($command, $response, $parameter, $result);
+        $l->visit($command, $response, $parameter, $result);
+        $l->after($command, $response, $model, $result);
+        $this->assertEquals([], $result);
+    }
+
     public function jsonProvider()
     {
         return [
