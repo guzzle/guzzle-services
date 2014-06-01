@@ -52,6 +52,18 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['Tag', 'Person'], array_keys($d->getModels()));
     }
 
+    public function testCanUseResponseClass()
+    {
+        $d = new Description([
+            'operations' => [
+                'foo' => ['responseClass' => 'Tag']
+            ],
+            'models' => ['Tag' => ['type' => 'object']]
+        ]);
+        $op = $d->getOperation('foo');
+        $this->assertNotNull($op->getResponseModel());
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */

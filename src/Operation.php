@@ -91,6 +91,11 @@ class Operation
             $this->{$key} = $value;
         }
 
+        // Account for the old style of using responseClass
+        if (isset($config['responseClass'])) {
+            $this->responseModel = $config['responseClass'];
+        }
+
         $this->deprecated = (bool) $this->deprecated;
         $this->errorResponses = $this->errorResponses ?: [];
         $this->data = $this->data ?: [];
