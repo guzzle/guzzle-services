@@ -29,10 +29,10 @@ class Operation
     /** @var string This is a short summary of what the operation does */
     private $summary;
 
-    /** @var string A longer text field to explain the behavior of the operation. */
+    /** @var string A longer text field description. */
     private $notes;
 
-    /** @var string Reference URL providing more information about the operation */
+    /** @var string Reference URL providing more information */
     private $documentationUrl;
 
     /** @var string HTTP URI of the command */
@@ -86,9 +86,10 @@ class Operation
     {
         $this->description = $description;
 
-        // Get the intersection of the available properties and properties set on the operation
-        foreach (array_intersect_key($config, self::$properties) as $key => $value) {
-            $this->{$key} = $value;
+        // Get the intersection of the available properties and properties set
+        // on the operation.
+        foreach (array_intersect_key($config, self::$properties) as $k => $v) {
+            $this->{$k} = $v;
         }
 
         // Account for the old style of using responseClass
@@ -99,29 +100,7 @@ class Operation
         $this->deprecated = (bool) $this->deprecated;
         $this->errorResponses = $this->errorResponses ?: [];
         $this->data = $this->data ?: [];
-
-        // Parameters need special handling when adding
-        if ($this->parameters) {
-            foreach ($this->parameters as $name => $param) {
-                if (!is_array($param)) {
-                    throw new \InvalidArgumentException('Parameters must be arrays');
-                }
-                $param['name'] = $name;
-                $this->parameters[$name] = new Parameter(
-                    $param,
-                    ['description' => $this->description]
-                );
-            }
-        }
-
-        if ($this->additionalParameters) {
-            if (is_array($this->additionalParameters)) {
-                $this->additionalParameters = new Parameter(
-                    $this->additionalParameters,
-                    ['description' => $this->description]
-                );
-            }
-        }
+        $this->resolveParameters();
     }
 
     /**
@@ -175,7 +154,9 @@ class Operation
      */
     public function getParam($name)
     {
-        return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+        return isset($this->parameters[$name])
+            ? $this->parameters[$name]
+            : null;
     }
 
     /**
@@ -284,6 +265,34 @@ class Operation
             return $this->data[$name];
         } else {
             return null;
+        }
+    }
+
+    private function resolveParameters()
+    {
+        // Parameters need special handling when adding
+        if ($this->parameters) {
+            foreach ($this->parameters as $name => $param) {
+                if (!is_array($param)) {
+                    throw new \InvalidArgumentException(
+                        'Parameters must be arrays'
+                    );
+                }
+                $param['name'] = $name;
+                $this->parameters[$name] = new Parameter(
+                    $param,
+                    ['description' => $this->description]
+                );
+            }
+        }
+
+        if ($this->additionalParameters &&
+            is_array($this->additionalParameters)
+        ) {
+            $this->additionalParameters = new Parameter(
+                $this->additionalParameters,
+                ['description' => $this->description]
+            );
         }
     }
 }
