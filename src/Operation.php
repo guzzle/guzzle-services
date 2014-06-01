@@ -1,57 +1,24 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
+
+use GuzzleHttp\ToArrayInterface;
 
 /**
  * Guzzle operation
  */
-class Operation
+class Operation implements ToArrayInterface
 {
-    /** @var array Hashmap of properties that can be specified */
-    private static $properties = ['name' => true, 'httpMethod' => true,
-        'uri' => true, 'responseModel' => true, 'notes' => true,
-        'summary' => true, 'documentationUrl' => true, 'deprecated' => true,
-        'data' => true, 'parameters' => true, 'additionalParameters' => true,
-        'errorResponses' => true];
-
     /** @var array Parameters */
     private $parameters = [];
 
     /** @var Parameter Additional parameters schema */
     private $additionalParameters;
 
-    /** @var string Name of the command */
-    private $name;
-
-    /** @var string HTTP method */
-    private $httpMethod;
-
-    /** @var string This is a short summary of what the operation does */
-    private $summary;
-
-    /** @var string A longer text field description. */
-    private $notes;
-
-    /** @var string Reference URL providing more information */
-    private $documentationUrl;
-
-    /** @var string HTTP URI of the command */
-    private $uri;
-
-    /** @var string The model name used for processing the response */
-    private $responseModel;
-
-    /** @var bool Whether or not the command is deprecated */
-    private $deprecated;
-
-    /** @var array Array of errors that could occur when running the command */
-    private $errorResponses;
-
     /** @var Description */
     private $description;
 
-    /** @var array Extra operation information */
-    private $data;
+    /** @var array Config data */
+    private $config;
 
     /**
      * Builds an Operation object using an array of configuration data.
@@ -84,23 +51,40 @@ class Operation
      */
     public function __construct(array $config = [], Description $description)
     {
+        static $defaults = [
+            'name' => '',
+            'httpMethod' => '',
+            'uri' => '',
+            'responseModel' => null,
+            'notes' => '',
+            'summary' => '',
+            'documentationUrl' => null,
+            'deprecated' => false,
+            'data' => [],
+            'parameters' => [],
+            'additionalParameters' => null,
+            'errorResponses' => []
+        ];
+
         $this->description = $description;
 
-        // Get the intersection of the available properties and properties set
-        // on the operation.
-        foreach (array_intersect_key($config, self::$properties) as $k => $v) {
-            $this->{$k} = $v;
+        if (isset($config['extends'])) {
+            $config = $this->resolveExtends($config['extends'], $config);
         }
+
+        $this->config = $config + $defaults;
 
         // Account for the old style of using responseClass
         if (isset($config['responseClass'])) {
-            $this->responseModel = $config['responseClass'];
+            $this->config['responseModel'] = $config['responseClass'];
         }
 
-        $this->deprecated = (bool) $this->deprecated;
-        $this->errorResponses = $this->errorResponses ?: [];
-        $this->data = $this->data ?: [];
         $this->resolveParameters();
+    }
+
+    public function toArray()
+    {
+        return $this->config;
     }
 
     /**
@@ -166,7 +150,7 @@ class Operation
      */
     public function getHttpMethod()
     {
-        return $this->httpMethod;
+        return $this->config['httpMethod'];
     }
 
     /**
@@ -176,7 +160,7 @@ class Operation
      */
     public function getName()
     {
-        return $this->name;
+        return $this->config['name'];
     }
 
     /**
@@ -186,7 +170,7 @@ class Operation
      */
     public function getSummary()
     {
-        return $this->summary;
+        return $this->config['summary'];
     }
 
     /**
@@ -196,7 +180,7 @@ class Operation
      */
     public function getNotes()
     {
-        return $this->notes;
+        return $this->config['notes'];
     }
 
     /**
@@ -206,7 +190,7 @@ class Operation
      */
     public function getDocumentationUrl()
     {
-        return $this->documentationUrl;
+        return $this->config['documentationUrl'];
     }
 
     /**
@@ -216,7 +200,7 @@ class Operation
      */
     public function getResponseModel()
     {
-        return $this->responseModel;
+        return $this->config['responseModel'];
     }
 
     /**
@@ -226,7 +210,7 @@ class Operation
      */
     public function getDeprecated()
     {
-        return $this->deprecated;
+        return $this->config['deprecated'];
     }
 
     /**
@@ -236,7 +220,7 @@ class Operation
      */
     public function getUri()
     {
-        return $this->uri;
+        return $this->config['uri'];
     }
 
     /**
@@ -246,7 +230,7 @@ class Operation
      */
     public function getErrorResponses()
     {
-        return $this->errorResponses;
+        return $this->config['errorResponses'];
     }
 
     /**
@@ -260,39 +244,56 @@ class Operation
     public function getData($name = null)
     {
         if ($name === null) {
-            return $this->data;
-        } elseif (isset($this->data[$name])) {
-            return $this->data[$name];
+            return $this->config['data'];
+        } elseif (isset($this->config['data'][$name])) {
+            return $this->config['data'][$name];
         } else {
             return null;
         }
     }
 
+    private function resolveExtends($name, array $config)
+    {
+        if (!$this->description->hasOperation($name)) {
+            throw new \InvalidArgumentException('No operation named ' . $name);
+        }
+
+        // Merge parameters together one level deep
+        $base = $this->description->getOperation($name)->toArray();
+        $result = $config + $base;
+
+        if (isset($base['parameters']) && isset($config['parameters'])) {
+            $result['parameters'] = $config['parameters'] + $base['parameters'];
+        }
+
+        return $result;
+    }
+
     private function resolveParameters()
     {
         // Parameters need special handling when adding
-        if ($this->parameters) {
-            foreach ($this->parameters as $name => $param) {
-                if (!is_array($param)) {
-                    throw new \InvalidArgumentException(
-                        'Parameters must be arrays'
-                    );
-                }
-                $param['name'] = $name;
-                $this->parameters[$name] = new Parameter(
-                    $param,
-                    ['description' => $this->description]
+        foreach ($this->config['parameters'] as $name => $param) {
+            if (!is_array($param)) {
+                throw new \InvalidArgumentException(
+                    'Parameters must be arrays'
                 );
             }
-        }
-
-        if ($this->additionalParameters &&
-            is_array($this->additionalParameters)
-        ) {
-            $this->additionalParameters = new Parameter(
-                $this->additionalParameters,
+            $param['name'] = $name;
+            $this->parameters[$name] = new Parameter(
+                $param,
                 ['description' => $this->description]
             );
+        }
+
+        if ($this->config['additionalParameters']) {
+            if (is_array($this->config['additionalParameters'])) {
+                $this->additionalParameters = new Parameter(
+                    $this->config['additionalParameters'],
+                    ['description' => $this->description]
+                );
+            } else {
+                $this->additionalParameters = $this->config['additionalParameters'];
+            }
         }
     }
 }

@@ -178,4 +178,48 @@ class OperationTest extends \PHPUnit_Framework_TestCase
             )
         ), new Description([]));
     }
+
+    public function testCanExtendFromOtherOperations()
+    {
+        $d = new Description([
+            'operations' => [
+                'A' => [
+                    'parameters' => [
+                        'A' => [
+                            'type' => 'object',
+                            'properties' => ['foo' => ['type' => 'string']]
+                        ],
+                        'B' => ['type' => 'string']
+                    ],
+                    'summary' => 'foo'
+                ],
+                'B' => [
+                    'extends' => 'A',
+                    'summary' => 'Bar'
+                ],
+                'C' => [
+                    'extends' => 'B',
+                    'summary' => 'Bar',
+                    'parameters' => [
+                        'B' => ['type' => 'number']
+                    ]
+                ]
+            ]
+        ]);
+
+        $a = $d->getOperation('A');
+        $this->assertEquals('foo', $a->getSummary());
+        $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('string', $a->getParam('B')->getType());
+
+        $b = $d->getOperation('B');
+        $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('Bar', $b->getSummary());
+        $this->assertEquals('string', $a->getParam('B')->getType());
+
+        $c = $d->getOperation('C');
+        $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('Bar', $c->getSummary());
+        $this->assertEquals('number', $c->getParam('B')->getType());
+    }
 }
