@@ -130,7 +130,7 @@ class PrepareRequest implements SubscriberInterface
      * @return RequestInterface
      * @throws \RuntimeException
      */
-    protected function createRequest(
+    private function createRequest(
         GuzzleCommandInterface $command,
         GuzzleClientInterface $client
     ) {
