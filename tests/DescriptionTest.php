@@ -3,7 +3,6 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\SchemaFormatter;
 
 /**
  * @covers GuzzleHttp\Command\Guzzle\Description

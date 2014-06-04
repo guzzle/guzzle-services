@@ -29,11 +29,14 @@ class HeaderLocationTest extends AbstractLocationTest
         $location = new HeaderLocation('header');
         $command = $this->getCommand();
         $command['add'] = 'props';
-        $operation = new Operation([
-            'additionalParameters' => [
-                'location' => 'header'
-            ]
-        ], new Description([]));
+        $operation = new Operation(
+            [
+                'additionalParameters' => [
+                    'location' => 'header'
+                ]
+            ],
+            new Description([])
+        );
         $request = new Request('POST', 'http://httbin.org');
         $location->after($command, $request, $operation, []);
         $this->assertEquals('props', $request->getHeader('add'));
