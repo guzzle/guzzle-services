@@ -120,6 +120,65 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testVisitsNestedArrays()
+    {
+        $hclient = new Client();
+
+        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
+            $json = [
+                'scalar' => 'foo',
+                'nested' => [
+                    'bar',
+                    'baz'
+                ]
+            ];
+            $response = new Response(200, [
+                'Content-Type' => 'application/json'
+            ], Stream::factory(json_encode($json)));
+            $event->intercept($response);
+        });
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j'
+                ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'scalar' => [
+                            'type' => 'string',
+                            'location' => 'json',
+                        ],
+                        'nested' => [
+                            'type' => 'array',
+                            'location' => 'json',
+                            'items' => [
+                                'type' => 'string',
+                                'location' => 'json',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $client = new GuzzleClient($hclient, $description);
+        $result = $client->foo();
+        $expected = [
+            'scalar' => 'foo',
+            'nested' => [
+                'bar',
+                'baz'
+            ]
+        ];
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testVisitsNestedProperties()
     {
         $hclient = new Client();
