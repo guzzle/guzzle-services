@@ -100,7 +100,9 @@ class GuzzleClient extends AbstractClient implements GuzzleClientInterface
                 return null;
             }
 
-            return new Command($operation, $args, clone $client->getEmitter());
+            $commandClass = new \ReflectionClass($operation->getClass());
+
+            return $commandClass->newInstance($operation, $args, clone $client->getEmitter());
         };
     }
 
