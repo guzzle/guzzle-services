@@ -153,7 +153,7 @@ class Parameter implements ToArrayInterface
                 // with the actual data union in the parent's data (e.g. actual
                 // supersedes parent)
                 if ($extends = $this->serviceDescription->getModel($data['extends'])) {
-                    $data += $extends->toArray();
+                    $data = array_merge_recursive($data, $extends->toArray());
                 }
             }
         }
