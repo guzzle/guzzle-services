@@ -72,7 +72,7 @@ class Parameter implements ToArrayInterface
      *   value through. Each value in the array must be a string containing the
      *   full class path to a static method or an array of complex filter
      *   information. You can specify static methods of classes using the full
-     *   namespace class name followed by '::' (e.g. Foo\Bar::baz()). Some
+     *   namespace class name followed by '::' (e.g. Foo\Bar::baz). Some
      *   filters require arguments in order to properly filter a value. For
      *   complex filters, use a hash containing a 'method' key pointing to a
      *   static method, and an 'args' key containing an array of positional
