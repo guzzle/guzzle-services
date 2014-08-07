@@ -52,7 +52,7 @@ composer.json:
 
     {
         "require": {
-            "guzzlehttp/guzzle-services": "0.1.0"
+            "guzzlehttp/guzzle-services": "0.3.*"
         }
     }
 
