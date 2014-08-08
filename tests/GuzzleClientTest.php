@@ -3,6 +3,7 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Command\Event\PrepareEvent;
 use GuzzleHttp\Command\Exception\CommandException;
@@ -139,17 +140,15 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $command->getEmitter()->on('prepare', function(PrepareEvent $event) {
             throw new CommandException(
                 'foo',
-                $event->getClient(),
-                $event->getCommand(),
-                $event->getRequest()
+                $event->getTransaction()
             );
         }, 1);
         $guzzle->execute($command);
     }
 
     /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage Error executing command: msg
+     * @expectedException \Exception
+     * @expectedExceptionMessage msg
      */
     public function testWrapsExceptionsInCommandExceptions()
     {
