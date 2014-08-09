@@ -48,7 +48,7 @@ class ValidateInput implements SubscriberInterface
         }
 
         if ($params = $operation->getAdditionalParameters()) {
-            foreach ($command as $name => $value) {
+            foreach ($command->toArray() as $name => $value) {
                 // It's only additional if it isn't defined in the schema
                 if (!$operation->hasParam($name)) {
                     // Always set the name so that error messages are useful
@@ -68,8 +68,7 @@ class ValidateInput implements SubscriberInterface
         if ($errors) {
             throw new CommandException(
                 'Validation errors: ' . implode("\n", $errors),
-                $event->getClient(),
-                $command
+                $event->getTransaction()
             );
         }
     }

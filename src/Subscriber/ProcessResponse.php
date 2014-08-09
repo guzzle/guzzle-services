@@ -67,8 +67,16 @@ class ProcessResponse implements SubscriberInterface
                 . ' is not a GuzzleHttp\\Command\\Guzzle\\GuzzleCommandInterface');
         }
 
+        // Do not overwrite a previous result
+        if ($event->getResult()) {
+            return;
+        }
+
         $operation = $command->getOperation();
+
+        // Add a default Model as the result if no matching schema was found.
         if (!($modelName = $operation->getResponseModel())) {
+            $event->setResult(new Model([]));
             return;
         }
 

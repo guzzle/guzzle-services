@@ -21,5 +21,10 @@
         "psr-4": {
             "GuzzleHttp\\Command\\Guzzle\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.3-dev"
+        }
     }
 }
