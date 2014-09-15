@@ -16,10 +16,14 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
         'operations' => [
             'testing' => [
                 'httpMethod' => 'GET',
-                'uri' => '/get',
+                'uri' => '/get/{foo}',
                 'responseModel' => 'getResponse',
                 'parameters' => [
                     'foo' => [
+                        'type' => 'string',
+                        'location' => 'uri'
+                    ],
+                    'bar' => [
                         'type' => 'string',
                         'location' => 'query'
                     ]
