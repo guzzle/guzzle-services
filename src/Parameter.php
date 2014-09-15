@@ -137,7 +137,7 @@ class Parameter implements ToArrayInterface
 
         if (isset($options['description'])) {
             $this->serviceDescription = $options['description'];
-            if (!($this->serviceDescription instanceof Description)) {
+            if (!($this->serviceDescription instanceof DescriptionInterface)) {
                 throw new \InvalidArgumentException('description must be a Description');
             }
             if (isset($data['$ref'])) {

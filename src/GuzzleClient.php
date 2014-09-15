@@ -37,13 +37,13 @@ class GuzzleClient extends AbstractClient implements GuzzleClientInterface
      * - response_locations: Associative array of location types mapping to
      *   ResponseLocationInterface objects.
      *
-     * @param ClientInterface   $client      Client used to send HTTP requests
-     * @param Description       $description Guzzle service description
-     * @param array             $config      Configuration options
+     * @param ClientInterface        $client      Client used to send HTTP requests
+     * @param DescriptionInterface   $description Guzzle service description
+     * @param array                  $config      Configuration options
      */
     public function __construct(
         ClientInterface $client,
-        Description $description,
+        DescriptionInterface $description,
         array $config = []
     ) {
         parent::__construct($client, $config);
@@ -73,11 +73,11 @@ class GuzzleClient extends AbstractClient implements GuzzleClientInterface
      * Creates a callable function used to create command objects from a
      * service description.
      *
-     * @param Description $description Service description
+     * @param DescriptionInterface $description Service description
      *
      * @return callable Returns a command factory
      */
-    public static function defaultCommandFactory(Description $description)
+    public static function defaultCommandFactory(DescriptionInterface $description)
     {
         return function (
             $name,

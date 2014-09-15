@@ -12,7 +12,7 @@ interface GuzzleClientInterface extends ServiceClientInterface
     /**
      * Returns the service description used by the client
      *
-     * @return Description
+     * @return DescriptionInterface
      */
     public function getDescription();
 }
