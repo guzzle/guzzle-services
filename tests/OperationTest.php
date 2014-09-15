@@ -4,6 +4,7 @@ namespace Guzzle\Tests\Service\Description;
 
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\Command;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Operation
@@ -48,6 +49,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.example.com', $c->getDocumentationUrl());
         $this->assertEquals('POST', $c->getHttpMethod());
         $this->assertEquals('/api/v1', $c->getUri());
+        $this->assertEquals('GuzzleHttp\\Command\\Guzzle\\Command', $c->getClass());
         $this->assertEquals('abc', $c->getResponseModel());
         $this->assertTrue($c->getDeprecated());
 
@@ -160,7 +162,6 @@ class OperationTest extends \PHPUnit_Framework_TestCase
     {
         return new Operation(array(
             'name'       => 'OperationTest',
-            'class'      => get_class($this),
             'parameters' => array(
                 'test'          => array('type' => 'object'),
                 'bool_1'        => array('default' => true, 'type' => 'boolean'),
@@ -222,4 +223,44 @@ class OperationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Bar', $c->getSummary());
         $this->assertEquals('number', $c->getParam('B')->getType());
     }
+
+    public function testCanOverrideCommandClass()
+    {
+        $description = new Description([]);
+        $c = new Operation([
+            'class' => 'Guzzle\\Tests\\Service\\Description\\MockCommand'
+        ], $description);
+    }
+
+    public function testErrorIsThrownWhenCommandClassNotExists()
+    {
+        try {
+            $description = new Description([]);
+            $c = new Operation([
+                'class' => 'Guzzle\\Tests\\Service\\Mock\\Description\\UnknownCommand',
+            ], $description);
+
+            $this->fail('->__construct() throws a \InvalidArgumentException because the command class does not exist');
+        } catch (\InvalidArgumentException $e) {
+            $this->assertInstanceof('InvalidArgumentException', $e, '->__construct() throws a \InvalidArgumentException because the command class does not exist');
+        }
+    }
+
+    public function testErrorIsThrownWhenCommandClassDoesNotExtendBaseCommand()
+    {
+        try {
+            $description = new Description([]);
+            $c = new Operation([
+                'class' => 'Guzzle\\Tests\\Service\\Mock\\Description\\WrongCommand',
+            ], $description);
+
+            $this->fail('->__construct() throws a \InvalidArgumentException because the class does not extend ' . Operation::COMMAND_CLASS);
+        } catch (\InvalidArgumentException $e) {
+            $this->assertInstanceof('InvalidArgumentException', $e, '->__construct() throws a \InvalidArgumentException because the command class does not extend '  . Operation::COMMAND_CLASS);
+        }
+    }
 }
+
+class MockCommand extends Command {}
+
+class WrongCommand {}

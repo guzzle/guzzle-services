@@ -8,6 +8,8 @@ use GuzzleHttp\ToArrayInterface;
  */
 class Operation implements ToArrayInterface
 {
+    const COMMAND_CLASS = 'GuzzleHttp\\Command\\Guzzle\\Command';
+
     /** @var array Parameters */
     private $parameters = [];
 
@@ -55,6 +57,7 @@ class Operation implements ToArrayInterface
             'name' => '',
             'httpMethod' => '',
             'uri' => '',
+            'class' => self::COMMAND_CLASS,
             'responseModel' => null,
             'notes' => '',
             'summary' => '',
@@ -79,6 +82,7 @@ class Operation implements ToArrayInterface
             $this->config['responseModel'] = $config['responseClass'];
         }
 
+        $this->resolveCommandClass();
         $this->resolveParameters();
     }
 
@@ -224,6 +228,16 @@ class Operation implements ToArrayInterface
     }
 
     /**
+     * Get the Command class
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->config['class'];
+    }
+
+    /**
      * Get the errors that could be encountered when executing the operation
      *
      * @return array
@@ -267,6 +281,22 @@ class Operation implements ToArrayInterface
         }
 
         return $result;
+    }
+
+    private function resolveCommandClass()
+    {
+        if (self::COMMAND_CLASS === $class = $this->config['class']) {
+            // Class is same as default, no need to validate.
+            return;
+        }
+
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException('Configured class ' . $class . ' does not exists');
+        }
+
+        if (!is_subclass_of($class, self::COMMAND_CLASS)) {
+            throw new \InvalidArgumentException('Configured class ' . $class . ' must extend ' . self::COMMAND_CLASS);
+        }
     }
 
     private function resolveParameters()
