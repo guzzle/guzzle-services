@@ -76,7 +76,7 @@ class PrepareRequest implements SubscriberInterface
      * @param RequestInterface       $request Request being created
      * @throws \RuntimeException If a location cannot be handled
      */
-    protected function prepareRequest(
+    private function prepareRequest(
         GuzzleCommandInterface $command,
         GuzzleClientInterface $client,
         RequestInterface $request
@@ -130,7 +130,7 @@ class PrepareRequest implements SubscriberInterface
      * @return RequestInterface
      * @throws \RuntimeException
      */
-    protected function createRequest(
+    private function createRequest(
         GuzzleCommandInterface $command,
         GuzzleClientInterface $client
     ) {
