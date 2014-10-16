@@ -9,6 +9,7 @@ use GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse;
 use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput;
 use GuzzleHttp\Event\HasEmitterTrait;
 use GuzzleHttp\Command\ServiceClientInterface;
+use GuzzleHttp\Ring\Future\FutureArray;
 
 /**
  * Default Guzzle web service client implementation.
@@ -58,19 +59,40 @@ class GuzzleClient extends AbstractClient
     public function getCommand($name, array $args = [])
     {
         $factory = $this->commandFactory;
+
+        // Determine if a future array should be returned.
+        if (!empty($args['@future'])) {
+            $future = !empty($args['@future']);
+            unset($args['@future']);
+        } else {
+            $future = false;
+        }
+
         // Merge in default command options
         $args += $this->getConfig('defaults');
 
-        if (!($command = $factory($name, $args, $this))) {
-            throw new \InvalidArgumentException("No operation found named $name");
+        if ($command = $factory($name, $args, $this)) {
+            $command->setFuture($future);
+            return $command;
         }
 
-        return $command;
+        throw new \InvalidArgumentException("No operation found named $name");
     }
 
     public function getDescription()
     {
         return $this->description;
+    }
+
+    protected function createFutureResult(CommandTransaction $transaction)
+    {
+        return new FutureArray(
+            $transaction->response->then(function () use ($transaction) {
+                return $transaction->result;
+            }),
+            [$transaction->response, 'wait'],
+            [$transaction->response, 'cancel']
+        );
     }
 
     protected function serializeRequest(CommandTransaction $trans)

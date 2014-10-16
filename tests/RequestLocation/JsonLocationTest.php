@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
@@ -7,17 +6,18 @@ use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Command;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class JsonLocationTest extends AbstractLocationTest
+class JsonLocationTest extends \PHPUnit_Framework_TestCase
 {
     public function testVisitsLocation()
     {
         $location = new JsonLocation('json');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $location->visit($command, $request, $param, []);
@@ -30,7 +30,7 @@ class JsonLocationTest extends AbstractLocationTest
     public function testVisitsAdditionalProperties()
     {
         $location = new JsonLocation('json', 'foo');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $command['baz'] = ['bam' => [1]];
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
@@ -48,7 +48,7 @@ class JsonLocationTest extends AbstractLocationTest
     public function testVisitsNestedLocation()
     {
         $location = new JsonLocation('json');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter([
             'name' => 'foo',

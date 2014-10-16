@@ -28,10 +28,10 @@ class ValidateInput implements SubscriberInterface
 
     public function getEvents()
     {
-        return ['prepare' => ['onPrepare']];
+        return ['init' => ['onInit']];
     }
 
-    public function onPrepare(InitEvent $event)
+    public function onInit(InitEvent $event)
     {
         $command = $event->getCommand();
         $errors = [];

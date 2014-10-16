@@ -78,7 +78,7 @@ class Serializer
             /* @var Parameter $param */
             $location = $param->getLocation();
             // Skip parameters that have not been set or are URI location
-            if ($location == 'uri' || !$operation->hasParam($name)) {
+            if ($location == 'uri' || !$trans->command->hasParam($name)) {
                 continue;
             }
             if (!isset($this->requestLocations[$location])) {

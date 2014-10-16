@@ -71,7 +71,7 @@ class XmlLocation extends AbstractLocation
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
                     $additional->setName($key);
-                    $this->visitWithValue($value, $additional, $command);
+                    $this->visitWithValue($value, $additional, $operation);
                 }
             }
             $additional->setName(null);
