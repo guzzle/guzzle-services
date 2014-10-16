@@ -7,7 +7,7 @@ use GuzzleHttp\Url;
 /**
  * Represents a Guzzle service description
  */
-class Description
+class Description implements DescriptionInterface
 {
     /** @var array Array of {@see OperationInterface} objects */
     private $operations = [];
