@@ -212,15 +212,33 @@ class XmlLocation extends AbstractLocation
         $children = $xml->children($ns, true);
 
         foreach ($children as $name => $child) {
+            $attributes = (array) $child->attributes($ns, true);
+
             if (!isset($result[$name])) {
-                $result[$name] = static::xmlToArray($child, $ns, $nesting + 1);
+                $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+                if($attributes) {
+                    $result[$name] = array_merge($attributes, $childArray);
+                } else {
+                    $result[$name] = $childArray;
+                }
             } else {
                 // A child element with this name exists so we're assuming
                 // that the node contains a list of elements
                 if (!is_array($result[$name])) {
                     $result[$name] = [$result[$name]];
+                } else if (!isset($result[$name][0])) {
+                    // Convert the first child into the first element of a numerically indexed array
+                    $firstResult = $result[$name];
+                    $result[$name] = [];
+                    $result[$name][] = $firstResult;
                 }
-                $result[$name][] = static::xmlToArray($child, $ns, $nesting + 1);
+
+                $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+                if($attributes) {
+                    $result[$name][] = array_merge($attributes, $childArray);
+                } else {
+                    $result[$name] = $childArray;
+                }
             }
         }
 
