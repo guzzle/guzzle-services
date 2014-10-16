@@ -1,8 +1,7 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Stream\Stream;
@@ -13,7 +12,7 @@ use GuzzleHttp\Stream\Stream;
 class BodyLocation extends AbstractLocation
 {
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Parameter $param,
         array $context

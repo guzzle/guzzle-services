@@ -1,11 +1,11 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
+use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Command\Event\ProcessEvent;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface;
@@ -14,7 +14,6 @@ use GuzzleHttp\Command\Guzzle\ResponseLocation\StatusCodeLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ReasonPhraseLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
-use GuzzleHttp\Command\Model;
 
 /**
  * Subscriber used to create response models based on an HTTP response and
@@ -34,11 +33,17 @@ class ProcessResponse implements SubscriberInterface
     /** @var ResponseLocationInterface[] */
     private $responseLocations;
 
+    /** @var DescriptionInterface */
+    private $description;
+
     /**
+     * @param DescriptionInterface        $description
      * @param ResponseLocationInterface[] $responseLocations Extra response locations
      */
-    public function __construct(array $responseLocations = [])
-    {
+    public function __construct(
+        DescriptionInterface $description,
+        array $responseLocations = []
+    ) {
         static $defaultResponseLocations;
         if (!$defaultResponseLocations) {
             $defaultResponseLocations = [
@@ -52,6 +57,7 @@ class ProcessResponse implements SubscriberInterface
         }
 
         $this->responseLocations = $responseLocations + $defaultResponseLocations;
+        $this->description = $description;
     }
 
     public function getEvents()
@@ -62,21 +68,17 @@ class ProcessResponse implements SubscriberInterface
     public function onProcess(ProcessEvent $event)
     {
         $command = $event->getCommand();
-        if (!($command instanceof GuzzleCommandInterface)) {
-            throw new \RuntimeException('The command sent to ' . __METHOD__
-                . ' is not a GuzzleHttp\\Command\\Guzzle\\GuzzleCommandInterface');
-        }
 
         // Do not overwrite a previous result
         if ($event->getResult()) {
             return;
         }
 
-        $operation = $command->getOperation();
+        $operation = $this->description->getOperation($command->getName());
 
         // Add a default Model as the result if no matching schema was found.
         if (!($modelName = $operation->getResponseModel())) {
-            $event->setResult(new Model([]));
+            $event->setResult([]);
             return;
         }
 
@@ -85,7 +87,7 @@ class ProcessResponse implements SubscriberInterface
             throw new \RuntimeException("Unknown model: {$modelName}");
         }
 
-        $event->setResult(new Model($this->visit($model, $event)));
+        $event->setResult($this->visit($model, $event));
     }
 
     protected function visit(Parameter $model, ProcessEvent $event)
@@ -115,7 +117,7 @@ class ProcessResponse implements SubscriberInterface
         $location,
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {
@@ -137,7 +139,7 @@ class ProcessResponse implements SubscriberInterface
     private function visitOuterObject(
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {
@@ -172,7 +174,7 @@ class ProcessResponse implements SubscriberInterface
     private function visitOuterArray(
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {

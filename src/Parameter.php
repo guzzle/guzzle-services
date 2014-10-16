@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ToArrayInterface;

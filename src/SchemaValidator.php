@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ToArrayInterface;
@@ -54,17 +53,59 @@ class SchemaValidator
     }
 
     /**
+     * From the allowable types, determine the type that the variable matches
+     *
+     * @param string $type  Parameter type
+     * @param mixed  $value Value to determine the type
+     *
+     * @return string|bool Returns the matching type on
+     */
+    protected function determineType($type, $value)
+    {
+        foreach ((array) $type as $t) {
+            if ($t == 'string'
+                && (is_string($value) || (is_object($value) && method_exists($value, '__toString')))
+            ) {
+                return 'string';
+            } elseif ($t == 'object' && (is_array($value) || is_object($value))) {
+                return 'object';
+            } elseif ($t == 'array' && is_array($value)) {
+                return 'array';
+            } elseif ($t == 'integer' && is_integer($value)) {
+                return 'integer';
+            } elseif ($t == 'boolean' && is_bool($value)) {
+                return 'boolean';
+            } elseif ($t == 'number' && is_numeric($value)) {
+                return 'number';
+            } elseif ($t == 'numeric' && is_numeric($value)) {
+                return 'numeric';
+            } elseif ($t == 'null' && !$value) {
+                return 'null';
+            } elseif ($t == 'any') {
+                return 'any';
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Recursively validate a parameter
      *
      * @param Parameter $param  API parameter being validated
-     * @param mixed     $value  Value to validate and validate. The value may change during this validate.
+     * @param mixed     $value  Value to validate and validate. The value may
+     *                          change during this validate.
      * @param string    $path   Current validation path (used for error reporting)
      * @param int       $depth  Current depth in the validation validate
      *
      * @return bool Returns true if valid, or false if invalid
      */
-    protected function recursiveProcess(Parameter $param, &$value, $path = '', $depth = 0)
-    {
+    protected function recursiveProcess(
+        Parameter $param,
+        &$value,
+        $path = '',
+        $depth = 0
+    ) {
         // Update the value by adding default or static values
         $value = $param->getValue($value);
 
@@ -97,7 +138,8 @@ class SchemaValidator
             }
 
             if ($valueIsArray) {
-                // Ensure that the array is associative and not numerically indexed
+                // Ensure that the array is associative and not numerically
+                // indexed
                 if (isset($value[0])) {
                     $this->errors[] = "{$path} must be an array of properties. Got a numerically indexed array.";
                     return false;
@@ -174,7 +216,9 @@ class SchemaValidator
         // If the value is required and the type is not null, then there is an
         // error if the value is not set
         if ($required && $value === null && $type != 'null') {
-            $message = "{$path} is " . ($param->getType() ? ('a required ' . implode(' or ', (array) $param->getType())) : 'required');
+            $message = "{$path} is " . ($param->getType()
+                ? ('a required ' . implode(' or ', (array) $param->getType()))
+                : 'required');
             if ($param->getDescription()) {
                 $message .= ': ' . $param->getDescription();
             }
@@ -186,7 +230,10 @@ class SchemaValidator
         // integer was passed, the class can be instructed to cast the integer
         // to a string to pass validation. This is the default behavior.
         if ($type && (!$type = $this->determineType($type, $value))) {
-            if ($this->castIntegerToStringType && $param->getType() == 'string' && is_integer($value)) {
+            if ($this->castIntegerToStringType
+                && $param->getType() == 'string'
+                && is_integer($value)
+            ) {
                 $value = (string) $value;
             } else {
                 $this->errors[] = "{$path} must be of type " . implode(' or ', (array) $param->getType());
@@ -245,40 +292,5 @@ class SchemaValidator
         }
 
         return empty($this->errors);
-    }
-
-    /**
-     * From the allowable types, determine the type that the variable matches
-     *
-     * @param string $type  Parameter type
-     * @param mixed  $value Value to determine the type
-     *
-     * @return string|bool Returns the matching type on
-     */
-    protected function determineType($type, $value)
-    {
-        foreach ((array) $type as $t) {
-            if ($t == 'string' && (is_string($value) || (is_object($value) && method_exists($value, '__toString')))) {
-                return 'string';
-            } elseif ($t == 'object' && (is_array($value) || is_object($value))) {
-                return 'object';
-            } elseif ($t == 'array' && is_array($value)) {
-                return 'array';
-            } elseif ($t == 'integer' && is_integer($value)) {
-                return 'integer';
-            } elseif ($t == 'boolean' && is_bool($value)) {
-                return 'boolean';
-            } elseif ($t == 'number' && is_numeric($value)) {
-                return 'number';
-            } elseif ($t == 'numeric' && is_numeric($value)) {
-                return 'numeric';
-            } elseif ($t == 'null' && !$value) {
-                return 'null';
-            } elseif ($t == 'any') {
-                return 'any';
-            }
-        }
-
-        return false;
     }
 }

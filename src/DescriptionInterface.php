@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Url;
@@ -64,7 +63,7 @@ interface DescriptionInterface
      * @return bool
      */
     public function hasModel($id);
-    
+
     /**
      * Get the API version of the service
      *
@@ -105,5 +104,4 @@ interface DescriptionInterface
      * @return null|mixed
      */
     public function getData($key = null);
-
-} 
+}

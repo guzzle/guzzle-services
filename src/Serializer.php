@@ -1,11 +1,10 @@
 <?php
+namespace GuzzleHttp\Command\Guzzle;
 
-namespace GuzzleHttp\Command\Guzzle\Subscriber;
-
-use GuzzleHttp\Event\SubscriberInterface;
+use GuzzleHttp\Command\ServiceClientInterface;
+use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleClientInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
@@ -13,24 +12,27 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
-use GuzzleHttp\Command\Event\PrepareEvent;
-use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
 
 /**
- * Subscriber used to create HTTP requests for commands based on a service
- * description.
+ * Serializes requests for a given command.
  */
-class PrepareRequest implements SubscriberInterface
+class Serializer
 {
     /** @var RequestLocationInterface[] */
     private $requestLocations;
 
+    /** @var DescriptionInterface */
+    private $description;
+
     /**
+     * @param DescriptionInterface       $description
      * @param RequestLocationInterface[] $requestLocations Extra request locations
      */
-    public function __construct(array $requestLocations = [])
-    {
+    public function __construct(
+        DescriptionInterface $description,
+        array $requestLocations = []
+    ) {
         static $defaultRequestLocations;
         if (!$defaultRequestLocations) {
             $defaultRequestLocations = [
@@ -45,52 +47,38 @@ class PrepareRequest implements SubscriberInterface
         }
 
         $this->requestLocations = $requestLocations + $defaultRequestLocations;
+        $this->description = $description;
     }
 
-    public function getEvents()
+    public function __invoke(CommandTransaction $trans)
     {
-        return ['prepare' => ['onPrepare']];
-    }
+        $request = $this->createRequest($trans);
+        $this->prepareRequest($trans, $request);
 
-    public function onPrepare(PrepareEvent $event)
-    {
-        // Don't modify the request if one is already present
-        if ($event->getRequest()) {
-            return;
-        }
-
-        /* @var GuzzleCommandInterface $command */
-        $command = $event->getCommand();
-        /* @var GuzzleClientInterface $client */
-        $client = $event->getClient();
-        $request = $this->createRequest($command, $client);
-        $this->prepareRequest($command, $client, $request);
-        $event->setRequest($request);
+        return $request;
     }
 
     /**
      * Prepares a request for sending using location visitors
      *
-     * @param GuzzleCommandInterface $command Command to prepare
-     * @param GuzzleClientInterface  $client  Client that owns the command
+     * @param CommandTransaction $trans
      * @param RequestInterface       $request Request being created
      * @throws \RuntimeException If a location cannot be handled
      */
     protected function prepareRequest(
-        GuzzleCommandInterface $command,
-        GuzzleClientInterface $client,
+        CommandTransaction $trans,
         RequestInterface $request
     ) {
         $visitedLocations = [];
-        $context = ['client' => $client, 'command' => $command];
-        $operation = $command->getOperation();
+        $context = ['client' => $trans->client, 'command' => $trans->command];
+        $operation = $this->description->getOperation($trans->command->getName());
 
         // Visit each actual parameter
         foreach ($operation->getParams() as $name => $param) {
             /* @var Parameter $param */
             $location = $param->getLocation();
             // Skip parameters that have not been set or are URI location
-            if ($location == 'uri' || !$command->hasParam($name)) {
+            if ($location == 'uri' || !$operation->hasParam($name)) {
                 continue;
             }
             if (!isset($this->requestLocations[$location])) {
@@ -98,7 +86,7 @@ class PrepareRequest implements SubscriberInterface
             }
             $visitedLocations[$location] = true;
             $this->requestLocations[$location]->visit(
-                $command,
+                $trans->command,
                 $request,
                 $param,
                 $context
@@ -113,7 +101,7 @@ class PrepareRequest implements SubscriberInterface
         // Call the after() method for each visited location
         foreach (array_keys($visitedLocations) as $location) {
             $this->requestLocations[$location]->after(
-                $command,
+                $trans->command,
                 $request,
                 $operation,
                 $context
@@ -124,41 +112,40 @@ class PrepareRequest implements SubscriberInterface
     /**
      * Create a request for the command and operation
      *
-     * @param GuzzleCommandInterface $command Command being executed
-     * @param GuzzleClientInterface  $client  Client used to execute the command
+     * @param CommandTransaction $trans
      *
      * @return RequestInterface
      * @throws \RuntimeException
      */
-    protected function createRequest(
-        GuzzleCommandInterface $command,
-        GuzzleClientInterface $client
-    ) {
-        $operation = $command->getOperation();
+    protected function createRequest(CommandTransaction $trans)
+    {
+        $operation = $this->description->getOperation($trans->command->getName());
 
         // If the command does not specify a template, then assume the base URL
         // of the client
         if (null === ($uri = $operation->getUri())) {
-            return $client->getHttpClient()->createRequest(
+            return $trans->client->createRequest(
                 $operation->getHttpMethod(),
-                $client->getDescription()->getBaseUrl(),
-                $command['request_options'] ?: []
+                $this->description->getBaseUrl(),
+                $trans->command['request_options'] ?: []
             );
         }
 
-        return $this->createCommandWithUri($command, $client);
+        return $this->createCommandWithUri(
+            $operation, $trans->command, $trans->serviceClient
+        );
     }
 
     /**
      * Create a request for an operation with a uri merged onto a base URI
      */
     private function createCommandWithUri(
-        GuzzleCommandInterface $command,
-        GuzzleClientInterface $client
+        Operation $operation,
+        CommandInterface $command,
+        ServiceClientInterface $client
     ) {
         // Get the path values and use the client config settings
         $variables = [];
-        $operation = $command->getOperation();
         foreach ($operation->getParams() as $name => $arg) {
             /* @var Parameter $arg */
             if ($arg->getLocation() == 'uri') {
@@ -173,7 +160,7 @@ class PrepareRequest implements SubscriberInterface
 
         return $client->getHttpClient()->createRequest(
             $operation->getHttpMethod(),
-            [$client->getDescription()->getBaseUrl()->combine($operation->getUri()), $variables],
+            [$this->description->getBaseUrl()->combine($operation->getUri()), $variables],
             $command['request_options'] ?: []
         );
     }

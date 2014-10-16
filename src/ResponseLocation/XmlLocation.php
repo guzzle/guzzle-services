@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts elements from an XML document
@@ -15,7 +14,7 @@ class XmlLocation extends AbstractLocation
     private $xml;
 
     public function before(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -25,7 +24,7 @@ class XmlLocation extends AbstractLocation
     }
 
     public function after(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -43,7 +42,7 @@ class XmlLocation extends AbstractLocation
     }
 
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $param,
         &$result,
