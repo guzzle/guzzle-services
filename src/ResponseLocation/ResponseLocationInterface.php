@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Location visitor used to parse values out of a response into an associative
@@ -17,15 +16,15 @@ interface ResponseLocationInterface
      * result of a command with default data (e.g. populating with JSON data in
      * the response then adding to the parsed data).
      *
-     * @param GuzzleCommandInterface $command  Command being visited
-     * @param ResponseInterface      $response Response being visited
-     * @param Parameter              $model    Response model
-     * @param mixed                  $result   Result associative array value
-     *                                         being updated by reference.
-     * @param array                  $context  Parsing context
+     * @param CommandInterface  $command  Command being visited
+     * @param ResponseInterface $response Response being visited
+     * @param Parameter         $model    Response model
+     * @param mixed             $result   Result associative array value
+     *                                    being updated by reference.
+     * @param array             $context  Parsing context
      */
     public function before(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -35,15 +34,15 @@ interface ResponseLocationInterface
     /**
      * Called after visiting all parameters
      *
-     * @param GuzzleCommandInterface $command  Command being visited
-     * @param ResponseInterface      $response Response being visited
-     * @param Parameter              $model    Response model
-     * @param mixed                  $result   Result associative array value
-     *                                         being updated by reference.
-     * @param array                  $context  Parsing context
+     * @param CommandInterface  $command  Command being visited
+     * @param ResponseInterface $response Response being visited
+     * @param Parameter         $model    Response model
+     * @param mixed             $result   Result associative array value
+     *                                    being updated by reference.
+     * @param array             $context  Parsing context
      */
     public function after(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -54,15 +53,15 @@ interface ResponseLocationInterface
      * Called once for each parameter being visited that matches the location
      * type.
      *
-     * @param GuzzleCommandInterface $command  Command being visited
-     * @param ResponseInterface      $response Response being visited
-     * @param Parameter              $param    Parameter being visited
-     * @param mixed                  $result   Result associative array value
-     *                                         being updated by reference.
-     * @param array                  $context  Parsing context
+     * @param CommandInterface  $command  Command being visited
+     * @param ResponseInterface $response Response being visited
+     * @param Parameter         $param    Parameter being visited
+     * @param mixed             $result   Result associative array value
+     *                                    being updated by reference.
+     * @param array             $context  Parsing context
      */
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $param,
         &$result,

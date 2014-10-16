@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;

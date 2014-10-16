@@ -1,5 +1,4 @@
 <?php
-
 namespace Guzzle\Tests\Service\Description;
 
 use GuzzleHttp\Command\Guzzle\Operation;

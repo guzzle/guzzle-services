@@ -4,7 +4,7 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Message\RequestInterface;
 
 /**
@@ -15,14 +15,14 @@ interface RequestLocationInterface
     /**
      * Visits a location for each top-level parameter
      *
-     * @param GuzzleCommandInterface $command Command being prepared
-     * @param RequestInterface       $request Request being modified
-     * @param Parameter              $param   Parameter being visited
-     * @param array                  $context Associative array containing a
+     * @param CommandInterface $command Command being prepared
+     * @param RequestInterface $request Request being modified
+     * @param Parameter        $param   Parameter being visited
+     * @param array            $context Associative array containing a
      *     'client' key referencing the client that created the command.
      */
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Parameter $param,
         array $context
@@ -31,14 +31,14 @@ interface RequestLocationInterface
     /**
      * Called when all of the parameters of a command have been visited.
      *
-     * @param GuzzleCommandInterface $command   Command being prepared
-     * @param RequestInterface       $request   Request being modified
-     * @param Operation              $operation Operation being serialized
-     * @param array                  $context   Associative array containing a
+     * @param CommandInterface $command   Command being prepared
+     * @param RequestInterface $request   Request being modified
+     * @param Operation        $operation Operation being serialized
+     * @param array            $context   Associative array containing a
      *     'client' key referencing the client that created the command.
      */
     public function after(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Operation $operation,
         array $context

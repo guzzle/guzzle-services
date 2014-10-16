@@ -1,10 +1,7 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
-use GuzzleHttp\Command\Guzzle\Command;
-use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation;
 use GuzzleHttp\Message\Response;
@@ -18,8 +15,7 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new HeaderLocation('header');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'X-Foo',

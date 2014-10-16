@@ -1,12 +1,11 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
+use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
-use GuzzleHttp\Command\Event\PrepareEvent;
+use GuzzleHttp\Command\Event\InitEvent;
 
 /**
  * Subscriber used to validate command input against a service description.
@@ -16,26 +15,28 @@ class ValidateInput implements SubscriberInterface
     /** @var SchemaValidator */
     private $validator;
 
-    public function __construct(SchemaValidator $schemaValidator = null)
-    {
+    /** @var DescriptionInterface */
+    private $description;
+
+    public function __construct(
+        DescriptionInterface $description,
+        SchemaValidator $schemaValidator = null
+    ) {
+        $this->description = $description;
         $this->validator = $schemaValidator ?: new SchemaValidator();
     }
 
     public function getEvents()
     {
-        return ['prepare' => ['onPrepare']];
+        return ['init' => ['onInit']];
     }
 
-    public function onPrepare(PrepareEvent $event)
+    public function onInit(InitEvent $event)
     {
         $command = $event->getCommand();
-        if (!($command instanceof GuzzleCommandInterface)) {
-            throw new \RuntimeException('The command sent to ' . __METHOD__
-                . ' is not a GuzzleHttp\\Command\\Guzzle\\GuzzleCommandInterface');
-        }
-
         $errors = [];
-        $operation = $command->getOperation();
+        $operation = $this->description->getOperation($command->getName());
+
         foreach ($operation->getParams() as $name => $schema) {
             $value = $command[$name];
             if (!$this->validator->validate($schema, $value)) {

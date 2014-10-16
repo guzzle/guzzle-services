@@ -1,12 +1,10 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Command\Guzzle\Command;
+use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Event\BeforeEvent;
@@ -21,8 +19,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new JsonLocation('json');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'vim',
@@ -38,8 +35,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsAdditionalProperties()
     {
         $l = new JsonLocation('json');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(200, [], Stream::factory('{"vim":"bar","qux":[1,2]}'));
@@ -54,8 +50,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsAdditionalPropertiesWithEmptyResponse()
     {
         $l = new JsonLocation('json');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(204);
@@ -117,7 +112,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         ]);
         $client = new GuzzleClient($hclient, $description);
         $result = $client->foo();
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($expected, $result);
     }
 
     public function testVisitsNestedProperties()
@@ -192,6 +187,6 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
             'baz' => 'BOO'
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($expected, $result);
     }
 }
