@@ -67,6 +67,10 @@ class ProcessResponse implements SubscriberInterface
 
     public function onProcess(ProcessEvent $event)
     {
+        if ($exception = $event->getException()) {
+            throw $exception;
+        }
+
         $command = $event->getCommand();
 
         // Do not overwrite a previous result
