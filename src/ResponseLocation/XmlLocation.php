@@ -216,7 +216,7 @@ class XmlLocation extends AbstractLocation
 
             if (!isset($result[$name])) {
                 $childArray = static::xmlToArray($child, $ns, $nesting + 1);
-                if($attributes) {
+                if ($attributes) {
                     $result[$name] = array_merge($attributes, $childArray);
                 } else {
                     $result[$name] = $childArray;
@@ -234,7 +234,7 @@ class XmlLocation extends AbstractLocation
                 }
 
                 $childArray = static::xmlToArray($child, $ns, $nesting + 1);
-                if($attributes) {
+                if ($attributes) {
                     $result[$name][] = array_merge($attributes, $childArray);
                 } else {
                     $result[$name] = $childArray;
