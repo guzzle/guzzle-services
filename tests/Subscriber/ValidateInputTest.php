@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client;
@@ -7,7 +6,7 @@ use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput;
-use GuzzleHttp\Command\Event\PrepareEvent;
+use GuzzleHttp\Command\Event\InitEvent;
 
 /**
  * @covers GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput
@@ -37,29 +36,14 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput();
-        $event = new PrepareEvent(new CommandTransaction(
-            $client,
-            $client->getCommand('foo')
-        ));
-        $val->onPrepare($event);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage is not a GuzzleHttp\Command\Guzzle\GuzzleCommandInterface
-     */
-    public function testEnsuresCorrectCommandType()
-    {
-        $val = new ValidateInput();
-        $client = $this->getMockBuilder('GuzzleHttp\Command\ServiceClientInterface')
-            ->getMockForAbstractClass();
-        $command = $this->getMockBuilder('GuzzleHttp\Command\CommandInterface')
-            ->getMockForAbstractClass();
-        $val->onPrepare(new PrepareEvent(new CommandTransaction(
-            $client,
-            $command
-        )));
+        $val = new ValidateInput($description);
+        $event = new InitEvent(
+            new CommandTransaction(
+                $client,
+                $client->getCommand('foo')
+            )
+        );
+        $val->onInit($event);
     }
 
     public function testSuccessfulValidationDoesNotThrow()
@@ -76,12 +60,14 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput();
-        $event = new PrepareEvent(new CommandTransaction(
-            $client,
-            $client->getCommand('foo')
-        ));
-        $val->onPrepare($event);
+        $val = new ValidateInput($description);
+        $event = new InitEvent(
+            new CommandTransaction(
+                $client,
+                $client->getCommand('foo')
+            )
+        );
+        $val->onInit($event);
     }
 
     /**
@@ -104,11 +90,13 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput();
-        $event = new PrepareEvent(new CommandTransaction(
-            $client,
-            $client->getCommand('foo', ['bar' => new \stdClass()])
-        ));
-        $val->onPrepare($event);
+        $val = new ValidateInput($description);
+        $event = new InitEvent(
+            new CommandTransaction(
+                $client,
+                $client->getCommand('foo', ['bar' => new \stdClass()])
+            )
+        );
+        $val->onInit($event);
     }
 }

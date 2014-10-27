@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Stream\Stream;
 
@@ -36,7 +35,7 @@ class XmlLocation extends AbstractLocation
     }
 
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Parameter $param,
         array $context
@@ -52,13 +51,17 @@ class XmlLocation extends AbstractLocation
     }
 
     public function after(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Operation $operation,
         array $context
     ) {
         foreach ($this->buffered as $param) {
-            $this->visitWithValue($command[$param->getName()], $param, $command);
+            $this->visitWithValue(
+                $command[$param->getName()],
+                $param,
+                $operation
+            );
         }
 
         $this->buffered = [];
@@ -68,7 +71,7 @@ class XmlLocation extends AbstractLocation
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
                     $additional->setName($key);
-                    $this->visitWithValue($value, $additional, $command);
+                    $this->visitWithValue($value, $additional, $operation);
                 }
             }
             $additional->setName(null);
@@ -286,10 +289,10 @@ class XmlLocation extends AbstractLocation
     private function visitWithValue(
         $value,
         Parameter $param,
-        GuzzleCommandInterface $command
+        Operation $operation
     ) {
         if (!$this->writer) {
-            $this->createRootElement($command->getOperation());
+            $this->createRootElement($operation);
         }
 
         $this->addXml($this->writer, $param, $value);

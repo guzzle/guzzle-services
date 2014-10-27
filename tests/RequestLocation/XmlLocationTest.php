@@ -1,9 +1,8 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Command\Event\PrepareEvent;
+use GuzzleHttp\Command\Event\PreparedEvent;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\Description;
@@ -12,17 +11,17 @@ use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Message\Response;
-
+use GuzzleHttp\Command\Command;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation
  */
-class XmlLocationTest extends AbstractLocationTest
+class XmlLocationTest extends \PHPUnit_Framework_TestCase
 {
     public function testVisitsLocation()
     {
         $location = new XmlLocation('xml');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $command['bar'] = 'test';
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
@@ -40,7 +39,7 @@ class XmlLocationTest extends AbstractLocationTest
     public function testCreatesBodyForEmptyDocument()
     {
         $location = new XmlLocation('xml');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $operation = new Operation([
             'data' => ['xmlAllowEmpty' => true]
@@ -55,7 +54,7 @@ class XmlLocationTest extends AbstractLocationTest
     public function testAddsAdditionalParameters()
     {
         $location = new XmlLocation('xml', 'test');
-        $command = $this->getCommand();
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $command['foo'] = 'bar';
@@ -79,7 +78,7 @@ class XmlLocationTest extends AbstractLocationTest
         $operation = new Operation([
             'data' => ['xmlEncoding' => 'UTF-8']
         ], new Description([]));
-        $command = $this->getCommand($operation);
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $command['foo'] = 'bar';
@@ -395,27 +394,37 @@ class XmlLocationTest extends AbstractLocationTest
     public function testSerializesXml(array $operation, array $input, $xml)
     {
         $operation['uri'] = 'http://httpbin.org';
-        $client = new GuzzleClient(new Client(), new Description([
-            'operations' => [
-                'foo' => $operation
+        $client = new GuzzleClient(
+            new Client(),
+            new Description([
+                'operations' => [
+                    'foo' => $operation
+                ]
             ]
-        ]));
+        ));
 
         $request = null;
         $command = $client->getCommand('foo', $input);
-        $command->getEmitter()->on('prepare', function (PrepareEvent $event) use (&$request) {
-            $request = $event->getRequest();
-            $event->getRequest()->getEmitter()->on('before', function(BeforeEvent $e) {
-                $e->intercept(new Response(200));
-            });
-        });
+
+        $command->getEmitter()->on(
+            'prepared',
+            function (PreparedEvent $event) use (&$request) {
+                $request = $event->getRequest();
+                $event->getRequest()->getEmitter()->on(
+                    'before',
+                    function(BeforeEvent $e) {
+                        $e->intercept(new Response(200));
+                    }
+                );
+            }
+        );
 
         $client->execute($command);
 
-        if (!empty($input)) {
-            $this->assertEquals('application/xml', $request->getHeader('Content-Type'));
-        } else {
+        if (empty($input)) {
             $this->assertEquals('', (string) $request->getHeader('Content-Type'));
+        } else {
+            $this->assertEquals('application/xml', $request->getHeader('Content-Type'));
         }
 
         $body = str_replace(array("\n", "<?xml version=\"1.0\"?>"), '', (string) $request->getBody());

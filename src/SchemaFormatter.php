@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
 
 /**
@@ -118,7 +117,8 @@ class SchemaFormatter
     /**
      * Formats a boolean value as a string
      *
-     * @param string|integer|bool $value Value to convert to a boolean 'true' / 'false' value
+     * @param string|integer|bool $value Value to convert to a boolean
+     *                                   'true' / 'false' value
      *
      * @return string
      */

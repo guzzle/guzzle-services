@@ -1,10 +1,7 @@
 <?php
-
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
-use GuzzleHttp\Command\Guzzle\Command;
-use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
 use GuzzleHttp\Message\Response;
@@ -18,8 +15,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new XmlLocation('xml');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'vim',
@@ -37,8 +33,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsAdditionalProperties()
     {
         $l = new XmlLocation('xml');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
         $response = new Response(200, [], Stream::factory('<w><vim>bar</vim></w>'));
@@ -103,8 +98,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     public function testEnsuresWrappedArraysAreInCorrectLocations($param, $xml, $expected)
     {
         $l = new XmlLocation('xml');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $model = new Parameter();
         $response = new Response(200, [], Stream::factory($xml));
         $result = [];
@@ -727,8 +721,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     private function xmlTest(Parameter $param, $xml, $expected)
     {
         $l = new XmlLocation('xml');
-        $operation = new Operation([], new Description([]));
-        $command = new Command($operation, []);
+        $command = new Command('foo', []);
         $model = new Parameter();
         $response = new Response(200, [], Stream::factory($xml));
         $result = [];

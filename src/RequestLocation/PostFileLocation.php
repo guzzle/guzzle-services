@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -7,7 +6,7 @@ use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Post\PostBodyInterface;
 use GuzzleHttp\Post\PostFileInterface;
 use GuzzleHttp\Post\PostFile;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Adds POST files to a request
@@ -15,7 +14,7 @@ use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
 class PostFileLocation extends AbstractLocation
 {
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         RequestInterface $request,
         Parameter $param,
         array $context

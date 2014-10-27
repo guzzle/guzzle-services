@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts headers from the response into a result fields
@@ -12,7 +11,7 @@ use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
 class HeaderLocation extends AbstractLocation
 {
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $param,
         &$result,

@@ -22,6 +22,11 @@
             "GuzzleHttp\\Command\\Guzzle\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "GuzzleHttp\\Tests\\Command\\Guzzle\\": "tests/"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.3-dev"
