@@ -13,6 +13,7 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
+use GuzzleHttp\Utils;
 
 /**
  * Serializes requests for a given command.
@@ -158,9 +159,12 @@ class Serializer
             }
         }
 
+        // Expand the URI template.
+        $uri = Utils::uriTemplate($operation->getUri(), $variables);
+
         return $client->getHttpClient()->createRequest(
             $operation->getHttpMethod(),
-            [$this->description->getBaseUrl()->combine($operation->getUri()), $variables],
+            $this->description->getBaseUrl()->combine($uri),
             $command['request_options'] ?: []
         );
     }
