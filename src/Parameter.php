@@ -119,7 +119,7 @@ class Parameter implements ToArrayInterface
      * - format: (string) Format used to coax a value into the correct format
      *   when serializing or unserializing. You may specify either an array of
      *   filters OR a format, but not both. Supported values: date-time, date,
-     *   time, timestamp, date-time-http.
+     *   time, timestamp, date-time-http, and boolean-string.
      *
      * - $ref: (string) String referencing a service description model. The
      *   parameter is replaced by the schema contained in the model.
