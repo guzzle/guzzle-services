@@ -234,8 +234,8 @@ class XmlLocation extends AbstractLocation
         if ($attributes) {
             if ($text !== null) {
                 $result['value'] = $text;
-                $result = array_merge($attributes, $result);
             }
+            $result = array_merge($attributes, $result);
         } else if ($text !== null) {
             $result = $text;
         }
