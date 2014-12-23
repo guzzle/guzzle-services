@@ -8,7 +8,7 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\Mock;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\Subscriber\ProcessSubscriber
+ * @covers GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse
  */
 class ProcessSubscriberTest extends \PHPUnit_Framework_TestCase
 {
