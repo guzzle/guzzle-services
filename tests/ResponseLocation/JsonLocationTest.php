@@ -13,6 +13,7 @@ use GuzzleHttp\Stream\Stream;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
+ * @covers \GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse
  */
 class JsonLocationTest extends \PHPUnit_Framework_TestCase
 {
@@ -146,17 +147,10 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
                     'type' => 'object',
                     'location' => 'json',
                     'properties' => [
-                        'scalar' => [
-                            'type' => 'string',
-                            'location' => 'json',
-                        ],
+                        'scalar' => ['type' => 'string'],
                         'nested' => [
                             'type' => 'array',
-                            'location' => 'json',
-                            'items' => [
-                                'type' => 'string',
-                                'location' => 'json',
-                            ]
+                            'items' => ['type' => 'string']
                         ]
                     ]
                 ]
@@ -174,10 +168,95 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testVisitsNestedProperties()
+    public function nestedProvider()
+    {
+        return [
+            [
+                [
+                    'operations' => [
+                        'foo' => [
+                            'uri' => 'http://httpbin.org',
+                            'httpMethod' => 'GET',
+                            'responseModel' => 'j'
+                        ]
+                    ],
+                    'models' => [
+                        'j' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'nested' => [
+                                    'location' => 'json',
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'foo' => ['type' => 'string'],
+                                        'bar' => ['type' => 'number'],
+                                        'bam' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'abc' => [
+                                                    'type' => 'number'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'additionalProperties' => [
+                                'location' => 'json',
+                                'type' => 'string',
+                                'filters' => ['strtoupper']
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    'operations' => [
+                        'foo' => [
+                            'uri' => 'http://httpbin.org',
+                            'httpMethod' => 'GET',
+                            'responseModel' => 'j'
+                        ]
+                    ],
+                    'models' => [
+                        'j' => [
+                            'type' => 'object',
+                            'location' => 'json',
+                            'properties' => [
+                                'nested' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'foo' => ['type' => 'string'],
+                                        'bar' => ['type' => 'number'],
+                                        'bam' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'abc' => [
+                                                    'type' => 'number'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'additionalProperties' => [
+                                'type' => 'string',
+                                'filters' => ['strtoupper']
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider nestedProvider
+     */
+    public function testVisitsNestedProperties($desc)
     {
         $hclient = new Client();
-
         $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
             $json = [
                 'nested' => [
@@ -195,44 +274,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
             $event->intercept($response);
         });
 
-        $description = new Description([
-            'operations' => [
-                'foo' => [
-                    'uri' => 'http://httpbin.org',
-                    'httpMethod' => 'GET',
-                    'responseModel' => 'j'
-                ]
-            ],
-            'models' => [
-                'j' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'nested' => [
-                            'location' => 'json',
-                            'type' => 'object',
-                            'properties' => [
-                                'foo' => ['type' => 'string'],
-                                'bar' => ['type' => 'number'],
-                                'bam' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'abc' => [
-                                            'type' => 'number'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
-                    'additionalProperties' => [
-                        'location' => 'json',
-                        'type' => 'string',
-                        'filters' => ['strtoupper']
-                    ]
-                ]
-            ]
-        ]);
-
+        $description = new Description($desc);
         $client = new GuzzleClient($hclient, $description);
         $result = $client->foo();
         $expected = [

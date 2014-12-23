@@ -148,31 +148,40 @@ class ProcessResponse implements SubscriberInterface
         ResponseInterface $response,
         array &$context
     ) {
+        $parentLocation = $model->getLocation();
+
         // If top-level additionalProperties is a schema, then visit it
         $additional = $model->getAdditionalProperties();
         if ($additional instanceof Parameter) {
-            $this->triggerBeforeVisitor($additional->getLocation(), $model,
-                $result, $command, $response, $context);
+            // Use the model location if none set on additionalProperties.
+            $location = $additional->getLocation() ?: $parentLocation;
+            $this->triggerBeforeVisitor(
+                $location, $model, $result, $command, $response, $context
+            );
         }
 
-        // Use 'location' from all individual defined properties
-        $properties = $model->getProperties();
-        foreach ($properties as $schema) {
-            if ($location = $schema->getLocation()) {
+        // Use 'location' from all individual defined properties, but fall back
+        // to the model location if no per-property location is set. Collect
+        // the properties that need to be visited into an array.
+        $visitProperties = [];
+        foreach ($model->getProperties() as $schema) {
+            $location = $schema->getLocation() ?: $parentLocation;
+            if ($location) {
+                $visitProperties[] = [$location, $schema];
                 // Trigger the before method on each unique visitor location
                 if (!isset($context['visitors'][$location])) {
-                    $this->triggerBeforeVisitor($location, $model, $result,
-                        $command, $response, $context);
+                    $this->triggerBeforeVisitor(
+                        $location, $model, $result, $command, $response, $context
+                    );
                 }
             }
         }
 
         // Actually visit each response element
-        foreach ($properties as $schema) {
-            if ($location = $schema->getLocation()) {
-                $this->responseLocations[$location]->visit($command, $response,
-                    $schema, $result, $context);
-            }
+        foreach ($visitProperties as $prop) {
+            $this->responseLocations[$prop[0]]->visit(
+                $command, $response, $prop[1], $result, $context
+            );
         }
     }
 
@@ -189,12 +198,14 @@ class ProcessResponse implements SubscriberInterface
         }
 
         if (!isset($foundVisitors[$location])) {
-            $this->triggerBeforeVisitor($location, $model, $result,
-                $command, $response, $context);
+            $this->triggerBeforeVisitor(
+                $location, $model, $result, $command, $response, $context
+            );
         }
 
         // Visit each item in the response
-        $this->responseLocations[$location]->visit($command, $response,
-            $model, $result, $context);
+        $this->responseLocations[$location]->visit(
+            $command, $response, $model, $result, $context
+        );
     }
 }
