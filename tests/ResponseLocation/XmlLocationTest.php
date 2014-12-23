@@ -256,8 +256,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
                         <PreviousState code="16" name="wait" />
                     </item>
                 </RunningQueues>
-            </wrap>
-        ';
+            </wrap>';
 
         $this->xmlTest($param, $xml, array(
             'RunningQueues' => array(

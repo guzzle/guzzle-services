@@ -141,7 +141,7 @@ class XmlLocation extends AbstractLocation
      */
     private function processObject(Parameter $param, \SimpleXMLElement $node)
     {
-        $result = $knownProps = [];
+        $result = $knownProps = $knownAttributes = [];
 
         // Handle known properties
         if ($properties = $param->getProperties()) {
@@ -157,7 +157,8 @@ class XmlLocation extends AbstractLocation
 
                 if ($property->getData('xmlAttribute')) {
                     // Handle XML attributes
-                    $result[$name] = (string)$node->attributes($ns, true)->{$sentAs};
+                    $result[$name] = (string) $node->attributes($ns, true)->{$sentAs};
+                    $knownAttributes[$sentAs] = 1;
                 } elseif (count($node->children($ns, true)->{$sentAs})) {
                     // Found a child node matching wire name
                     $childNode = $node->children($ns, true)->{$sentAs};
@@ -186,6 +187,15 @@ class XmlLocation extends AbstractLocation
             // Blindly transform the XML into an array preserving as much data
             // as possible. Remove processed, aliased properties.
             $array = array_diff_key(static::xmlToArray($node), $knownProps);
+            // Remove @attributes that were explicitly plucked from the
+            // attributes list.
+            if (isset($array['@attributes']) && $knownAttributes) {
+                $array['@attributes'] = array_diff_key($array['@attributes'], $knownProps);
+                if (!$array['@attributes']) {
+                    unset($array['@attributes']);
+                }
+            }
+
             // Merge it together with the original result
             $result = array_merge($array, $result);
         }
