@@ -459,6 +459,38 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testConvertsMultipleAssociativeElementsToArray()
+    {
+        $param = new Parameter(array(
+            'name'                 => 'foo',
+            'type'                 => 'object',
+            'additionalProperties' => true
+        ));
+
+        $xml = '
+            <xml>
+                <foo>
+                    <baz>15</baz>
+                    <baz>25</baz>
+                    <bar>hi</bar>
+                    <bam>test</bam>
+                    <bam attr="hi" />
+                </foo>
+            </xml>
+        ';
+
+        $this->xmlTest($param, $xml, [
+            'foo' => [
+                'baz' => ['15', '25'],
+                'bar' => 'hi',
+                'bam' => [
+                    'test',
+                    ['@attributes' => ['attr' => 'hi']]
+                ]
+            ]
+        ]);
+    }
+
     public function testUnderstandsNamespaces()
     {
         $param = new Parameter(array(

@@ -222,38 +222,29 @@ class XmlLocation extends AbstractLocation
 
         foreach ($children as $name => $child) {
             $attributes = (array) $child->attributes($ns, true);
-
             if (!isset($result[$name])) {
                 $childArray = static::xmlToArray($child, $ns, $nesting + 1);
-                if ($attributes) {
-                    $result[$name] = array_merge($attributes, $childArray);
-                } else {
-                    $result[$name] = $childArray;
-                }
+                $result[$name] = $attributes
+                    ? array_merge($attributes, $childArray)
+                    : $childArray;
+                continue;
+            }
+            // A child element with this name exists so we're assuming
+            // that the node contains a list of elements
+            if (!is_array($result[$name])) {
+                $result[$name] = [$result[$name]];
+            }
+            $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+            if ($attributes) {
+                $result[$name][] = array_merge($attributes, $childArray);
             } else {
-                // A child element with this name exists so we're assuming
-                // that the node contains a list of elements
-                if (!is_array($result[$name])) {
-                    $result[$name] = [$result[$name]];
-                } else if (!isset($result[$name][0])) {
-                    // Convert the first child into the first element of a numerically indexed array
-                    $firstResult = $result[$name];
-                    $result[$name] = [];
-                    $result[$name][] = $firstResult;
-                }
-
-                $childArray = static::xmlToArray($child, $ns, $nesting + 1);
-                if ($attributes) {
-                    $result[$name][] = array_merge($attributes, $childArray);
-                } else {
-                    $result[$name] = $childArray;
-                }
+                $result[$name][] = $childArray;
             }
         }
 
         // Extract text from node
         $text = trim((string) $xml);
-        if (empty($text)) {
+        if ($text === '') {
             $text = null;
         }
 
@@ -264,7 +255,7 @@ class XmlLocation extends AbstractLocation
                 $result['value'] = $text;
             }
             $result = array_merge($attributes, $result);
-        } else if ($text !== null) {
+        } elseif ($text !== null) {
             $result = $text;
         }
 
