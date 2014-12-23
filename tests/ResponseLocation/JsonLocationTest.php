@@ -171,7 +171,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
                 'baz'
             ]
         ];
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals($expected, $result);
     }
 
     public function testVisitsNestedProperties()
