@@ -21,6 +21,11 @@ class JsonLocation extends AbstractLocation
         array $context = []
     ) {
         $this->json = $response->json() ?: [];
+        // relocate named arrays, so that they have the same structure as
+        //  arrays nested in objects and visit can work on them in the same way
+        if ($model->getType() == 'array' && ($name = $model->getName())) {
+            $this->json = [$name => $this->json];
+        }
     }
 
     public function after(
@@ -63,7 +68,7 @@ class JsonLocation extends AbstractLocation
             // Treat as javascript array
             if ($name) {
                 // name provided, store it under a key in the array
-                $result[$name] = $this->recurse($param, $this->json);
+                $result[$name] = $this->recurse($param, $this->json[$name]);
             } else {
                 // top-level `array` or an empty name
                 $result = array_merge($result, $this->recurse($param, $this->json));
