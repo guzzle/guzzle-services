@@ -5,9 +5,11 @@ use GuzzleHttp\Command\Event\ProcessEvent;
 use GuzzleHttp\Event\SubscriberInterface;
 
 /**
- * Subscriber that can be used when filling the "errorResponses" property for commands. In order for the
- * exception to be properly triggered, all your exceptions must be instance of "GuzzleHttp\Command\Exception\CommandException".
- * If that's not the case, your exceptions will be wrapped around a CommandException
+ * Subscriber that reads the "errorResponses" from commands, and trigger appropriate exceptions
+ *
+ * In order for the exception to be properly triggered, all your exceptions must be instance
+ * of "GuzzleHttp\Command\Exception\CommandException". If that's not the case, your exceptions will be wrapped
+ * around a CommandException
  */
 class HandleErrorResponse implements SubscriberInterface
 {
