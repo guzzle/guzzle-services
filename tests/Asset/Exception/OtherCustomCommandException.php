@@ -18,12 +18,8 @@
 
 namespace GuzzleHttp\Tests\Command\Guzzle\Asset\Exception;
 
-use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Command\Exception\CommandException;
 
 class OtherCustomCommandException extends CommandException
 {
-    public function __construct(CommandTransaction $transaction)
-    {
-    }
 }

@@ -43,7 +43,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
     public function testCreateExceptionWithCode()
     {
         $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
-        $response->expects($this->once())->method('getStatusCode')->will($this->returnValue(404));
+        $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
         $commandTransaction->response  = $response;
@@ -62,7 +62,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
     public function testNotCreateExceptionIfDoesNotMatchCode()
     {
         $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
-        $response->expects($this->once())->method('getStatusCode')->will($this->returnValue(401));
+        $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(401));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
         $commandTransaction->response  = $response;
@@ -84,8 +84,8 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
     public function testCreateExceptionWithExactMatchOfReasonPhrase()
     {
         $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
-        $response->expects($this->once())->method('getStatusCode')->will($this->returnValue(404));
-        $response->expects($this->once())->method('getReasonPhrase')->will($this->returnValue('Bar'));
+        $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
+        $response->expects($this->any())->method('getReasonPhrase')->will($this->returnValue('Bar'));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
         $commandTransaction->response  = $response;
@@ -107,8 +107,8 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
     public function testFavourMostPreciseMatch()
     {
         $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
-        $response->expects($this->exactly(2))->method('getStatusCode')->will($this->returnValue(404));
-        $response->expects($this->once())->method('getReasonPhrase')->will($this->returnValue('Bar'));
+        $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
+        $response->expects($this->any())->method('getReasonPhrase')->will($this->returnValue('Bar'));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
         $commandTransaction->response  = $response;

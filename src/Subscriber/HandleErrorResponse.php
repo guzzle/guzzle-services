@@ -76,7 +76,7 @@ class HandleErrorResponse implements SubscriberInterface
         }
 
         if (null !== $bestException) {
-            throw new $bestException($event->getTransaction());
+            throw new $bestException($response->getReasonPhrase(), $event->getTransaction(), $exception);
         }
 
         // If we reach here, no exception could be match from descriptor, and Guzzle exception will propagate
