@@ -476,6 +476,9 @@ class Parameter implements ToArrayInterface
         }
 
         if (!($this->properties[$name] instanceof self)) {
+            if (!is_array($this->properties[$name])) {
+                $this->properties[$name] = ['type' => $this->properties[$name]];
+            }
             $this->properties[$name]['name'] = $name;
             $this->properties[$name] = new static(
                 $this->properties[$name],
