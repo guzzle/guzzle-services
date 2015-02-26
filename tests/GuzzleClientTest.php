@@ -6,6 +6,7 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Event\BeforeEvent;
+use GuzzleHttp\Stream\Stream;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\GuzzleClient
@@ -145,5 +146,28 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $result = $guzzle->execute($command);
         $this->assertInternalType('array', $result);
         $this->assertEquals(201, $result['code']);
+    }
+
+    public function testAllowsScalarValues()
+    {
+        $client = new Client();
+        $client->getEmitter()->on('before', function (BeforeEvent $event) {
+            $event->intercept(new Response(201, [], Stream::factory('iamdata')));
+        });
+        $description = new Description([
+            'operations' => [
+                'Foo' => ['responseModel' => 'Bar']
+            ],
+            'models' => [
+                'Bar' => [
+                    'location' => 'json',
+                    'type' => 'string'
+                ]
+            ]
+        ]);
+        $guzzle = new GuzzleClient($client, $description);
+        $command = $guzzle->getCommand('foo');
+        $result = $guzzle->execute($command);
+        $this->assertEquals('iamdata', $result);
     }
 }
