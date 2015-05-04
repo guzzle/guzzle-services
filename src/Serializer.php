@@ -83,7 +83,7 @@ class Serializer
                 continue;
             }
             if (!isset($this->requestLocations[$location])) {
-                throw new \RuntimeException("No location registered for $location");
+                throw new \RuntimeException("No location registered for $name");
             }
             $visitedLocations[$location] = true;
             $this->requestLocations[$location]->visit(
