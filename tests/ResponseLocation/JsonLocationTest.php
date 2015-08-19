@@ -290,4 +290,64 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testVisitsNullResponseProperties()
+    {
+        $hclient = new Client();
+
+        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
+            $json = [
+                'data' => [
+                    'link' => null
+                ]
+            ];
+            $response = new Response(200, [
+                'Content-Type' => 'application/json'
+            ], Stream::factory(json_encode($json)));
+            $event->intercept($response);
+        });
+
+        $description = new Description(
+            [
+                'operations' => [
+                    'foo' => [
+                        'uri' => 'http://httpbin.org',
+                        'httpMethod' => 'GET',
+                        'responseModel' => 'j'
+                    ]
+                ],
+                'models' => [
+                    'j' => [
+                        'type' => 'object',
+                        'location' => 'json',
+                        'properties' => [
+                            'scalar' => ['type' => 'string'],
+                            'data' => [
+                                'type'          => 'object',
+                                'location'      => 'json',
+                                'properties'    => [
+                                    'link' => [
+                                        'name'    => 'val',
+                                        'type' => 'string',
+                                        'location' => 'json'
+                                    ],
+                                ],
+                                'additionalProperties' => false
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
+        $client = new GuzzleClient($hclient, $description);
+        $result = $client->foo();
+
+        $expected = [
+            'data' => [
+                'link' => null
+            ]
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
 }
