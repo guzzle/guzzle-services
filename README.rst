@@ -60,4 +60,9 @@ composer.json:
         }
     }
 
+Plugins
+=======
+
+* Load Service description from file [https://github.com/gimler/guzzle-description-loader]
+
 More documentation coming soon.
