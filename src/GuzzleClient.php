@@ -69,7 +69,8 @@ class GuzzleClient extends AbstractClient
         }
 
         // Merge in default command options
-        $args += $this->getConfig('defaults');
+        $defaults = $this->getConfig('defaults') ?: [];
+        $args += $defaults;
 
         if ($command = $factory($name, $args, $this)) {
             $command->setFuture($future);
