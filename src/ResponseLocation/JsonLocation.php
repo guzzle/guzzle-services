@@ -72,7 +72,7 @@ class JsonLocation extends AbstractLocation
             // Treat as javascript array
             if ($name) {
                 // name provided, store it under a key in the array
-                $result[$name] = $this->recurse($param, $this->json[$name]);
+                $result[$name] = $this->recurse($param, isset($this->json[$name]) ? $this->json[$name] : null);
             } else {
                 // top-level `array` or an empty name
                 $result = array_merge($result, $this->recurse($param, $this->json));
