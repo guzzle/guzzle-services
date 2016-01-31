@@ -109,7 +109,7 @@ class JsonLocation extends AbstractLocation
             if ($properties = $param->getProperties()) {
                 foreach ($properties as $property) {
                     $key = $property->getWireName();
-                    if (isset($value[$key])) {
+                    if (array_key_exists($key, $value)) {
                         $result[$property->getName()] = $this->recurse(
                             $property,
                             $value[$key]
