@@ -3,7 +3,7 @@ namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;

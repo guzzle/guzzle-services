@@ -2,7 +2,7 @@
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\CommandInterface;
 

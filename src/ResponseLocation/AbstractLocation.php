@@ -2,7 +2,7 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Command\CommandInterface;
 
 abstract class AbstractLocation implements ResponseLocationInterface

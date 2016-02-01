@@ -42,7 +42,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateExceptionWithCode()
     {
-        $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
@@ -61,7 +61,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testNotCreateExceptionIfDoesNotMatchCode()
     {
-        $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(401));
 
         $commandTransaction            = new CommandTransaction($this->serviceClient, $this->command);
@@ -83,7 +83,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateExceptionWithExactMatchOfReasonPhrase()
     {
-        $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
         $response->expects($this->any())->method('getReasonPhrase')->will($this->returnValue('Bar'));
 
@@ -106,7 +106,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testFavourMostPreciseMatch()
     {
-        $response = $this->getMock('GuzzleHttp\Message\ResponseInterface');
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->any())->method('getStatusCode')->will($this->returnValue(404));
         $response->expects($this->any())->method('getReasonPhrase')->will($this->returnValue('Bar'));
 
