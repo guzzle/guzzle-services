@@ -3,8 +3,7 @@ namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ServiceClientInterface;
 use GuzzleHttp\Command\CommandInterface;
-use GuzzleHttp\Command\CommandTransaction;
-use GuzzleHttp\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
@@ -13,7 +12,6 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
-use GuzzleHttp\Utils;
 
 /**
  * Serializes requests for a given command.
@@ -51,10 +49,10 @@ class Serializer
         $this->description = $description;
     }
 
-    public function __invoke(CommandTransaction $trans)
+    public function __invoke(CommandInterface $command)
     {
-        $request = $this->createRequest($trans);
-        $this->prepareRequest($trans, $request);
+        $request = $this->createRequest($command);
+        $this->prepareRequest($command, $request);
 
         return $request;
     }
@@ -62,24 +60,24 @@ class Serializer
     /**
      * Prepares a request for sending using location visitors
      *
-     * @param CommandTransaction $trans
+     * @param CommandInterface $command
      * @param RequestInterface       $request Request being created
      * @throws \RuntimeException If a location cannot be handled
      */
     protected function prepareRequest(
-        CommandTransaction $trans,
+        CommandInterface $command,
         RequestInterface $request
     ) {
         $visitedLocations = [];
-        $context = ['client' => $trans->client, 'command' => $trans->command];
-        $operation = $this->description->getOperation($trans->command->getName());
+        $context = ['command' => $command];
+        $operation = $this->description->getOperation($command->getName());
 
         // Visit each actual parameter
         foreach ($operation->getParams() as $name => $param) {
             /* @var Parameter $param */
             $location = $param->getLocation();
             // Skip parameters that have not been set or are URI location
-            if ($location == 'uri' || !$trans->command->hasParam($name)) {
+            if ($location == 'uri' || !$command->hasParam($name)) {
                 continue;
             }
             if (!isset($this->requestLocations[$location])) {
@@ -87,7 +85,7 @@ class Serializer
             }
             $visitedLocations[$location] = true;
             $this->requestLocations[$location]->visit(
-                $trans->command,
+                $command,
                 $request,
                 $param,
                 $context
@@ -102,7 +100,7 @@ class Serializer
         // Call the after() method for each visited location
         foreach (array_keys($visitedLocations) as $location) {
             $this->requestLocations[$location]->after(
-                $trans->command,
+                $command,
                 $request,
                 $operation,
                 $context
@@ -117,6 +115,7 @@ class Serializer
      *
      * @return RequestInterface
      * @throws \RuntimeException
+     * @TODO Fix
      */
     protected function createRequest(CommandTransaction $trans)
     {
@@ -160,8 +159,9 @@ class Serializer
         }
 
         // Expand the URI template.
-        $uri = Utils::uriTemplate($operation->getUri(), $variables);
+        $uri = \GuzzleHttp\uri_template($operation->getUri(), $variables);
 
+        // @TODO fix
         return $client->getHttpClient()->createRequest(
             $operation->getHttpMethod(),
             $this->description->getBaseUrl()->combine($uri),

@@ -3,6 +3,7 @@ namespace Guzzle\Tests\Service\Description;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
+use GuzzleHttp\Command\ToArrayInterface;
 
 /**
  * @covers GuzzleHttp\Command\Guzzle\SchemaValidator
@@ -83,7 +84,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testConvertsObjectsToArraysWhenToArrayInterface()
     {
-        $o = $this->getMockBuilder('GuzzleHttp\ToArrayInterface')
+        $o = $this->getMockBuilder(ToArrayInterface::class)
             ->setMethods(array('toArray'))
             ->getMockForAbstractClass();
         $o->expects($this->once())

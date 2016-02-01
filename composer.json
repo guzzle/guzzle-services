@@ -8,14 +8,20 @@
             "name": "Michael Dowling",
             "email": "mtdowling@gmail.com",
             "homepage": "https://github.com/mtdowling"
+        },
+        {
+            "name": "Jeremy Lindblom",
+            "email": "jeremeamia@gmail.com",
+            "homepage": "https://github.com/jeremeamia"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/command": "0.7.*"
+        "guzzlehttp/guzzle": "^6.1",
+        "guzzlehttp/command": "0.9.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~5.0"
     },
     "autoload": {
         "psr-4": {
@@ -29,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4-dev"
+            "dev-master": "0.6-dev"
         }
     }
 }

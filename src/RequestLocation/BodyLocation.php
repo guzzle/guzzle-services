@@ -3,8 +3,7 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Stream\Stream;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Adds a body to a request
@@ -18,6 +17,6 @@ class BodyLocation extends AbstractLocation
         array $context
     ) {
         $value = $command[$param->getName()];
-        $request->setBody(Stream::factory($param->filter($value)));
+        $request->setBody(Psr7\stream_for($param->filter($value)));
     }
 }

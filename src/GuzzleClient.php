@@ -2,19 +2,15 @@
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Command\AbstractClient;
 use GuzzleHttp\Command\Command;
-use GuzzleHttp\Command\CommandTransaction;
-use GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse;
-use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput;
-use GuzzleHttp\Event\HasEmitterTrait;
-use GuzzleHttp\Command\ServiceClientInterface;
-use GuzzleHttp\Ring\Future\FutureArray;
+use GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse; // @TODO Remove
+use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput; // @TODO Remove
+use GuzzleHttp\Command\ServiceClient;
 
 /**
  * Default Guzzle web service client implementation.
  */
-class GuzzleClient extends AbstractClient
+class GuzzleClient extends ServiceClient
 {
     /** @var Description Guzzle service description */
     private $description;
@@ -51,89 +47,26 @@ class GuzzleClient extends AbstractClient
         DescriptionInterface $description,
         array $config = []
     ) {
-        parent::__construct($client, $config);
+        parent::__construct($client); // @todo
         $this->description = $description;
-        $this->processConfig($config);
+        //$this->processConfig($config);
     }
 
     public function getCommand($name, array $args = [])
     {
-        $factory = $this->commandFactory;
-
-        // Determine if a future array should be returned.
-        if (!empty($args['@future'])) {
-            $future = !empty($args['@future']);
-            unset($args['@future']);
-        } else {
-            $future = false;
+        if (!$this->description->hasOperation($name)) {
+            $name = ucfirst($name);
+            if (!$this->description->hasOperation($name)) {
+                throw new \InvalidArgumentException("No operation found named $name");
+            }
         }
 
-        // Merge in default command options
-        $defaults = $this->getConfig('defaults') ?: [];
-        $args += $defaults;
-
-        if ($command = $factory($name, $args, $this)) {
-            $command->setFuture($future);
-            return $command;
-        }
-
-        throw new \InvalidArgumentException("No operation found named $name");
+        return parent::getCommand($name, $args);
     }
 
     public function getDescription()
     {
         return $this->description;
-    }
-
-    protected function createFutureResult(CommandTransaction $transaction)
-    {
-        return new FutureArray(
-            $transaction->response->then(function () use ($transaction) {
-                return $transaction->result;
-            }),
-            [$transaction->response, 'wait'],
-            [$transaction->response, 'cancel']
-        );
-    }
-
-    protected function serializeRequest(CommandTransaction $trans)
-    {
-        $fn = $this->serializer;
-        return $fn($trans);
-    }
-
-    /**
-     * Creates a callable function used to create command objects from a
-     * service description.
-     *
-     * @param DescriptionInterface $description Service description
-     *
-     * @return callable Returns a command factory
-     */
-    public static function defaultCommandFactory(DescriptionInterface $description)
-    {
-        return function (
-            $name,
-            array $args = [],
-            ServiceClientInterface $client
-        ) use ($description) {
-            $operation = null;
-
-            if ($description->hasOperation($name)) {
-                $operation = $description->getOperation($name);
-            } else {
-                $name = ucfirst($name);
-                if ($description->hasOperation($name)) {
-                    $operation = $description->getOperation($name);
-                }
-            }
-
-            if (!$operation) {
-                return null;
-            }
-
-            return new Command($name, $args, ['emitter' => clone $client->getEmitter()]);
-        };
     }
 
     /**
