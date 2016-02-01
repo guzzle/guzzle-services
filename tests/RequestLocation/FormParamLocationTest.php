@@ -4,29 +4,30 @@ namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
+use GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation;
+use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
 use GuzzleHttp\Psr7\Request;
 
 /**
- * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation
+ * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class HeaderLocationTest extends \PHPUnit_Framework_TestCase
+class FormParamLocationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @group RequestLocation
      */
     public function testVisitsLocation()
     {
-        $location = new HeaderLocation('header');
+        $location = new FormParamLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
-
-        $header = $request->getHeader('foo');
-        $this->assertTrue(is_array($header));
-        $this->assertArraySubset([0 => 'bar'], $request->getHeader('foo'));
+        $operation = new Operation();
+        $request = $location->after($command, $request, $operation);
+        $this->assertEquals('foo=bar', $request->getBody()->getContents());
+        $this->assertArraySubset([0 => 'application/x-www-form-urlencoded; charset=utf-8'], $request->getHeader('Content-Type'));
     }
 
     /**
@@ -34,19 +35,18 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddsAdditionalProperties()
     {
-        $location = new HeaderLocation('header');
+        $location = new FormParamLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $command['add'] = 'props';
+        $request = new Request('POST', 'http://httbin.org', []);
+        $param = new Parameter(['name' => 'foo']);
+        $request = $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'header'
+                'location' => 'formParam'
             ]
         ]);
-        $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);
-
-        $header = $request->getHeader('add');
-        $this->assertTrue(is_array($header));
-        $this->assertArraySubset([0 => 'props'], $header);
+        $this->assertEquals('foo=bar&add=props', $request->getBody()->getContents());
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle;
 
-use GuzzleHttp\ToArrayInterface;
+use GuzzleHttp\Command\ToArrayInterface;
 
 /**
  * API parameter object used with service descriptions
@@ -9,28 +9,73 @@ use GuzzleHttp\ToArrayInterface;
 class Parameter implements ToArrayInterface
 {
     private $originalData;
+
+    /** @var string $name */
     private $name;
+
+    /** @var string $description */
     private $description;
+
+    /** @var string|array $type */
     private $type;
+
+    /** @var bool $required*/
     private $required;
+
+    /** @var array|null $enum */
     private $enum;
+
+    /** @var string $pattern */
     private $pattern;
+
+    /** @var int $minimum*/
     private $minimum;
+
+    /** @var int $maximum */
     private $maximum;
+
+    /** @var int $minLength */
     private $minLength;
+
+    /** @var int $maxLength */
     private $maxLength;
+
+    /** @var int $minItems */
     private $minItems;
+
+    /** @var int $maxItems */
     private $maxItems;
+
+    /** @var mixed $default */
     private $default;
+
+    /** @var bool $static */
     private $static;
+
+    /** @var array $filters */
     private $filters;
+
+    /** @var string $location */
     private $location;
+
+    /** @var string $sentAs */
     private $sentAs;
+
+    /** @var array $data */
     private $data;
+
+    /** @var array $properties */
     private $properties = [];
+
+    /** @var array|bool|Parameter $additionalProperties */
     private $additionalProperties;
+
+    /** @var array|Parameter $items */
     private $items;
+
+    /** @var string $format */
     private $format;
+
     private $propertiesCache = null;
 
     /** @var Description */
@@ -297,7 +342,7 @@ class Parameter implements ToArrayInterface
      *
      * @return bool
      */
-    public function getRequired()
+    public function isRequired()
     {
         return $this->required;
     }
@@ -405,7 +450,7 @@ class Parameter implements ToArrayInterface
 
     /**
      * Retrieve a known property from the parameter by name or a data property
-     * by name. When not specific name value is specified, all data properties
+     * by name. When no specific name value is passed, all data properties
      * will be returned.
      *
      * @param string|null $name Specify a particular property name to retrieve
@@ -428,9 +473,9 @@ class Parameter implements ToArrayInterface
     /**
      * Get whether or not the default value can be changed
      *
-     * @return mixed|null
+     * @return bool
      */
-    public function getStatic()
+    public function isStatic()
     {
         return $this->static;
     }
@@ -506,7 +551,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the item data of the parameter
      *
-     * @return Parameter|null
+     * @return Parameter
      */
     public function getItems()
     {
@@ -592,5 +637,19 @@ class Parameter implements ToArrayInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Check if a parameter has a specific variable and if it set.
+     *
+     * @param string $var
+     * @return bool
+     */
+    public function has($var)
+    {
+        if (!is_string($var)) {
+            throw new \InvalidArgumentException('Expected a string. Got: ' . (is_object($var) ? get_class($var) : gettype($var)));
+        }
+        return isset($this->{$var}) && !empty($this->{$var});
     }
 }

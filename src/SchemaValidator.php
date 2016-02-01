@@ -1,7 +1,7 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle;
 
-use GuzzleHttp\ToArrayInterface;
+use GuzzleHttp\Command\ToArrayInterface;
 
 /**
  * Default parameter validator
@@ -29,6 +29,11 @@ class SchemaValidator
         $this->castIntegerToStringType = $castIntegerToStringType;
     }
 
+    /**
+     * @param Parameter $param
+     * @param $value
+     * @return bool
+     */
     public function validate(Parameter $param, &$value)
     {
         $this->errors = [];
@@ -55,10 +60,10 @@ class SchemaValidator
     /**
      * From the allowable types, determine the type that the variable matches
      *
-     * @param string $type  Parameter type
-     * @param mixed  $value Value to determine the type
+     * @param string|array $type Parameter type
+     * @param mixed $value Value to determine the type
      *
-     * @return string|bool Returns the matching type on
+     * @return string|false Returns the matching type on
      */
     protected function determineType($type, $value)
     {
@@ -109,10 +114,10 @@ class SchemaValidator
         // Update the value by adding default or static values
         $value = $param->getValue($value);
 
-        $required = $param->getRequired();
+        $required = $param->isRequired();
         // if the value is null and the parameter is not required or is static,
         // then skip any further recursion
-        if ((null === $value && !$required) || $param->getStatic()) {
+        if ((null === $value && !$required) || $param->isStatic()) {
             return true;
         }
 
@@ -127,7 +132,6 @@ class SchemaValidator
         }
 
         if ($type == 'object') {
-
             // Determine whether or not this "value" has properties and should
             // be traversed
             $traverse = $temporaryValue = false;
@@ -153,7 +157,6 @@ class SchemaValidator
             }
 
             if ($traverse) {
-
                 if ($properties = $param->getProperties()) {
                     // if properties were found, validate each property
                     foreach ($properties as $property) {
@@ -181,7 +184,7 @@ class SchemaValidator
                     $diff = array_diff($keys, array_keys($properties));
                     if (!empty($diff)) {
                         // Determine which keys are not in the properties
-                        if ($additional instanceOf Parameter) {
+                        if ($additional instanceof Parameter) {
                             foreach ($diff as $key) {
                                 $this->recursiveProcess($additional, $value[$key], "{$path}[{$key}]", $depth);
                             }
@@ -219,7 +222,7 @@ class SchemaValidator
             $message = "{$path} is " . ($param->getType()
                 ? ('a required ' . implode(' or ', (array) $param->getType()))
                 : 'required');
-            if ($param->getDescription()) {
+            if ($param->has('description')) {
                 $message .= ': ' . $param->getDescription();
             }
             $this->errors[] = $message;
@@ -242,12 +245,11 @@ class SchemaValidator
 
         // Perform type specific validation for strings, arrays, and integers
         if ($type == 'string') {
-
             // Strings can have enums which are a list of predefined values
             if (($enum = $param->getEnum()) && !in_array($value, $enum)) {
                 $this->errors[] = "{$path} must be one of " . implode(' or ', array_map(function ($s) {
                         return '"' . addslashes($s) . '"';
-                    }, $enum));
+                }, $enum));
             }
             // Strings can have a regex pattern that the value must match
             if (($pattern  = $param->getPattern()) && !preg_match($pattern, $value)) {
@@ -268,7 +270,6 @@ class SchemaValidator
             }
 
         } elseif ($type == 'array') {
-
             $size = null;
             if ($min = $param->getMinItems()) {
                 $size = count($value);

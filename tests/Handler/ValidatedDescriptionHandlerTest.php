@@ -1,18 +1,16 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle\Subscriber;
+namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\CommandTransaction;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput;
-use GuzzleHttp\Command\Event\InitEvent;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput
+ * @covers \GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler
  */
-class ValidateInputTest extends \PHPUnit_Framework_TestCase
+class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
      * @expectedException \GuzzleHttp\Command\Exception\CommandException
      * @expectedExceptionMessage Validation errors: [bar] is a required string
@@ -35,15 +33,8 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput($description);
-        $event = new InitEvent(
-            new CommandTransaction(
-                $client,
-                $client->getCommand('foo')
-            )
-        );
-        $val->onInit($event);
+        $client = new GuzzleClient(new HttpClient(), $description);
+        $client->foo([]);
     }
 
     public function testSuccessfulValidationDoesNotThrow()
@@ -56,18 +47,16 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
                     'responseModel' => 'j',
                     'parameters' => []
                 ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object'
+                ]
             ]
         ]);
 
-        $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput($description);
-        $event = new InitEvent(
-            new CommandTransaction(
-                $client,
-                $client->getCommand('foo')
-            )
-        );
-        $val->onInit($event);
+        $client = new GuzzleClient(new HttpClient(), $description);
+        $client->foo([]);
     }
 
     /**
@@ -86,17 +75,15 @@ class ValidateInputTest extends \PHPUnit_Framework_TestCase
                         'type'     => 'string'
                     ]
                 ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object'
+                ]
             ]
         ]);
 
-        $client = new GuzzleClient(new Client(), $description);
-        $val = new ValidateInput($description);
-        $event = new InitEvent(
-            new CommandTransaction(
-                $client,
-                $client->getCommand('foo', ['bar' => new \stdClass()])
-            )
-        );
-        $val->onInit($event);
+        $client = new GuzzleClient(new HttpClient(), $description);
+        $client->foo(['bar' => new \stdClass()]);
     }
 }

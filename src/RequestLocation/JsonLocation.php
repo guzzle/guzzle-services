@@ -1,18 +1,19 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\CommandInterface;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Creates a JSON document
  */
 class JsonLocation extends AbstractLocation
 {
-    /** @var bool Whether or not to add a Content-Type header when JSON is found */
+    /** @var string Whether or not to add a Content-Type header when JSON is found */
     private $jsonContentType;
 
     /** @var array */
@@ -23,36 +24,50 @@ class JsonLocation extends AbstractLocation
      * @param string $contentType  Content-Type header to add to the request if
      *     JSON is added to the body. Pass an empty string to omit.
      */
-    public function __construct($locationName, $contentType = 'application/json')
+    public function __construct($locationName = 'json', $contentType = 'application/json')
     {
-        $this->locationName = $locationName;
+        parent::__construct($locationName);
         $this->jsonContentType = $contentType;
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {
         $this->jsonData[$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
             $param
         );
+
+        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($this->jsonData)));
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation        $operation
+     *
+     * @return MessageInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {
         $data = $this->jsonData;
-        $this->jsonData = null;
+        $this->jsonData = [];
 
         // Add additional parameters to the JSON document
         $additional = $operation->getAdditionalParameters();
-        if ($additional && $additional->getLocation() == $this->locationName) {
+        if ($additional && ($additional->getLocation() === $this->locationName)) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
                     $data[$key] = $this->prepareValue($value, $additional);
@@ -62,9 +77,9 @@ class JsonLocation extends AbstractLocation
 
         // Don't overwrite the Content-Type if one is set
         if ($this->jsonContentType && !$request->hasHeader('Content-Type')) {
-            $request->setHeader('Content-Type', $this->jsonContentType);
+            $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        $request->setBody(Stream::factory(json_encode($data)));
+        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($data)));
     }
 }

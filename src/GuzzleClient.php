@@ -2,28 +2,21 @@
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Command\AbstractClient;
-use GuzzleHttp\Command\Command;
-use GuzzleHttp\Command\CommandTransaction;
-use GuzzleHttp\Command\Guzzle\Subscriber\ProcessResponse;
-use GuzzleHttp\Command\Guzzle\Subscriber\ValidateInput;
-use GuzzleHttp\Event\HasEmitterTrait;
-use GuzzleHttp\Command\ServiceClientInterface;
-use GuzzleHttp\Ring\Future\FutureArray;
+use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler;
+use GuzzleHttp\Command\ServiceClient;
+use GuzzleHttp\HandlerStack;
 
 /**
  * Default Guzzle web service client implementation.
  */
-class GuzzleClient extends AbstractClient
+class GuzzleClient extends ServiceClient
 {
-    /** @var Description Guzzle service description */
+    /** @var array $config */
+    private $config;
+
+    /** @var DescriptionInterface Guzzle service description */
     private $description;
-
-    /** @var callable Factory used for creating commands */
-    private $commandFactory;
-
-    /** @var callable Serializer */
-    private $serializer;
 
     /**
      * The client constructor accepts an associative array of configuration
@@ -39,101 +32,113 @@ class GuzzleClient extends AbstractClient
      *   effect.
      * - response_locations: Associative array of location types mapping to
      *   ResponseLocationInterface objects.
-     * - serializer: Optional callable that accepts a CommandTransactions and
-     *   returns a serialized request object.
      *
-     * @param ClientInterface      $client      HTTP client to use.
+     * @param ClientInterface $client HTTP client to use.
      * @param DescriptionInterface $description Guzzle service description
-     * @param array                $config      Configuration options
+     * @param callable $commandToRequestTransformer
+     * @param callable $responseToResultTransformer
+     * @param HandlerStack $commandHandlerStack
+     * @param array $config Configuration options
      */
     public function __construct(
         ClientInterface $client,
         DescriptionInterface $description,
+        callable $commandToRequestTransformer = null,
+        callable $responseToResultTransformer = null,
+        HandlerStack $commandHandlerStack = null,
         array $config = []
     ) {
-        parent::__construct($client, $config);
+        $this->config = $config;
         $this->description = $description;
+        $serializer = $this->getSerializer($commandToRequestTransformer);
+        $deserializer = $this->getDeserializer($responseToResultTransformer);
+
+        parent::__construct($client, $serializer, $deserializer, $commandHandlerStack);
         $this->processConfig($config);
     }
 
+    /**
+     * Returns the command if valid; otherwise an Exception
+     * @param string $name
+     * @param array  $args
+     * @return CommandInterface
+     * @throws \InvalidArgumentException
+     */
     public function getCommand($name, array $args = [])
     {
-        $factory = $this->commandFactory;
-
-        // Determine if a future array should be returned.
-        if (!empty($args['@future'])) {
-            $future = !empty($args['@future']);
-            unset($args['@future']);
-        } else {
-            $future = false;
+        if (!$this->description->hasOperation($name)) {
+            $name = ucfirst($name);
+            if (!$this->description->hasOperation($name)) {
+                throw new \InvalidArgumentException(
+                    "No operation found named {$name}"
+                );
+            }
         }
 
         // Merge in default command options
-        $defaults = $this->getConfig('defaults') ?: [];
-        $args += $defaults;
+        $args += $this->getConfig('defaults');
 
-        if ($command = $factory($name, $args, $this)) {
-            $command->setFuture($future);
-            return $command;
-        }
-
-        throw new \InvalidArgumentException("No operation found named $name");
+        return parent::getCommand($name, $args);
     }
 
+    /**
+     * Return the description
+     *
+     * @return DescriptionInterface
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    protected function createFutureResult(CommandTransaction $transaction)
+    /**
+     * Returns the passed Serializer when set, a new instance otherwise
+     *
+     * @param callable|null $commandToRequestTransformer
+     * @return \GuzzleHttp\Command\Guzzle\Serializer
+     */
+    private function getSerializer($commandToRequestTransformer)
     {
-        return new FutureArray(
-            $transaction->response->then(function () use ($transaction) {
-                return $transaction->result;
-            }),
-            [$transaction->response, 'wait'],
-            [$transaction->response, 'cancel']
-        );
-    }
-
-    protected function serializeRequest(CommandTransaction $trans)
-    {
-        $fn = $this->serializer;
-        return $fn($trans);
+        return $commandToRequestTransformer ==! null
+            ? $commandToRequestTransformer
+            : new Serializer($this->description);
     }
 
     /**
-     * Creates a callable function used to create command objects from a
-     * service description.
+     * Returns the passed Deserializer when set, a new instance otherwise
      *
-     * @param DescriptionInterface $description Service description
-     *
-     * @return callable Returns a command factory
+     * @param callable|null $responseToResultTransformer
+     * @return \GuzzleHttp\Command\Guzzle\Deserializer
      */
-    public static function defaultCommandFactory(DescriptionInterface $description)
+    private function getDeserializer($responseToResultTransformer)
     {
-        return function (
-            $name,
-            array $args = [],
-            ServiceClientInterface $client
-        ) use ($description) {
-            $operation = null;
+        $process = (! isset($this->config['process']) || $this->config['process'] === true);
 
-            if ($description->hasOperation($name)) {
-                $operation = $description->getOperation($name);
-            } else {
-                $name = ucfirst($name);
-                if ($description->hasOperation($name)) {
-                    $operation = $description->getOperation($name);
-                }
-            }
+        return $responseToResultTransformer ==! null
+            ? $responseToResultTransformer
+            : new Deserializer($this->description, $process);
+    }
 
-            if (!$operation) {
-                return null;
-            }
+    /**
+     * Get the config of the client
+     *
+     * @param array|string $option
+     * @return mixed
+     */
+    public function getConfig($option = null)
+    {
+        return $option === null
+            ? $this->config
+            : (isset($this->config[$option]) ? $this->config[$option] : []);
+    }
 
-            return new Command($name, $args, ['emitter' => clone $client->getEmitter()]);
-        };
+    /**
+     * @param $option
+     * @param $value
+     */
+    public function setConfig($option, $value)
+    {
+        $this->config[$option] = $value;
     }
 
     /**
@@ -147,36 +152,18 @@ class GuzzleClient extends AbstractClient
         if (!isset($config['defaults'])) {
             $config['defaults'] = [];
         }
-        
-        // Use the passed in command factory or a custom factory if provided
-        $this->commandFactory = isset($config['command_factory'])
-            ? $config['command_factory']
-            : self::defaultCommandFactory($this->description);
 
-        // Add event listeners based on the configuration option
-        $emitter = $this->getEmitter();
+        // Add the handlers based on the configuration option
+        $stack = $this->getHandlerStack();
 
-        if (!isset($config['validate']) ||
-            $config['validate'] === true
-        ) {
-            $emitter->attach(new ValidateInput($this->description));
+        if (!isset($config['validate']) || $config['validate'] === true) {
+            $stack->push(new ValidatedDescriptionHandler($this->description));
         }
 
-        $this->serializer = isset($config['serializer'])
-            ? $config['serializer']
-            : new Serializer($this->description);
-
-        if (!isset($config['process']) ||
-            $config['process'] === true
-        ) {
-            $emitter->attach(
-                new ProcessResponse(
-                    $this->description,
-                    isset($config['response_locations'])
-                        ? $config['response_locations']
-                        : []
-                )
-            );
+        if (!isset($config['process']) || $config['process'] === true) {
+            // TODO: This belongs to the Deserializer and should be handled there.
+            // Question: What is the result when the Deserializer is bypassed?
+            // Possible answer: The raw response.
         }
     }
 }

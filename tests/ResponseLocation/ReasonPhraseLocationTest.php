@@ -1,10 +1,10 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ReasonPhraseLocation;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Command\Result;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\ReasonPhraseLocation
@@ -12,17 +12,19 @@ use GuzzleHttp\Message\Response;
  */
 class ReasonPhraseLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitsLocation()
     {
-        $l = new ReasonPhraseLocation('reasonPhrase');
-        $command = new Command('foo', []);
+        $location = new ReasonPhraseLocation();
         $parameter = new Parameter([
             'name' => 'val',
             'filters' => ['strtolower']
         ]);
         $response = new Response(200);
-        $result = [];
-        $l->visit($command, $response, $parameter, $result);
+        $result = new Result();
+        $result = $location->visit($result, $response, $parameter);
         $this->assertEquals('ok', $result['val']);
     }
 }
