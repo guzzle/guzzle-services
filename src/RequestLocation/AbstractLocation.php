@@ -24,15 +24,13 @@ abstract class AbstractLocation implements RequestLocationInterface
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {}
 
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {}
 
     /**

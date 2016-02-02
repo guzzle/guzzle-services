@@ -5,7 +5,7 @@ use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\CommandInterface;
 use Psr\Http\Message\RequestInterface;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
 
 /**
  * Creates a JSON document
@@ -32,8 +32,7 @@ class JsonLocation extends AbstractLocation
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {
         $this->jsonData[$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
@@ -44,8 +43,7 @@ class JsonLocation extends AbstractLocation
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {
         $data = $this->jsonData;
         $this->jsonData = null;
@@ -62,9 +60,9 @@ class JsonLocation extends AbstractLocation
 
         // Don't overwrite the Content-Type if one is set
         if ($this->jsonContentType && !$request->hasHeader('Content-Type')) {
-            $request->setHeader('Content-Type', $this->jsonContentType);
+            $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        $request->setBody(Stream::factory(json_encode($data)));
+        return $request->withBody(Psr7\stream_for(json_encode($data)));
     }
 }

@@ -18,14 +18,13 @@ interface RequestLocationInterface
      * @param CommandInterface $command Command being prepared
      * @param RequestInterface $request Request being modified
      * @param Parameter        $param   Parameter being visited
-     * @param array            $context Associative array containing a
-     *     'client' key referencing the client that created the command.
+     *
+     * @return RequestInterface Modified request
      */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     );
 
     /**
@@ -34,13 +33,12 @@ interface RequestLocationInterface
      * @param CommandInterface $command   Command being prepared
      * @param RequestInterface $request   Request being modified
      * @param Operation        $operation Operation being serialized
-     * @param array            $context   Associative array containing a
-     *     'client' key referencing the client that created the command.
+     *
+     * @return RequestInterface Modified request
      */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     );
 }

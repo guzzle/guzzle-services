@@ -5,7 +5,7 @@ use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\CommandInterface;
 use Psr\Http\Message\RequestInterface;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
 
 /**
  * Creates an XML document
@@ -37,8 +37,7 @@ class XmlLocation extends AbstractLocation
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {
         // Buffer and order the parameters to visit based on if they are
         // top-level attributes or child nodes.
@@ -53,8 +52,7 @@ class XmlLocation extends AbstractLocation
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {
         foreach ($this->buffered as $param) {
             $this->visitWithValue(
@@ -88,14 +86,16 @@ class XmlLocation extends AbstractLocation
         }
 
         if ($xml) {
-            $request->setBody(Stream::factory($xml));
+            $request = $request->withBody(Psr7\stream_for($xml));
             // Don't overwrite the Content-Type if one is set
             if ($this->contentType && !$request->hasHeader('Content-Type')) {
-                $request->setHeader('Content-Type', $this->contentType);
+                $request = $request->withHeader('Content-Type', $this->contentType);
             }
         }
 
         $this->writer = null;
+
+        return $request;
     }
 
     /**

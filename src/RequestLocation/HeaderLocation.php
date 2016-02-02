@@ -14,26 +14,27 @@ class HeaderLocation extends AbstractLocation
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {
         $value = $command[$param->getName()];
-        $request->setHeader($param->getWireName(), $param->filter($value));
+
+        return $request->withHeader($param->getWireName(), $param->filter($value));
     }
 
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {
         $additional = $operation->getAdditionalParameters();
         if ($additional && $additional->getLocation() == $this->locationName) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
-                    $request->setHeader($key, $additional->filter($value));
+                    $request = $request->withHeader($key, $additional->filter($value));
                 }
             }
         }
+
+        return $request;
     }
 }

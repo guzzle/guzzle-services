@@ -8,26 +8,27 @@ use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Adds query string values to requests
+ * @TODO fix
  */
 class QueryLocation extends AbstractLocation
 {
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
+        Parameter $param
     ) {
         $request->getQuery()[$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
             $param
         );
+
+        return $request;
     }
 
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
+        Operation $operation
     ) {
         $additional = $operation->getAdditionalParameters();
         if ($additional && $additional->getLocation() == $this->locationName) {
@@ -40,5 +41,7 @@ class QueryLocation extends AbstractLocation
                 }
             }
         }
+
+        return $request;
     }
 }
