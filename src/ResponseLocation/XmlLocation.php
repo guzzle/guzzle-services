@@ -2,8 +2,9 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\Result;
+use GuzzleHttp\Command\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts elements from an XML document
@@ -14,39 +15,40 @@ class XmlLocation extends AbstractLocation
     private $xml;
 
     public function before(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     ) {
-        $this->xml = $response->xml();
+        $this->xml = simplexml_load_string($response->getBody()); // @TODO fix
+
+        return $result;
     }
 
     public function after(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     ) {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
         if ($additional instanceof Parameter &&
             $additional->getLocation() == $this->locationName
         ) {
-            $result += self::xmlToArray($this->xml);
+            $result = new Result(array_merge(
+                $result->toArray(),
+                self::xmlToArray($this->xml)
+            ));
         }
 
         $this->xml = null;
+
+        return $result;
     }
 
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
+        Parameter $param
     ) {
         $sentAs = $param->getWireName();
         $ns = null;
@@ -61,6 +63,8 @@ class XmlLocation extends AbstractLocation
                 $this->xml->children($ns, true)->{$sentAs}
             );
         }
+
+        return $result;
     }
 
     /**

@@ -2,8 +2,8 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts headers from the response into a result fields
@@ -11,16 +11,16 @@ use GuzzleHttp\Command\CommandInterface;
 class HeaderLocation extends AbstractLocation
 {
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
+        Parameter $param
     ) {
         // Retrieving a single header by name
         $name = $param->getName();
         if ($header = $response->getHeader($param->getWireName())) {
             $result[$name] = $param->filter($header);
         }
+
+        return $result;
     }
 }

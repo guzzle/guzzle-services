@@ -25,13 +25,17 @@ abstract class AbstractLocation implements RequestLocationInterface
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {}
+    ) {
+        return $request;
+    }
 
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {}
+    ) {
+        return $request;
+    }
 
     /**
      * Prepare (filter and set desired name for request item) the value for

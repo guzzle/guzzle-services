@@ -2,6 +2,7 @@
 namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
+use GuzzleHttp\Command\Result;
 use GuzzleHttp\Event\SubscriberInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -27,6 +28,8 @@ use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
  * are visited, the ``after()`` method is called on each visitor. This is the
  * place in which you should handle things like additionalProperties with
  * custom locations (i.e., this is how it is handled in the JSON visitor).
+ *
+ * @TODO Fix? Especially $context thing. Refactor to middleware or transformer.
  */
 class ProcessResponse implements SubscriberInterface
 {
@@ -97,8 +100,8 @@ class ProcessResponse implements SubscriberInterface
 
     protected function visit(Parameter $model, ProcessEvent $event)
     {
-        $result = [];
-        $context = ['client' => $event->getClient(), 'visitors' => []];
+        $result = new Result();
+        $context = ['visitors' => []];
         $command = $event->getCommand();
         $response = $event->getResponse();
 
@@ -112,7 +115,7 @@ class ProcessResponse implements SubscriberInterface
 
         // Call the after() method of each found visitor
         foreach ($context['visitors'] as $visitor) {
-            $visitor->after($command, $response, $model, $result, $context);
+            $visitor->after($result, $response, $model);
         }
 
         return $result;

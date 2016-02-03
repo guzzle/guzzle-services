@@ -2,8 +2,8 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
 
 abstract class AbstractLocation implements ResponseLocationInterface
 {
@@ -21,26 +21,26 @@ abstract class AbstractLocation implements ResponseLocationInterface
     }
 
     public function before(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $model
+    ) {
+        return $result;
+    }
 
     public function after(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $model
+    ) {
+        return $result;
+    }
 
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $param
+    ) {
+        return $result;
+    }
 }

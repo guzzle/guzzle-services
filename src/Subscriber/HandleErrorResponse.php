@@ -10,6 +10,8 @@ use GuzzleHttp\Event\SubscriberInterface;
  * In order for the exception to be properly triggered, all your exceptions must be instance
  * of "GuzzleHttp\Command\Exception\CommandException". If that's not the case, your exceptions will be wrapped
  * around a CommandException
+ *
+ * @TODO Refactor to middleware or transformer.
  */
 class HandleErrorResponse implements SubscriberInterface
 {

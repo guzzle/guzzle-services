@@ -2,8 +2,9 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\Result;
+use GuzzleHttp\Command\ResultInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts elements from a JSON document.
@@ -14,31 +15,29 @@ class JsonLocation extends AbstractLocation
     private $json = [];
 
     public function before(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     ) {
-        $this->json = $response->json() ?: [];
+        $this->json = json_decode($response->getBody(), true) ?: []; // @TODO new guzzle function
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
         if ($model->getType() == 'array' && ($name = $model->getName())) {
             $this->json = [$name => $this->json];
         }
+
+        return $result;
     }
 
     public function after(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     ) {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
         if (!($additional instanceof Parameter)) {
-            return;
+            return $result;
         }
 
         // Use the model location as the default if one is not set on additional
@@ -55,14 +54,14 @@ class JsonLocation extends AbstractLocation
         }
 
         $this->json = [];
+
+        return $result;
     }
 
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
+        Parameter $param
     ) {
         $name = $param->getName();
         $key = $param->getWireName();
@@ -72,14 +71,20 @@ class JsonLocation extends AbstractLocation
             // Treat as javascript array
             if ($name) {
                 // name provided, store it under a key in the array
-                $result[$name] = $this->recurse($param, isset($this->json[$name]) ? $this->json[$name] : null);
+                $subArray = isset($this->json[$name]) ? $this->json[$name] : null;
+                $result[$name] = $this->recurse($param, $subArray);
             } else {
                 // top-level `array` or an empty name
-                $result = array_merge($result, $this->recurse($param, $this->json));
+                $result = new Result(array_merge(
+                    $result->toArray(),
+                    $this->recurse($param, $this->json)
+                ));
             }
         } elseif (isset($this->json[$key])) {
             $result[$name] = $this->recurse($param, $this->json[$key]);
         }
+
+        return $result;
     }
 
     /**

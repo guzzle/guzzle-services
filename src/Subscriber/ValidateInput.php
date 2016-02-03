@@ -9,6 +9,8 @@ use GuzzleHttp\Command\Event\InitEvent;
 
 /**
  * Subscriber used to validate command input against a service description.
+ *
+ * @TODO Refactor to middleware or transformer.
  */
 class ValidateInput implements SubscriberInterface
 {

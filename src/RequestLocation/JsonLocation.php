@@ -63,6 +63,6 @@ class JsonLocation extends AbstractLocation
             $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        return $request->withBody(Psr7\stream_for(json_encode($data)));
+        return $request->withBody(Psr7\stream_for(json_encode($data))); // @TODO new guzzle function
     }
 }
