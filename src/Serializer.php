@@ -4,6 +4,7 @@ namespace GuzzleHttp\Command\Guzzle;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestParameterContext;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
@@ -149,7 +150,7 @@ class Serializer
 
         return new Request(
             $operation->getHttpMethod(),
-            $this->description->getBaseUrl()->combine($uri)
+            Uri::resolve($this->description->getBaseUrl(),$uri)
         );
     }
 }
