@@ -4,8 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\BodyLocation;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\BodyLocation
@@ -21,7 +20,7 @@ class BodyLocationTest extends \PHPUnit_Framework_TestCase
             'name'    => 'val',
             'filters' => ['strtoupper']
         ]);
-        $response = new Response(200, [], Stream::factory('foo'));
+        $response = new Response(200, [], 'foo');
         $result = [];
         $l->visit($command, $response, $parameter, $result);
         $this->assertEquals('FOO', $result['val']);

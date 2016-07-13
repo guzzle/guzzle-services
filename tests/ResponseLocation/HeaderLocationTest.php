@@ -4,7 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation

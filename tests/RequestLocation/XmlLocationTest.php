@@ -2,16 +2,16 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Command\Event\PreparedEvent;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\Operation;
-use GuzzleHttp\Message\Response;
 use GuzzleHttp\Command\Command;
+use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation
@@ -406,18 +406,13 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $request = null;
         $command = $client->getCommand('foo', $input);
 
-        $command->getEmitter()->on(
-            'prepared',
-            function (PreparedEvent $event) use (&$request) {
-                $request = $event->getRequest();
-                $event->getRequest()->getEmitter()->on(
-                    'before',
-                    function(BeforeEvent $e) {
-                        $e->intercept(new Response(200));
-                    }
-                );
-            }
-        );
+        $command->getHandlerStack()->push(function () use (&$request) {
+            return function (RequestInterface $req) use (&$request) {
+                $request = $req;
+
+                return new FulfilledPromise(new Response(200));
+            };
+        });
 
         $client->execute($command);
 

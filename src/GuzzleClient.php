@@ -44,8 +44,11 @@ class GuzzleClient extends ServiceClient
         $serializer = isset($config['serializer'])
             ? $config['serializer']
             : new Serializer($this->description);
+        $deserializer = isset($config['deserializer'])
+            ? $config['deserializer']
+            : new Deserializer($this->description);
 
-        parent::__construct($client, $serializer, function(){}); // @todo responseToResult
+        parent::__construct($client, $serializer, $deserializer);
 //        $this->processConfig($config); // @todo config?
     }
 

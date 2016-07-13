@@ -3,10 +3,10 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
-use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation

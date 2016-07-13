@@ -1,12 +1,13 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
-use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Command;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation
@@ -21,7 +22,7 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $location->visit($command, $request, $param, []);
-        $this->assertEquals('bar', $request->getQuery()['foo']);
+        $this->assertEquals('bar', Psr7\parse_query($request->getUri()->getQuery())['foo']);
     }
 
     public function testAddsAdditionalProperties()
@@ -36,6 +37,6 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
         ], new Description([]));
         $request = new Request('POST', 'http://httbin.org');
         $location->after($command, $request, $operation, []);
-        $this->assertEquals('props', $request->getQuery()['add']);
+        $this->assertEquals('props', Psr7\parse_query($request->getUri()->getQuery())['add']);
     }
 }

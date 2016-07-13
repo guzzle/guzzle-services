@@ -4,7 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
-use GuzzleHttp\Message\Request;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation

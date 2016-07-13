@@ -2,11 +2,11 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Command;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation

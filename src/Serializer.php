@@ -1,7 +1,6 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle;
 
-use GuzzleHttp\Command\Guzzle\RequestLocation\RequestParameterContext;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
@@ -13,6 +12,7 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Serializes requests for a given command.
@@ -149,7 +149,31 @@ class Serializer
 
         return new Request(
             $operation->getHttpMethod(),
-            $this->description->getBaseUrl()->combine($uri)
+            $this->combineUris($uri)
         );
+    }
+
+    /**
+     * @param string $template
+     *
+     * @return UriInterface
+     */
+    private function combineUris($template)
+    {
+        $uri = $this->description->getBaseUrl();
+
+        $template = \GuzzleHttp\Psr7\uri_for($template);
+
+        $parts = $template->getParts();
+
+        if (isset($parts['scheme'])) {
+            return clone $template;
+        }
+
+        if (isset($parts['query'])) {
+
+        }
+
+        return $uri;
     }
 }

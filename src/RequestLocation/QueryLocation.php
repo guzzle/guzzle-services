@@ -5,6 +5,7 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Psr7;
 
 /**
  * Adds query string values to requests
@@ -17,12 +18,17 @@ class QueryLocation extends AbstractLocation
         RequestInterface $request,
         Parameter $param
     ) {
-        $request->getQuery()[$param->getWireName()] = $this->prepareValue(
+        $uri = $request->getUri();
+        $query = Psr7\parse_query($uri->getQuery());
+
+        $query[$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
             $param
         );
 
-        return $request;
+        $uri = $uri->withQuery(Psr7\build_query($query));
+
+        return $request->withUri($uri);
     }
 
     public function after(
@@ -34,10 +40,16 @@ class QueryLocation extends AbstractLocation
         if ($additional && $additional->getLocation() == $this->locationName) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
-                    $request->getQuery()[$key] = $this->prepareValue(
+                    $uri = $request->getUri();
+                    $query = Psr7\parse_query($uri->getQuery());
+
+                    $query[$key] = $this->prepareValue(
                         $value,
                         $additional
                     );
+
+                    $uri = $uri->withQuery(Psr7\build_query($query));
+                    $request = $request->withUri($uri);
                 }
             }
         }

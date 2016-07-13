@@ -4,10 +4,9 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
-use GuzzleHttp\Message\Request;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Command\Command;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation
@@ -19,7 +18,7 @@ class PostFieldLocationTest extends \PHPUnit_Framework_TestCase
     {
         $location = new PostFieldLocation('body');
         $command = new Command('foo', ['foo' => 'bar']);
-        $request = new Request('POST', 'http://httbin.org', [], new PostBody());
+        $request = new Request('POST', 'http://httbin.org', []);
         $param = new Parameter(['name' => 'foo']);
         $location->visit($command, $request, $param, []);
         $this->assertEquals('bar', $request->getBody()->getField('foo'));
@@ -47,7 +46,7 @@ class PostFieldLocationTest extends \PHPUnit_Framework_TestCase
                 'location' => 'postField'
             ]
         ], new Description([]));
-        $request = new Request('POST', 'http://httbin.org', [], new PostBody());
+        $request = new Request('POST', 'http://httbin.org', []);
         $location->after($command, $request, $operation, []);
         $this->assertEquals('props', $request->getBody()->getField('add'));
     }

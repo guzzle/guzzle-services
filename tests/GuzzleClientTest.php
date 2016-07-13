@@ -106,21 +106,6 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $guzzle->getCommand('foo');
     }
 
-    public function testDefaultFactoryChecksWithUppercaseToo()
-    {
-        $description = new Description([
-            'operations' => ['Foo' => [], 'bar' => []]
-        ]);
-        $c = new GuzzleClient(new Client(), $description);
-        $f = GuzzleClient::defaultCommandFactory($description);
-        $command1 = $f('foo', [], $c);
-        $this->assertInstanceOf('GuzzleHttp\\Command\\Command', $command1);
-        $this->assertEquals('Foo', $command1->getName());
-        $command2 = $f('Foo', [], $c);
-        $this->assertInstanceOf('GuzzleHttp\\Command\\Command', $command2);
-        $this->assertEquals('Foo', $command2->getName());
-    }
-
     public function testReturnsProcessedResponse()
     {
         $client = new Client();

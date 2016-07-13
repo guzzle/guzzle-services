@@ -7,9 +7,9 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
@@ -26,7 +26,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
             'sentAs'  => 'vim',
             'filters' => ['strtoupper']
         ]);
-        $response = new Response(200, [], Stream::factory('{"vim":"bar"}'));
+        $response = new Response(200, [], '{"vim":"bar"}');
         $result = [];
         $l->before($command, $response, $parameter, $result);
         $l->visit($command, $response, $parameter, $result);
@@ -39,7 +39,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
-        $response = new Response(200, [], Stream::factory('{"vim":"bar","qux":[1,2]}'));
+        $response = new Response(200, [], '{"vim":"bar","qux":[1,2]}');
         $result = [];
         $l->before($command, $response, $parameter, $result);
         $l->visit($command, $response, $parameter, $result);
@@ -77,15 +77,19 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     {
         $hclient = new Client();
 
-        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
-            $json = [
-                ['foo' => 'bar'],
-                ['baz' => 'bam'],
-            ];
-            $response = new Response(200, [
-                'Content-Type' => 'application/json'
-            ], Stream::factory(json_encode($json)));
-            $event->intercept($response);
+        $hclient->getConfig('handler')->push(function () {
+            return function () {
+                $json = [
+                    ['foo' => 'bar'],
+                    ['baz' => 'bam'],
+                ];
+
+                return new FulfilledPromise(new Response(
+                    200,
+                    ['Content-Type' => 'application/json'],
+                    json_encode($json)
+                ));
+            };
         });
 
         $description = new Description([
@@ -120,18 +124,22 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     {
         $hclient = new Client();
 
-        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
-            $json = [
-                'scalar' => 'foo',
-                'nested' => [
-                    'bar',
-                    'baz'
-                ]
-            ];
-            $response = new Response(200, [
-                'Content-Type' => 'application/json'
-            ], Stream::factory(json_encode($json)));
-            $event->intercept($response);
+        $hclient->getConfig('handler')->push(function () {
+            return function () {
+                $json = [
+                    'scalar' => 'foo',
+                    'nested' => [
+                        'bar',
+                        'baz'
+                    ]
+                ];
+
+                return new FulfilledPromise(new Response(
+                    200,
+                    ['Content-Type' => 'application/json'],
+                    json_encode($json)
+                ));
+            };
         });
 
         $description = new Description([
@@ -257,21 +265,26 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsNestedProperties($desc)
     {
         $hclient = new Client();
-        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
-            $json = [
-                'nested' => [
-                    'foo' => 'abc',
-                    'bar' => 123,
-                    'bam' => [
-                        'abc' => 456
-                    ]
-                ],
-                'baz' => 'boo'
-            ];
-            $response = new Response(200, [
-                'Content-Type' => 'application/json'
-            ], Stream::factory(json_encode($json)));
-            $event->intercept($response);
+
+        $hclient->getConfig('handler')->push(function () {
+            return function () {
+                $json = [
+                    'nested' => [
+                        'foo' => 'abc',
+                        'bar' => 123,
+                        'bam' => [
+                            'abc' => 456
+                        ]
+                    ],
+                    'baz' => 'boo'
+                ];
+
+                return new FulfilledPromise(new Response(
+                    200,
+                    ['Content-Type' => 'application/json'],
+                    json_encode($json)
+                ));
+            };
         });
 
         $description = new Description($desc);
@@ -295,16 +308,20 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     {
         $hclient = new Client();
 
-        $hclient->getEmitter()->on('before', function (BeforeEvent $event) {
-            $json = [
-                'data' => [
-                    'link' => null
-                ]
-            ];
-            $response = new Response(200, [
-                'Content-Type' => 'application/json'
-            ], Stream::factory(json_encode($json)));
-            $event->intercept($response);
+        $hclient->getConfig('handler')->push(function () {
+            return function () {
+                $json = [
+                    'data' => [
+                        'link' => null
+                    ]
+                ];
+
+                return new FulfilledPromise(new Response(
+                    200,
+                    ['Content-Type' => 'application/json'],
+                    json_encode($json)
+                ));
+            };
         });
 
         $description = new Description(
