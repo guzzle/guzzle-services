@@ -3,6 +3,7 @@ namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
@@ -87,6 +88,7 @@ class Serializer
         }
 
         // Ensure that the after() method is invoked for additionalParameters
+        /** @var Parameter $additional */
         if ($additional = $operation->getAdditionalParameters()) {
             $visitedLocations[$additional->getLocation()] = true;
         }
@@ -124,7 +126,13 @@ class Serializer
 
     /**
      * Create a request for an operation with a uri merged onto a base URI
+     *
      * @TODO fix
+     *
+     * @param \GuzzleHttp\Command\Guzzle\Operation $operation
+     * @param \GuzzleHttp\Command\CommandInterface $command
+     *
+     * @return \GuzzleHttp\Psr7\Request
      */
     private function createCommandWithUri(
         Operation $operation,
@@ -149,31 +157,7 @@ class Serializer
 
         return new Request(
             $operation->getHttpMethod(),
-            $this->combineUris($uri)
+            Uri::resolve($this->description->getBaseUrl(), $uri)
         );
-    }
-
-    /**
-     * @param string $template
-     *
-     * @return UriInterface
-     */
-    private function combineUris($template)
-    {
-        $uri = $this->description->getBaseUrl();
-
-        $template = \GuzzleHttp\Psr7\uri_for($template);
-
-        $parts = $template->getParts();
-
-        if (isset($parts['scheme'])) {
-            return clone $template;
-        }
-
-        if (isset($parts['query'])) {
-
-        }
-
-        return $uri;
     }
 }

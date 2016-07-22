@@ -7,6 +7,7 @@ use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Serializer;
+use GuzzleHttp\Psr7\Request;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,12 +30,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $client = new Client();
-        $guzzle = new GuzzleClient($client, $description);
         $command = new Command('test', ['key' => 'bar']);
-        $trans = new CommandTransaction($guzzle, $command);
-        $s = new Serializer($description);
-        $request = $s($trans);
-        $this->assertEquals('http://test.com/api/bar/foo', $request->getUrl());
+        $serializer = new Serializer($description);
+        /** @var Request $request */
+        $request = $serializer($command);
+        $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
 }
