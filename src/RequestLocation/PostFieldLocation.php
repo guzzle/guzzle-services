@@ -13,6 +13,13 @@ use GuzzleHttp\Command\Guzzle\Operation;
  */
 class PostFieldLocation extends AbstractLocation
 {
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
@@ -31,6 +38,13 @@ class PostFieldLocation extends AbstractLocation
         return $request;
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation        $operation
+     *
+     * @return RequestInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,

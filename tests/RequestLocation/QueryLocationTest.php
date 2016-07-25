@@ -21,7 +21,8 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
-        $location->visit($command, $request, $param, []);
+        $request = $location->visit($command, $request, $param);
+
         $this->assertEquals('bar', Psr7\parse_query($request->getUri()->getQuery())['foo']);
     }
 
@@ -36,7 +37,8 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
             ]
         ], new Description([]));
         $request = new Request('POST', 'http://httbin.org');
-        $location->after($command, $request, $operation, []);
+        $request = $location->after($command, $request, $operation);
+
         $this->assertEquals('props', Psr7\parse_query($request->getUri()->getQuery())['add']);
     }
 }

@@ -13,6 +13,13 @@ use GuzzleHttp\Psr7;
  */
 class QueryLocation extends AbstractLocation
 {
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
@@ -31,6 +38,13 @@ class QueryLocation extends AbstractLocation
         return $request->withUri($uri);
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation        $operation
+     *
+     * @return RequestInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,

@@ -20,8 +20,11 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
-        $location->visit($command, $request, $param, []);
-        $this->assertEquals('bar', $request->getHeader('foo'));
+        $request = $location->visit($command, $request, $param);
+
+        $header = $request->getHeader('foo');
+        $this->assertTrue(is_array($header));
+        $this->assertArraySubset([0 => 'bar'], $request->getHeader('foo'));
     }
 
     public function testAddsAdditionalProperties()
@@ -35,7 +38,10 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
             ]
         ], new Description([]));
         $request = new Request('POST', 'http://httbin.org');
-        $location->after($command, $request, $operation, []);
-        $this->assertEquals('props', $request->getHeader('add'));
+        $request = $location->after($command, $request, $operation);
+
+        $header = $request->getHeader('add');
+        $this->assertTrue(is_array($header));
+        $this->assertArraySubset([0 => 'props'], $header);
     }
 }

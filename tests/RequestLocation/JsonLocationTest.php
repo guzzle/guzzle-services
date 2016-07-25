@@ -20,11 +20,11 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
-        $location->visit($command, $request, $param, []);
+        $location->visit($command, $request, $param);
         $operation = new Operation([], new Description([]));
-        $location->after($command, $request, $operation, []);
-        $this->assertEquals('{"foo":"bar"}', $request->getBody());
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $request = $location->after($command, $request, $operation);
+        $this->assertEquals('{"foo":"bar"}', $request->getBody()->getContents());
+        $this->assertArraySubset([0 => 'application/json'], $request->getHeader('Content-Type'));
     }
 
     public function testVisitsAdditionalProperties()
@@ -34,15 +34,15 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $command['baz'] = ['bam' => [1]];
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
-        $location->visit($command, $request, $param, []);
+        $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
                 'location' => 'json'
             ]
         ], new Description([]));
-        $location->after($command, $request, $operation, []);
-        $this->assertEquals('{"foo":"bar","baz":{"bam":[1]}}', $request->getBody());
-        $this->assertEquals('foo', $request->getHeader('Content-Type'));
+        $request = $location->after($command, $request, $operation);
+        $this->assertEquals('{"foo":"bar","baz":{"bam":[1]}}', $request->getBody()->getContents());
+        $this->assertEquals([0 => 'foo'], $request->getHeader('Content-Type'));
     }
 
     public function testVisitsNestedLocation()
@@ -74,10 +74,10 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
             'baz' => ['a', 'b'],
             'bam' => ['A', 'B'],
         ];
-        $location->visit($command, $request, $param, []);
+        $location->visit($command, $request, $param);
         $operation = new Operation([], new Description([]));
-        $location->after($command, $request, $operation, []);
-        $this->assertEquals('{"foo":{"baz":["A","B"],"bam":["a","b"]}}', (string) $request->getBody());
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $request = $location->after($command, $request, $operation);
+        $this->assertEquals('{"foo":{"baz":["A","B"],"bam":["a","b"]}}', (string) $request->getBody()->getContents());
+        $this->assertEquals([0 => 'application/json'], $request->getHeader('Content-Type'));
     }
 }

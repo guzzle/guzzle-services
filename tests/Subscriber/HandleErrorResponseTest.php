@@ -24,6 +24,7 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->markTestSkipped();
         $this->serviceClient = $this->getMock('GuzzleHttp\Command\Guzzle\GuzzleClient', [], [], '', false);
         $this->command       = $this->getMock('GuzzleHttp\Command\CommandInterface');
     }

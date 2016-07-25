@@ -10,6 +10,13 @@ use Psr\Http\Message\ResponseInterface;
  */
 class HeaderLocation extends AbstractLocation
 {
+    /**
+     * @param ResultInterface   $result
+     * @param ResponseInterface $response
+     * @param Parameter         $param
+     *
+     * @return ResultInterface
+     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,

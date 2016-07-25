@@ -4,6 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\BodyLocation;
+use GuzzleHttp\Command\Result;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -15,14 +16,13 @@ class BodyLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new BodyLocation('body');
-        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'filters' => ['strtoupper']
         ]);
         $response = new Response(200, [], 'foo');
-        $result = [];
-        $l->visit($command, $response, $parameter, $result);
+        $result = new Result();
+        $result = $l->visit($result, $response, $parameter);
         $this->assertEquals('FOO', $result['val']);
     }
 }

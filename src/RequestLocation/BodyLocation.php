@@ -4,6 +4,7 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -11,6 +12,13 @@ use Psr\Http\Message\RequestInterface;
  */
 class BodyLocation extends AbstractLocation
 {
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return MessageInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,

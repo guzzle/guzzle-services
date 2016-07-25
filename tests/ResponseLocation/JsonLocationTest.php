@@ -7,6 +7,7 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
+use GuzzleHttp\Command\Result;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
@@ -20,16 +21,15 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new JsonLocation('json');
-        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'vim',
             'filters' => ['strtoupper']
         ]);
         $response = new Response(200, [], '{"vim":"bar"}');
-        $result = [];
-        $l->before($command, $response, $parameter, $result);
-        $l->visit($command, $response, $parameter, $result);
+        $result = new Result();
+        $result = $l->visit($result, $response, $parameter);
+        $result = $l->visit($result, $response, $parameter);
         $this->assertEquals('BAR', $result['val']);
     }
 
@@ -40,10 +40,10 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(200, [], '{"vim":"bar","qux":[1,2]}');
-        $result = [];
-        $l->before($command, $response, $parameter, $result);
-        $l->visit($command, $response, $parameter, $result);
-        $l->after($command, $response, $model, $result);
+        $result = new Result();
+        $result = $l->before($result, $response, $parameter);
+        $result = $l->visit($result, $response, $parameter);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals('bar', $result['vim']);
         $this->assertEquals([1, 2], $result['qux']);
     }
@@ -55,10 +55,10 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(204);
-        $result = [];
-        $l->before($command, $response, $parameter, $result);
-        $l->visit($command, $response, $parameter, $result);
-        $l->after($command, $response, $model, $result);
+        $result = new Result();
+        $result = $l->before($result, $response, $parameter);
+        $result = $l->visit($result, $response, $parameter);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals([], $result);
     }
 

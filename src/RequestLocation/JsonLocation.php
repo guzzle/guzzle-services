@@ -4,6 +4,7 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\CommandInterface;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Psr7;
 
@@ -25,10 +26,17 @@ class JsonLocation extends AbstractLocation
      */
     public function __construct($locationName, $contentType = 'application/json')
     {
-        $this->locationName = $locationName;
+        parent::__construct($locationName);
         $this->jsonContentType = $contentType;
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
@@ -40,6 +48,13 @@ class JsonLocation extends AbstractLocation
         );
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation        $operation
+     *
+     * @return MessageInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
@@ -63,6 +78,6 @@ class JsonLocation extends AbstractLocation
             $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        return $request->withBody(Psr7\stream_for(json_encode($data))); // @TODO new guzzle function
+        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($data)));
     }
 }

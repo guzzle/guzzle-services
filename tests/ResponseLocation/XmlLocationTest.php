@@ -4,8 +4,8 @@ namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Command\Result;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation
@@ -15,32 +15,30 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsLocation()
     {
         $l = new XmlLocation('xml');
-        $command = new Command('foo', []);
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'vim',
             'filters' => ['strtoupper']
         ]);
         $model = new Parameter();
-        $response = new Response(200, [], Stream::factory('<w><vim>bar</vim></w>'));
-        $result = [];
-        $l->before($command, $response, $model, $result);
-        $l->visit($command, $response, $parameter, $result);
-        $l->after($command, $response, $model, $result);
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
+        $result = new Result();
+        $result = $l->before($result, $response, $model);
+        $result = $l->visit($result, $response, $parameter);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals('BAR', $result['val']);
     }
 
     public function testVisitsAdditionalProperties()
     {
         $l = new XmlLocation('xml');
-        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
-        $response = new Response(200, [], Stream::factory('<w><vim>bar</vim></w>'));
-        $result = [];
-        $l->before($command, $response, $parameter, $result);
-        $l->visit($command, $response, $parameter, $result);
-        $l->after($command, $response, $model, $result);
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
+        $result = new Result();
+        $result = $l->before($result, $response, $parameter);
+        $result = $l->visit($result, $response, $parameter);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals('bar', $result['vim']);
     }
 
@@ -98,13 +96,12 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     public function testEnsuresWrappedArraysAreInCorrectLocations($param, $xml, $expected)
     {
         $l = new XmlLocation('xml');
-        $command = new Command('foo', []);
         $model = new Parameter();
-        $response = new Response(200, [], Stream::factory($xml));
-        $result = [];
-        $l->before($command, $response, $param, $result);
-        $l->visit($command, $response, $param, $result);
-        $l->after($command, $response, $model, $result);
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
+        $result = new Result();
+        $result = $l->before($result, $response, $param);
+        $result = $l->visit($result, $response, $param);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals($result, $expected);
     }
 
@@ -752,13 +749,12 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     private function xmlTest(Parameter $param, $xml, $expected)
     {
         $l = new XmlLocation('xml');
-        $command = new Command('foo', []);
         $model = new Parameter();
-        $response = new Response(200, [], Stream::factory($xml));
-        $result = [];
-        $l->before($command, $response, $param, $result);
-        $l->visit($command, $response, $param, $result);
-        $l->after($command, $response, $model, $result);
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
+        $result = new Result();
+        $result = $l->before($result, $response, $param);
+        $result = $l->visit($result, $response, $param);
+        $result = $l->after($result, $response, $model);
         $this->assertEquals($expected, $result);
     }
 }

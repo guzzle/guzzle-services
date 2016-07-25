@@ -29,11 +29,17 @@ class XmlLocation extends AbstractLocation
      */
     public function __construct($locationName, $contentType = 'application/xml')
     {
-        $this->locationName = $locationName;
+        parent::__construct($locationName);
         $this->contentType = $contentType;
-        $this->data = new \SplObjectStorage();
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter        $param
+     *
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
@@ -49,6 +55,13 @@ class XmlLocation extends AbstractLocation
         }
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation        $operation
+     *
+     * @return RequestInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,

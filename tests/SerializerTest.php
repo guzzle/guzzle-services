@@ -1,11 +1,8 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Command\Command;
-use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Serializer;
 use GuzzleHttp\Psr7\Request;
 
