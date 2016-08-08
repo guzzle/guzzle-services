@@ -38,6 +38,9 @@ class JsonLocation extends AbstractLocation
             $command[$param->getName()],
             $param
         );
+        // Returning unchanged request, because Serializer::prepareRequest()
+        // requires a return.
+        return $request;
     }
 
     public function after(
