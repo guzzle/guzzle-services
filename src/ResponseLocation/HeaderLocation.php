@@ -25,6 +25,9 @@ class HeaderLocation extends AbstractLocation
         // Retrieving a single header by name
         $name = $param->getName();
         if ($header = $response->getHeader($param->getWireName())) {
+            if (is_array($header)) {
+                $header = array_shift($header);
+            }
             $result[$name] = $param->filter($header);
         }
 
