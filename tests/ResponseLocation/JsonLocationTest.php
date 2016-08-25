@@ -28,7 +28,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         ]);
         $response = new Response(200, [], '{"vim":"bar"}');
         $result = new Result();
-        $result = $l->visit($result, $response, $parameter);
+        $result = $l->before($result, $response, $parameter);
         $result = $l->visit($result, $response, $parameter);
         $this->assertEquals('BAR', $result['val']);
     }
@@ -36,7 +36,6 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsAdditionalProperties()
     {
         $l = new JsonLocation('json');
-        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(200, [], '{"vim":"bar","qux":[1,2]}');
@@ -51,7 +50,6 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
     public function testVisitsAdditionalPropertiesWithEmptyResponse()
     {
         $l = new JsonLocation('json');
-        $command = new Command('foo', []);
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'json']]);
         $response = new Response(204);
@@ -59,7 +57,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $result = $l->before($result, $response, $parameter);
         $result = $l->visit($result, $response, $parameter);
         $result = $l->after($result, $response, $model);
-        $this->assertEquals([], $result);
+        $this->assertEquals([], $result->toArray());
     }
 
     public function jsonProvider()

@@ -14,12 +14,19 @@ class JsonLocation extends AbstractLocation
     /** @var array The JSON document being visited */
     private $json = [];
 
+    /**
+     * @param \GuzzleHttp\Command\ResultInterface  $result
+     * @param \Psr\Http\Message\ResponseInterface  $response
+     * @param \GuzzleHttp\Command\Guzzle\Parameter $model
+     *
+     * @return \GuzzleHttp\Command\ResultInterface
+     */
     public function before(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
     ) {
-        $this->json = json_decode($response->getBody(), true) ?: []; // @TODO new guzzle function
+        $this->json = \GuzzleHttp\json_decode($response->getBody(), true) ?: [];
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
         if ($model->getType() == 'array' && ($name = $model->getName())) {
