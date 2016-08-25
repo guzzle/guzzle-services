@@ -102,7 +102,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $result = $l->before($result, $response, $param);
         $result = $l->visit($result, $response, $param);
         $result = $l->after($result, $response, $model);
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result->toArray());
     }
 
     public function testCanRenameValues()
@@ -755,6 +755,6 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $result = $l->before($result, $response, $param);
         $result = $l->visit($result, $response, $param);
         $result = $l->after($result, $response, $model);
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->toArray());
     }
 }
