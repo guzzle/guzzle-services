@@ -19,11 +19,6 @@ use Psr\Http\Message\RequestInterface;
 class XmlLocationTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function setUp()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testVisitsLocation()
     {
         $location = new XmlLocation('xml');
@@ -407,6 +402,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializesXml(array $operation, array $input, $xml)
     {
+        $this->markTestIncomplete();
         $operation['uri'] = 'http://httpbin.org';
         $client = new GuzzleClient(
             new Client(),

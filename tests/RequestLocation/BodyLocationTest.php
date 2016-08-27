@@ -18,6 +18,6 @@ class BodyLocationTest extends \PHPUnit_Framework_TestCase
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
-        $this->assertEquals('bar', $request->getBody()->getContents());
+        $this->assertEquals('foo=bar', $request->getBody()->getContents());
     }
 }

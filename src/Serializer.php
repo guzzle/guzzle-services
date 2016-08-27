@@ -13,7 +13,6 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
-use Psr\Http\Message\UriInterface;
 
 /**
  * Serializes requests for a given command.
@@ -95,7 +94,7 @@ class Serializer
 
         // Call the after() method for each visited location
         foreach (array_keys($visitedLocations) as $location) {
-            $request = $this->locations[$location]->after($command, $request, $param);
+            $request = $this->locations[$location]->after($command, $request, $operation);
         }
 
         return $request;

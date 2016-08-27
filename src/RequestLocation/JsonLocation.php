@@ -46,6 +46,8 @@ class JsonLocation extends AbstractLocation
             $command[$param->getName()],
             $param
         );
+
+        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($this->jsonData)));
     }
 
     /**
@@ -65,7 +67,7 @@ class JsonLocation extends AbstractLocation
 
         // Add additional parameters to the JSON document
         $additional = $operation->getAdditionalParameters();
-        if ($additional && $additional->getLocation() == $this->locationName) {
+        if ($additional && ($additional->getLocation() === $this->locationName)) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
                     $data[$key] = $this->prepareValue($value, $additional);

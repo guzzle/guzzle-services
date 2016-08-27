@@ -53,6 +53,8 @@ class XmlLocation extends AbstractLocation
         } else {
             $this->buffered[] = $param;
         }
+
+        return $request;
     }
 
     /**

@@ -41,8 +41,9 @@ class HeaderLocation extends AbstractLocation
         RequestInterface $request,
         Operation $operation
     ) {
+        /** @var Parameter $additional */
         $additional = $operation->getAdditionalParameters();
-        if ($additional && $additional->getLocation() == $this->locationName) {
+        if ($additional && ($additional->getLocation() === $this->locationName)) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
                     $request = $request->withHeader($key, $additional->filter($value));
