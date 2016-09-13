@@ -44,7 +44,7 @@ class FormParamLocationTest extends \PHPUnit_Framework_TestCase
         $request = $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'body'
+                'location' => 'formParam'
             ]
         ], new Description([]));
         $request = $location->after($command, $request, $operation);
