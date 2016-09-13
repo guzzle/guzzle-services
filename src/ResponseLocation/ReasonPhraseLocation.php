@@ -10,6 +10,17 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ReasonPhraseLocation extends AbstractLocation
 {
+
+    /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'reasonPhrase')
+    {
+        parent::__construct($locationName);
+    }
+
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,

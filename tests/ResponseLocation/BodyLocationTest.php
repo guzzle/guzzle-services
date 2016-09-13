@@ -13,16 +13,19 @@ use GuzzleHttp\Psr7\Response;
  */
 class BodyLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitsLocation()
     {
-        $l = new BodyLocation('body');
+        $location = new BodyLocation();
         $parameter = new Parameter([
             'name'    => 'val',
             'filters' => ['strtoupper']
         ]);
         $response = new Response(200, [], 'foo');
         $result = new Result();
-        $result = $l->visit($result, $response, $parameter);
+        $result = $location->visit($result, $response, $parameter);
         $this->assertEquals('FOO', $result['val']);
     }
 }

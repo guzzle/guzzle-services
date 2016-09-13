@@ -15,6 +15,16 @@ class JsonLocation extends AbstractLocation
     private $json = [];
 
     /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'json')
+    {
+        parent::__construct($locationName);
+    }
+
+    /**
      * @param \GuzzleHttp\Command\ResultInterface  $result
      * @param \Psr\Http\Message\ResponseInterface  $response
      * @param \GuzzleHttp\Command\Guzzle\Parameter $model
@@ -26,10 +36,12 @@ class JsonLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $model
     ) {
-        $this->json = \GuzzleHttp\json_decode($response->getBody(), true) ?: [];
+        $body = (string) $response->getBody();
+        $body = $body ?: "{}";
+        $this->json = \GuzzleHttp\json_decode($body, true);
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
-        if ($model->getType() == 'array' && ($name = $model->getName())) {
+        if ($model->getType() === 'array' && ($name = $model->getName())) {
             $this->json = [$name => $this->json];
         }
 

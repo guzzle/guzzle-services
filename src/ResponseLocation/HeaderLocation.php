@@ -10,6 +10,17 @@ use Psr\Http\Message\ResponseInterface;
  */
 class HeaderLocation extends AbstractLocation
 {
+
+    /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'header')
+    {
+        parent::__construct($locationName);
+    }
+
     /**
      * @param ResultInterface   $result
      * @param ResponseInterface $response

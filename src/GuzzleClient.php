@@ -151,21 +151,14 @@ class GuzzleClient extends ServiceClient
         // Add the handlers based on the configuration option
         $stack = $this->getHandlerStack();
 
-//        if (!isset($config['process']) ||
-//            $config['process'] === true
-//        ) {
-//            $emitter->attach(
-//                new ProcessResponse(
-//                    $this->description,
-//                    isset($config['response_locations'])
-//                        ? $config['response_locations']
-//                        : []
-//                )
-//            );
-//        }
-//    }
         if (!isset($config['validate']) || $config['validate'] === true) {
             $stack->push(new ValidatedDescriptionHandler($this->description));
+        }
+
+        if (!isset($config['process']) || $config['process'] === true) {
+            // TODO: This belongs to the Deserializer and should be handled there.
+            // Question: What is the result when the Deserializer is bypassed?
+            // Possible answer: The raw response.
         }
     }
 }

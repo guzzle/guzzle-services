@@ -12,9 +12,12 @@ use GuzzleHttp\Psr7\Response;
  */
 class XmlLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitsLocation()
     {
-        $l = new XmlLocation('xml');
+        $location = new XmlLocation();
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'vim',
@@ -23,25 +26,31 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $model = new Parameter();
         $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
         $result = new Result();
-        $result = $l->before($result, $response, $model);
-        $result = $l->visit($result, $response, $parameter);
-        $result = $l->after($result, $response, $model);
+        $result = $location->before($result, $response, $model);
+        $result = $location->visit($result, $response, $parameter);
+        $result = $location->after($result, $response, $model);
         $this->assertEquals('BAR', $result['val']);
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitsAdditionalProperties()
     {
-        $l = new XmlLocation('xml');
+        $location = new XmlLocation();
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
         $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
         $result = new Result();
-        $result = $l->before($result, $response, $parameter);
-        $result = $l->visit($result, $response, $parameter);
-        $result = $l->after($result, $response, $model);
+        $result = $location->before($result, $response, $parameter);
+        $result = $location->visit($result, $response, $parameter);
+        $result = $location->after($result, $response, $model);
         $this->assertEquals('bar', $result['vim']);
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testEnsuresFlatArraysAreFlat()
     {
         $param = new Parameter(array(
@@ -92,19 +101,23 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider xmlDataProvider
+     * @group ResponseLocation
      */
     public function testEnsuresWrappedArraysAreInCorrectLocations($param, $xml, $expected)
     {
-        $l = new XmlLocation('xml');
+        $location = new XmlLocation();
         $model = new Parameter();
         $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
         $result = new Result();
-        $result = $l->before($result, $response, $param);
-        $result = $l->visit($result, $response, $param);
-        $result = $l->after($result, $response, $model);
+        $result = $location->before($result, $response, $param);
+        $result = $location->visit($result, $response, $param);
+        $result = $location->after($result, $response, $model);
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testCanRenameValues()
     {
         $param = new Parameter(array(
@@ -188,6 +201,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testCanRenameAttributes()
     {
         $param = new Parameter(array(
@@ -272,6 +288,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testAddsEmptyArraysWhenValueIsMissing()
     {
         $param = new Parameter(array(
@@ -304,7 +323,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group issue-399
+     * @group issue-399, ResponseLocation
      * @link  https://github.com/guzzle/guzzle/issues/399
      */
     public function testDiscardingUnknownProperties()
@@ -338,7 +357,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group issue-399
+     * @group issue-399, ResponseLocation
      * @link  https://github.com/guzzle/guzzle/issues/399
      */
     public function testDiscardingUnknownPropertiesWithAliasing()
@@ -371,6 +390,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testProcessingOfNestedAdditionalProperties()
     {
         $param = new Parameter(array(
@@ -456,6 +478,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testConvertsMultipleAssociativeElementsToArray()
     {
         $param = new Parameter(array(
@@ -488,6 +513,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testUnderstandsNamespaces()
     {
         $param = new Parameter(array(
@@ -609,6 +637,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testCanWalkUndefinedPropertiesWithNamespace()
     {
         $param = new Parameter(array(
@@ -681,6 +712,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testCanWalkSimpleArrayWithNamespace()
     {
         $param = new Parameter(array(
@@ -715,6 +749,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @group ResponseLocation
+     */
     public function testCanWalkSimpleArrayWithNamespace2()
     {
         $param = new Parameter(array(
@@ -748,13 +785,13 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
 
     private function xmlTest(Parameter $param, $xml, $expected)
     {
-        $l = new XmlLocation('xml');
+        $location = new XmlLocation();
         $model = new Parameter();
         $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
         $result = new Result();
-        $result = $l->before($result, $response, $param);
-        $result = $l->visit($result, $response, $param);
-        $result = $l->after($result, $response, $model);
+        $result = $location->before($result, $response, $param);
+        $result = $location->visit($result, $response, $param);
+        $result = $location->after($result, $response, $model);
         $this->assertEquals($expected, $result->toArray());
     }
 }

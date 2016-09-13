@@ -14,6 +14,16 @@ class XmlLocation extends AbstractLocation
     /** @var \SimpleXMLElement XML document being visited */
     private $xml;
 
+    /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'xml')
+    {
+        parent::__construct($locationName);
+    }
+
     public function before(
         ResultInterface $result,
         ResponseInterface $response,

@@ -1,16 +1,15 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\Subscriber;
 
-use GuzzleHttp\Command\Event\ProcessEvent;
-use GuzzleHttp\Command\CommandTransaction;
+use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Operation;
-use GuzzleHttp\Command\Guzzle\Subscriber\HandleErrorResponse;
 use RuntimeException;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\Subscriber\HandleErrorResponse
+ * @covers \GuzzleHttp\Command\Guzzle\Handler\ErrorResponseHandler
  */
-class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
+class ErrorResponseHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \GuzzleHttp\Command\ServiceClientInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -25,8 +24,8 @@ class HandleErrorResponseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->markTestSkipped();
-        $this->serviceClient = $this->getMock('GuzzleHttp\Command\Guzzle\GuzzleClient', [], [], '', false);
-        $this->command       = $this->getMock('GuzzleHttp\Command\CommandInterface');
+        $this->serviceClient = $this->getMock(GuzzleClient::class, [], [], '', false);
+        $this->command       = $this->getMock(CommandInterface::class);
     }
 
     public function testDoNothingIfNoException()

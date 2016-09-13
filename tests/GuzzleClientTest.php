@@ -2,15 +2,12 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Result;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
@@ -182,9 +179,8 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('listen', $guzzle->getConfig('abc'));
     }
 
-    public function testAddsSubscribersWhenTrue()
+    public function testAddsValidateHandlerWhenTrue()
     {
-        $this->markTestSkipped('Migrate the test to Middelware / Transformers');
         $client = new HttpClient();
         $description = new Description([]);
         $guzzle = new GuzzleClient(
@@ -195,69 +191,403 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             null,
             [
                 'validate' => true,
-                'process' => true
+                'process' => false
             ]
         );
-        $this->assertCount(1, $guzzle->getEmitter()->listeners('process'));
+
+        $handlers = explode("\n", $guzzle->getHandlerStack()->__toString());
+        $handlers = array_filter($handlers);
+        $this->assertCount(3, $handlers);
     }
 
     public function testDisablesSubscribersWhenFalse()
     {
-        $this->markTestSkipped('Migrate the test to Middelware / Transformers');
-        $client = new HttpClient();
-        $description = new Description([]);
-        $guzzle = new GuzzleClient($client, $description, [
-            'validate' => false,
-            'process' => false
-        ]);
-        $this->assertCount(0, $guzzle->getEmitter()->listeners('process'));
-    }
-
-    public function testCanUseCustomConfigFactory()
-    {
-        $this->markTestIncomplete();
-        $mock = $this->getMockBuilder(Command::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $client = new HttpClient();
         $description = new Description([]);
         $guzzle = new GuzzleClient(
             $client,
             $description,
-            [
-            'command_factory' => function () use ($mock) {
-                $this->assertCount(3, func_get_args());
-                return $mock;
-            },
+            $this->commandToRequestTransformer(),
             $this->responseToResultTransformer(),
-        ]);
-        $this->assertSame($mock, $guzzle->getCommand('foo'));
+            null,
+            [
+                'validate' => false,
+                'process' => false
+            ]
+        );
+
+        $handlers = explode("\n", $guzzle->getHandlerStack()->__toString());
+        $handlers = array_filter($handlers);
+        $this->assertCount(1, $handlers);
+    }
+
+    public function testValidateDescription()
+    {
+        $client = new HttpClient();
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $guzzle = new GuzzleClient(
+            $client,
+            $description,
+            null,
+            null,
+            null,
+            [
+                'validate' => true,
+                'process' => false
+            ]
+        );
+
+        $command = $guzzle->getCommand('Foo', ['baz' => 'BAZ']);
+        /** @var ResultInterface $response */
+        $result = $guzzle->execute($command);
+        $this->assertInstanceOf(Result::class, $result);
+        $result = $result->toArray();
+        $this->assertEquals(200, $result['statusCode']);
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Command\Exception\CommandException
+     * @expectedExceptionMessage Validation errors: [baz] is a required string: baz
+     */
+    public function testValidateDescriptionFailsDueMissingRequiredParameter()
+    {
+        $client = new HttpClient();
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => true,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $guzzle = new GuzzleClient(
+            $client,
+            $description,
+            null,
+            null,
+            null,
+            [
+                'validate' => true,
+                'process' => false
+            ]
+        );
+
+        $command = $guzzle->getCommand('Foo');
+        /** @var ResultInterface $result */
+        $result = $guzzle->execute($command);
+        $this->assertInstanceOf(Result::class, $result);
+        $result = $result->toArray();
+        $this->assertEquals(200, $result['statusCode']);
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Command\Exception\CommandException
+     * @expectedExceptionMessage Validation errors: [baz] must be of type integer
+     */
+    public function testValidateDescriptionFailsDueTypeMismatch()
+    {
+        $client = new HttpClient();
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'integer',
+                                'required' => true,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $guzzle = new GuzzleClient(
+            $client,
+            $description,
+            null,
+            null,
+            null,
+            [
+                'validate' => true,
+                'process' => false
+            ]
+        );
+
+        $command = $guzzle->getCommand('Foo', ['baz' => 'Hello']);
+        /** @var ResultInterface $result */
+        $result = $guzzle->execute($command);
+        $this->assertInstanceOf(Result::class, $result);
+        $result = $result->toArray();
+        $this->assertEquals(200, $result['statusCode']);
+    }
+
+    public function testValidateDescriptionDoesNotFailWhenSendingIntegerButExpectingString()
+    {
+        $client = new HttpClient();
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => true,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $guzzle = new GuzzleClient(
+            $client,
+            $description,
+            null,
+            null,
+            null,
+            [
+                'validate' => true,
+                'process' => false
+            ]
+        );
+
+        $command = $guzzle->getCommand('Foo', ['baz' => 42]);
+        /** @var ResultInterface $result */
+        $result = $guzzle->execute($command);
+        $this->assertInstanceOf(Result::class, $result);
+        $result = $result->toArray();
+        $this->assertEquals(200, $result['statusCode']);
     }
 
     public function testMagicMethodExecutesCommands()
     {
-        $this->markTestIncomplete();
-
-        $mock = $this->getMockBuilder(Command::class)
-            ->setConstructorArgs(['foo'])
-            ->getMock();
-
         $client = new HttpClient();
-        $description = new Description([]);
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => true,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
 
         $guzzle = $this->getMockBuilder(GuzzleClient::class)
             ->setConstructorArgs([
                 $client,
-                $description,
-                [
-                    'command_factory' => function ($name) use ($mock) {
-                        $this->assertEquals('foo', $name);
-                        $this->assertCount(3, func_get_args());
-                        return $mock;
-                    }
-                ],
-                $this->responseToResultTransformer(),
+                $description
             ])
             ->setMethods(['execute'])
             ->getMock();
@@ -273,7 +603,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage No operation found named Foo
      */
-    public function testThrowsWhenFactoryReturnsNull()
+    public function testThrowsWhenOperationNotFoundInDescription()
     {
         $client = new HttpClient();
         $description = new Description([]);
@@ -288,42 +618,68 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsProcessedResponse()
     {
-        $this->markTestIncomplete();
-        $handler = HandlerStack::create();
-        $handler->push(Middleware::mapResponse(function (ResponseInterface $response) {
-            return $response->withStatus(201);
-        }), 'map_response');
-
-//        $client = new Client(['handler' => $handler]);
         $client = new HttpClient();
-//        $client->getEmitter()->on('before', function (BeforeEvent $event) {
-//            $event->intercept(new Response(201));
-//        });
 
-        $description = new Description([
-            'operations' => [
-                'Foo' => ['responseModel' => 'Bar']
-            ],
-            'models' => [
-                'Bar' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'code' => ['location' => 'statusCode']
-                    ]
-                ]
+        $description = new Description(
+            [
+                'name' => 'Testing API ',
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'Foo' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Bar',
+                                'location' => 'query'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => true,
+                                'description' => 'baz',
+                                'location' => 'query'
+                            ],
+                        ],
+                        'responseModel' => 'Foo'
+                    ],
+                ],
+                'models' => [
+                    'Foo' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => [
+                                'location' => 'json',
+                                'type' => 'string'
+                            ],
+                            'location' => [
+                                'location' => 'header',
+                                'sentAs' => 'Location',
+                                'type' => 'string'
+                            ],
+                            'age' => [
+                                'location' => 'json',
+                                'type' => 'integer'
+                            ],
+                            'statusCode' => [
+                                'location' => 'statusCode',
+                                'type' => 'integer'
+                            ],
+                        ],
+                    ],
+                ],
             ]
-        ]);
-
-        $guzzle = new GuzzleClient(
-            $client,
-            $description,
-            $this->commandToRequestTransformer(),
-            $this->responseToResultTransformer()
         );
-        $command = $guzzle->getCommand('foo');
+
+        $guzzle = new GuzzleClient($client, $description, null, null);
+        $command = $guzzle->getCommand('foo', ['baz' => 'BAZ']);
+
+        /** @var ResultInterface $result */
         $result = $guzzle->execute($command);
-        $this->assertInternalType('array', $result);
-        $this->assertEquals(201, $result['code']);
+        $this->assertInstanceOf(Result::class, $result);
+        $result = $result->toArray();
+        $this->assertEquals(200, $result['statusCode']);
     }
 
 
@@ -359,7 +715,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 
     private function responseToResultTransformer()
     {
-        return function (ResponseInterface $response, RequestInterface $request) {
+        return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command) {
             $data = \GuzzleHttp\json_decode($response->getBody(), true);
             parse_str($request->getBody(), $data['_request']);
 

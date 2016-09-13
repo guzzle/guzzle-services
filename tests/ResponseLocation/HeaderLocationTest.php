@@ -13,9 +13,12 @@ use GuzzleHttp\Psr7\Response;
  */
 class HeaderLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitsLocation()
     {
-        $l = new HeaderLocation('header');
+        $location = new HeaderLocation();
         $parameter = new Parameter([
             'name'    => 'val',
             'sentAs'  => 'X-Foo',
@@ -23,7 +26,7 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
         ]);
         $response = new Response(200, ['X-Foo' => 'bar']);
         $result = new Result();
-        $result = $l->visit($result, $response, $parameter);
+        $result = $location->visit($result, $response, $parameter);
         $this->assertEquals('BAR', $result['val']);
     }
 }
