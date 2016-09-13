@@ -15,12 +15,6 @@
             "homepage": "https://github.com/jeremeamia"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:Konafets/command.git"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "guzzlehttp/guzzle": "^6.1",
