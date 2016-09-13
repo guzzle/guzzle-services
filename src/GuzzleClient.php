@@ -3,6 +3,7 @@ namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
 
@@ -53,7 +54,7 @@ class GuzzleClient extends ServiceClient
         $this->config = $config;
 
         parent::__construct($client, $serializer, $deserializer, $commandHandlerStack);
-//        $this->processConfig($config); // @todo config?
+        $this->processConfig($config);
     }
 
     /**
@@ -87,16 +88,6 @@ class GuzzleClient extends ServiceClient
         return $this->description;
     }
 
-//    /**
-//     * Prepares the client based on the configuration settings of the client.
-//     *
-//     * @param array $config Constructor config as an array
-//     */
-//    protected function processConfig(array $config)
-//    {
-//        // set defaults as an array if not provided
-//        if (!isset($config['defaults'])) {
-//            $config['defaults'] = [];
     /**
      * Returns the passed Serializer when set, a new instance otherwise
      *
@@ -157,18 +148,9 @@ class GuzzleClient extends ServiceClient
             $config['defaults'] = [];
         }
 
-//        }
-//
-//        // Add event listeners based on the configuration option
-//        $emitter = $this->getEmitter();
-//
-//        if (!isset($config['validate']) ||
-//            $config['validate'] === true
+        // Add the handlers based on the configuration option
+        $stack = $this->getHandlerStack();
 
-//        ) {
-//            $emitter->attach(new ValidateInput($this->description));
-//        }
-//
 //        $this->serializer = isset($config['serializer'])
 //            ? $config['serializer']
 //            : new Serializer($this->description);
@@ -186,5 +168,8 @@ class GuzzleClient extends ServiceClient
 //            );
 //        }
 //    }
+        if (!isset($config['validate']) || $config['validate'] === true) {
+            $stack->push(new ValidatedDescriptionHandler($this->description));
+        }
     }
 }
