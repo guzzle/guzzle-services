@@ -6,6 +6,9 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Serializer;
 use GuzzleHttp\Psr7\Request;
 
+/**
+ * @covers \GuzzleHttp\Command\Guzzle\Serializer
+ */
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function testAllowsUriTemplates()

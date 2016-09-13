@@ -7,7 +7,7 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\Description
+ * @covers \GuzzleHttp\Command\Guzzle\Description
  */
 class DescriptionTest extends \PHPUnit_Framework_TestCase
 {

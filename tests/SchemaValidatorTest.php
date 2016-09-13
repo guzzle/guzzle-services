@@ -6,7 +6,7 @@ use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\ToArrayInterface;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\SchemaValidator
+ * @covers \GuzzleHttp\Command\Guzzle\SchemaValidator
  */
 class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
 {
