@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle;
+namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -18,10 +18,12 @@ use Psr\Http\Message\RequestInterface;
  */
 class XmlLocationTest extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsLocation()
     {
-        $location = new XmlLocation('xml');
+        $location = new XmlLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $command['bar'] = 'test';
         $request = new Request('POST', 'http://httbin.org');
@@ -39,9 +41,12 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset([0 => 'application/xml'], $header);
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testCreatesBodyForEmptyDocument()
     {
-        $location = new XmlLocation('xml');
+        $location = new XmlLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $operation = new Operation([
@@ -56,6 +61,9 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset([0 => 'application/xml'], $header);
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testAddsAdditionalParameters()
     {
         $location = new XmlLocation('xml', 'test');
@@ -78,9 +86,12 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset([0 => 'test'], $header);
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testAllowsXmlEncoding()
     {
-        $location = new XmlLocation('xml');
+        $location = new XmlLocation();
         $operation = new Operation([
             'data' => ['xmlEncoding' => 'UTF-8']
         ], new Description([]));
@@ -399,6 +410,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      * @param array  $input
      * @param string $xml
      * @dataProvider xmlProvider
+     * @group RequestLocation
      */
     public function testSerializesXml(array $operation, array $input, $xml)
     {

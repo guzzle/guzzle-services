@@ -12,6 +12,17 @@ use Psr\Http\Message\RequestInterface;
  */
 class BodyLocation extends AbstractLocation
 {
+
+    /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'body')
+    {
+        parent::__construct($locationName);
+    }
+
     /**
      * @param CommandInterface $command
      * @param RequestInterface $request

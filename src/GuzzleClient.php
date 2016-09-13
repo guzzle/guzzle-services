@@ -151,10 +151,6 @@ class GuzzleClient extends ServiceClient
         // Add the handlers based on the configuration option
         $stack = $this->getHandlerStack();
 
-//        $this->serializer = isset($config['serializer'])
-//            ? $config['serializer']
-//            : new Serializer($this->description);
-//
 //        if (!isset($config['process']) ||
 //            $config['process'] === true
 //        ) {

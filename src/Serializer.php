@@ -3,8 +3,10 @@ namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
+use GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
+use GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
@@ -36,13 +38,13 @@ class Serializer
         static $defaultRequestLocations;
         if (!$defaultRequestLocations) {
             $defaultRequestLocations = [
-                'body'      => new BodyLocation('body'),
-                'query'     => new QueryLocation('query'),
-                'header'    => new HeaderLocation('header'),
-                'json'      => new JsonLocation('json'),
-                'xml'       => new XmlLocation('xml'),
-                'postField' => new PostFieldLocation('postField'),
-                'postFile'  => new PostFileLocation('postFile')
+                'body'      => new BodyLocation(),
+                'query'     => new QueryLocation(),
+                'header'    => new HeaderLocation(),
+                'json'      => new JsonLocation(),
+                'xml'       => new XmlLocation(),
+                'formParam' => new FormParamLocation(),
+                'multipart' => new MultiPartLocation(),
             ];
         }
 

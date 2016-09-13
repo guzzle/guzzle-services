@@ -4,41 +4,47 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use Psr\Http\Message\MessageInterface;
+use GuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Request header location
+ * Add form_params to a request
  */
-class HeaderLocation extends AbstractLocation
+class FormParamLocation extends AbstractLocation
 {
+    protected $contentType = 'application/x-www-form-urlencoded';
+
+    /** @var array $formParamsData */
+    protected $formParamsData = [];
 
     /**
      * Set the name of the location
      *
      * @param string $locationName
      */
-    public function __construct($locationName = 'header')
+    public function __construct($locationName = 'formParam')
     {
         parent::__construct($locationName);
     }
-
 
     /**
      * @param CommandInterface $command
      * @param RequestInterface $request
      * @param Parameter        $param
      *
-     * @return MessageInterface
+     * @return RequestInterface
      */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
     ) {
-        $value = $command[$param->getName()];
+        $this->formParamsData['form_params'][$param->getWireName()] = $this->prepareValue(
+            $command[$param->getName()],
+            $param
+        );
 
-        return $request->withHeader($param->getWireName(), $param->filter($value));
+        return $request;
     }
 
     /**
@@ -53,15 +59,24 @@ class HeaderLocation extends AbstractLocation
         RequestInterface $request,
         Operation $operation
     ) {
-        /** @var Parameter $additional */
+        $data = $this->formParamsData;
+        $this->formParamsData = null;
+
+        // Add additional parameters to the form_params array
         $additional = $operation->getAdditionalParameters();
-        if ($additional && ($additional->getLocation() === $this->locationName)) {
+        if ($additional && $additional->getLocation() == $this->locationName) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
-                    $request = $request->withHeader($key, $additional->filter($value));
+                    $data['form_params'][$key] = $this->prepareValue($value, $additional);
                 }
             }
         }
+
+        $body = http_build_query($data['form_params'], '', '&');
+        $modify['body'] = Psr7\stream_for($body);
+
+        $request = $request->withHeader('Content-Type', $this->contentType);
+        $request = Psr7\modify_request($request, $modify);
 
         return $request;
     }

@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle;
+namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
@@ -15,9 +15,12 @@ use GuzzleHttp\Psr7;
  */
 class QueryLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsLocation()
     {
-        $location = new QueryLocation('query');
+        $location = new QueryLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
@@ -26,9 +29,12 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', Psr7\parse_query($request->getUri()->getQuery())['foo']);
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testAddsAdditionalProperties()
     {
-        $location = new QueryLocation('query');
+        $location = new QueryLocation();
         $command = new Command('foo', ['foo' => 'bar']);
         $command['add'] = 'props';
         $operation = new Operation([

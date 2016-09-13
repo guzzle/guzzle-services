@@ -24,7 +24,7 @@ class JsonLocation extends AbstractLocation
      * @param string $contentType  Content-Type header to add to the request if
      *     JSON is added to the body. Pass an empty string to omit.
      */
-    public function __construct($locationName, $contentType = 'application/json')
+    public function __construct($locationName = 'json', $contentType = 'application/json')
     {
         parent::__construct($locationName);
         $this->jsonContentType = $contentType;

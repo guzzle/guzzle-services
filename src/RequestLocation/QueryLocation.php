@@ -14,6 +14,16 @@ use Psr\Http\Message\RequestInterface;
 class QueryLocation extends AbstractLocation
 {
     /**
+     * Set the name of the location
+     *
+     * @param string $locationName
+     */
+    public function __construct($locationName = 'query')
+    {
+        parent::__construct($locationName);
+    }
+
+    /**
      * @param CommandInterface $command
      * @param RequestInterface $request
      * @param Parameter        $param

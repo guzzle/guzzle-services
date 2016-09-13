@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle;
+namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -11,6 +11,9 @@ use GuzzleHttp\Psr7\Request;
  */
 class BodyLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsLocation()
     {
         $location = new BodyLocation('body');

@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle;
+namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
@@ -14,6 +14,9 @@ use GuzzleHttp\Psr7\Request;
  */
 class JsonLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsLocation()
     {
         $location = new JsonLocation('json');
@@ -27,6 +30,9 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset([0 => 'application/json'], $request->getHeader('Content-Type'));
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsAdditionalProperties()
     {
         $location = new JsonLocation('json', 'foo');
@@ -45,6 +51,9 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([0 => 'foo'], $request->getHeader('Content-Type'));
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsNestedLocation()
     {
         $location = new JsonLocation('json');

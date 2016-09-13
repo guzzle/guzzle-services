@@ -27,7 +27,7 @@ class XmlLocation extends AbstractLocation
      *     Content-Type header to a request if any XML content is added to the
      *     body. Pass an empty string to disable the addition of the header.
      */
-    public function __construct($locationName, $contentType = 'application/xml')
+    public function __construct($locationName = 'xml', $contentType = 'application/xml')
     {
         parent::__construct($locationName);
         $this->contentType = $contentType;

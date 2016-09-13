@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Tests\Command\Guzzle;
+namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
@@ -14,6 +14,9 @@ use GuzzleHttp\Psr7\Request;
  */
 class HeaderLocationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group RequestLocation
+     */
     public function testVisitsLocation()
     {
         $location = new HeaderLocation('header');
@@ -27,6 +30,9 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset([0 => 'bar'], $request->getHeader('foo'));
     }
 
+    /**
+     * @group RequestLocation
+     */
     public function testAddsAdditionalProperties()
     {
         $location = new HeaderLocation('header');
