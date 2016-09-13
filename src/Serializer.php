@@ -2,17 +2,17 @@
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\CommandInterface;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
-use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
+use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Serializes requests for a given command.

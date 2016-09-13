@@ -9,8 +9,8 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
