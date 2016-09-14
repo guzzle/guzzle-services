@@ -77,6 +77,8 @@ class Deserializer
 
         // Add a default Model as the result if no matching schema was found
         if (!($modelName = $operation->getResponseModel())) {
+            // Not sure if this should be empty or contains the response.
+            // Decided to do it how it was in the old version for now.
             return new Result();
         }
 
@@ -252,6 +254,8 @@ class Deserializer
     ) {
         $errors = $operation->getErrorResponses();
 
+        // We iterate through each errors in service description. If the descriptor contains both a phrase and
+        // status code, there must be an exact match of both. Otherwise, a match of status code is enough
         $bestException = null;
 
         foreach ($errors as $error) {
@@ -277,5 +281,8 @@ class Deserializer
         if (null !== $bestException) {
             throw new $bestException($response->getReasonPhrase(), $command, null, $request, $response);
         }
+
+        // If we reach here, no exception could be match from descriptor, and Guzzle exception will propagate if
+        // option "http_errors" is set to true, which is the default setting.
     }
 }

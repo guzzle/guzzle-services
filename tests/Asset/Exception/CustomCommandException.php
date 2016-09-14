@@ -3,6 +3,9 @@ namespace GuzzleHttp\Tests\Command\Guzzle\Asset\Exception;
 
 use GuzzleHttp\Command\Exception\CommandException;
 
-class CustomCommandException extends CommandException
-{
-}
+/**
+ * Class CustomCommandException
+ *
+ * @package GuzzleHttp\Tests\Command\Guzzle\Asset\Exception
+ */
+class CustomCommandException extends CommandException{}
