@@ -200,7 +200,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $handlers);
     }
 
-    public function testDisablesSubscribersWhenFalse()
+    public function testDisablesHandlersWhenFalse()
     {
         $client = new HttpClient();
         $description = new Description([]);
@@ -289,11 +289,10 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'BAZ']);
-        /** @var ResultInterface $response */
-        $result = $guzzle->execute($command);
-        $this->assertInstanceOf(Result::class, $result);
-        $result = $result->toArray();
-        $this->assertEquals(200, $result['statusCode']);
+        /** @var ResponseInterface $response */
+        $response = $guzzle->execute($command);
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -509,17 +508,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $guzzle = new GuzzleClient(
-            $client,
-            $description,
-            null,
-            null,
-            null,
-            [
-                'validate' => true,
-                'process' => false
-            ]
-        );
+        $guzzle = new GuzzleClient($client, $description);
 
         $command = $guzzle->getCommand('Foo', ['baz' => 42]);
         /** @var ResultInterface $result */

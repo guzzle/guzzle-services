@@ -18,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
  * Handler used to create response models based on an HTTP response and
  * a service description.
  *
- * Response location visitors are registered with this subscriber to handle
+ * Response location visitors are registered with this Handler to handle
  * locations (e.g., 'xml', 'json', 'header'). All of the locations of a response
  * model that will be visited first have their ``before`` method triggered.
  * After the before method is called on every visitor that will be walked, each
@@ -35,13 +35,19 @@ class Deserializer
     /** @var DescriptionInterface $description */
     private $description;
 
+    /** @var boolean $process */
+    private $process;
+
+
     /**
-     * @param DescriptionInterface        $description
+     * @param DescriptionInterface $description
      * @param ResponseLocationInterface[] $responseLocations Extra response locations
+     * @param $process
      */
     public function __construct(
         DescriptionInterface $description,
-        array $responseLocations = []
+        array $responseLocations = [],
+        $process
     ) {
         static $defaultResponseLocations;
         if (!$defaultResponseLocations) {
@@ -57,6 +63,7 @@ class Deserializer
 
         $this->responseLocations = $responseLocations + $defaultResponseLocations;
         $this->description = $description;
+        $this->process = $process;
     }
 
 
@@ -66,10 +73,15 @@ class Deserializer
      * @param ResponseInterface     $response
      * @param RequestInterface|null $request
      * @param CommandInterface      $command
-     * @return Result|ResultInterface|void
+     * @return Result|ResultInterface|void|ResponseInterface
      */
     public function __invoke(ResponseInterface $response, RequestInterface $request = null, CommandInterface $command)
     {
+        // If the user don't want to process the result, just return the plain response here
+        if ($this->process === false) {
+            return $response;
+        }
+
         $name = $command->getName();
         $operation = $this->description->getOperation($name);
 

@@ -48,10 +48,10 @@ class GuzzleClient extends ServiceClient
         HandlerStack $commandHandlerStack = null,
         array $config = []
     ) {
+        $this->config = $config;
         $this->description = $description;
         $serializer = $this->getSerializer($commandToRequestTransformer);
         $deserializer = $this->getDeserializer($responseToResultTransformer);
-        $this->config = $config;
 
         parent::__construct($client, $serializer, $deserializer, $commandHandlerStack);
         $this->processConfig($config);
@@ -109,9 +109,11 @@ class GuzzleClient extends ServiceClient
      */
     private function getDeserializer($responseToResultTransformer)
     {
+        $process = (! isset($this->config['process']) || $this->config['process'] === true);
+
         return $responseToResultTransformer ==! null
             ? $responseToResultTransformer
-            : new Deserializer($this->description);
+            : new Deserializer($this->description, [], $process);
     }
 
     /**
