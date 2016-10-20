@@ -37,7 +37,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
     {
         $this->command->expects($this->once())->method('getName')->will($this->returnValue($commandName));
 
-        $description = $this->getMock(DescriptionInterface::class);
+        $description = $this->getMockBuilder(DescriptionInterface::class)->getMock();
         $operation = new Operation(['errorResponses' => $errors], $description);
 
         $description->expects($this->once())
