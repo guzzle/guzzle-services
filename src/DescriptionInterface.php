@@ -6,11 +6,11 @@ use GuzzleHttp\Psr7\Uri;
 interface DescriptionInterface
 {
     /**
-     * Get the basePath/baseUrl of the description
+     * Get the basePath/baseUri of the description
      *
      * @return Uri
      */
-    public function getBaseUrl();
+    public function getBaseUri();
 
     /**
      * Get the API operations of the service

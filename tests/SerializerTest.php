@@ -14,7 +14,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function testAllowsUriTemplates()
     {
         $description = new Description([
-            'baseUrl' => 'http://test.com',
+            'baseUri' => 'http://test.com',
             'operations' => [
                 'test' => [
                     'httpMethod'         => 'GET',

@@ -124,10 +124,16 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testHasBaseUrl()
+    public function testHasbaseUrl()
     {
         $description = new Description(['baseUrl' => 'http://foo.com']);
-        $this->assertEquals('http://foo.com', $description->getBaseUrl());
+        $this->assertEquals('http://foo.com', $description->getBaseUri());
+    }
+
+    public function testHasbaseUri()
+    {
+        $description = new Description(['baseUri' => 'http://foo.com']);
+        $this->assertEquals('http://foo.com', $description->getBaseUri());
     }
 
     public function testModelsHaveNames()

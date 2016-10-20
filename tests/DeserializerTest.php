@@ -91,7 +91,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
         $description = new Description([
             'name' => 'Test API',
-            'baseUrl' => 'http://httpbin.org',
+            'baseUri' => 'http://httpbin.org',
             'operations' => [
                 'foo' => [
                     'uri' => '/{foo}',
@@ -132,7 +132,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
         $description = new Description([
             'name' => 'Test API',
-            'baseUrl' => 'http://httpbin.org',
+            'baseUri' => 'http://httpbin.org',
             'operations' => [
                 'foo' => [
                     'uri' => '/{foo}',
@@ -176,7 +176,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
         $description = new Description([
             'name' => 'Test API',
-            'baseUrl' => 'http://httpbin.org',
+            'baseUri' => 'http://httpbin.org',
             'operations' => [
                 'foo' => [
                     'uri' => '/{foo}',
@@ -220,7 +220,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
         $description = new Description([
             'name' => 'Test API',
-            'baseUrl' => 'http://httpbin.org',
+            'baseUri' => 'http://httpbin.org',
             'operations' => [
                 'foo' => [
                     'uri' => '/{foo}',
@@ -298,7 +298,7 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
         $description = new Description([
             'name' => 'Test API',
-            'baseUrl' => 'http://httpbin.org',
+            'baseUri' => 'http://httpbin.org',
             'operations' => [
                 'Login' => [
                     'uri' => '/{foo}',

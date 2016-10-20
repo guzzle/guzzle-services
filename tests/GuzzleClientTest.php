@@ -227,7 +227,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -305,7 +305,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -384,7 +384,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -459,7 +459,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -524,7 +524,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -612,7 +612,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -717,7 +717,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         return new Description(
             [
                 'name' => 'Testing API ',
-                'baseUrl' => 'http://httpbin.org/',
+                'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'doThatThingYouDo' => [
                         'responseModel' => 'Bar'

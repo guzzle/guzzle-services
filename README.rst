@@ -12,7 +12,7 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
 
     $client = new Client();
     $description = new Description([
-        'baseUrl' => 'http://httpbin.org/',
+        'baseUri' => 'http://httpbin.org/',
         'operations' => [
             'testing' => [
                 'httpMethod' => 'GET',

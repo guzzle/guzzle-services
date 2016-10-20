@@ -118,7 +118,7 @@ class Serializer
         if (null === ($uri = $operation->getUri())) {
             return new Request(
                 $operation->getHttpMethod(),
-                $this->description->getBaseUrl()
+                $this->description->getBaseUri()
             );
         }
 
@@ -156,7 +156,7 @@ class Serializer
 
         return new Request(
             $operation->getHttpMethod(),
-            Uri::resolve($this->description->getBaseUrl(), $uri)
+            Uri::resolve($this->description->getBaseUri(), $uri)
         );
     }
 }
