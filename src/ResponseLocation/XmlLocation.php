@@ -24,12 +24,19 @@ class XmlLocation extends AbstractLocation
         parent::__construct($locationName);
     }
 
+
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $model
+     * @return ResultInterface
+     */
     public function before(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
     ) {
-        $this->xml = simplexml_load_string($response->getBody()); // @TODO fix
+        $this->xml = simplexml_load_string($response->getBody());
 
         return $result;
     }
