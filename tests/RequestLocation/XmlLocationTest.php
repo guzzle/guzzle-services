@@ -518,7 +518,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
                 $this->assertArraySubset([0 => 'application/xml'], $request->getHeader('Content-Type'));
             }
 
-            $body = str_replace(array("\n", "<?xml version=\"1.0\"?>"), '', (string) $request->getBody());
+            $body = str_replace(["\n", "<?xml version=\"1.0\"?>"], '', (string) $request->getBody());
             $this->assertEquals($xml, $body);
         }
     }

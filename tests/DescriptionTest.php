@@ -15,18 +15,18 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->operations = array(
+        $this->operations = [
             'test_command' => [
                 'name'        => 'test_command',
                 'description' => 'documentationForCommand',
                 'httpMethod'  => 'DELETE',
                 'class'       => 'FooModel',
-                'parameters'  => array(
-                    'bucket'  => array('required' => true),
-                    'key'     => array('required' => true)
-                )
+                'parameters'  => [
+                    'bucket'  => ['required' => true],
+                    'key'     => ['required' => true]
+                ]
             ]
-        );
+        ];
     }
 
     public function testConstructor()
@@ -76,12 +76,12 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 
     public function testHasAttributes()
     {
-        $d = new Description(array(
-            'operations'  => array(),
+        $d = new Description([
+            'operations'  => [],
             'name'        => 'Name',
             'description' => 'Description',
             'apiVersion'  => '1.24'
-        ));
+        ]);
 
         $this->assertEquals('Name', $d->getName());
         $this->assertEquals('Description', $d->getDescription());
@@ -119,9 +119,9 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidatesOperationTypes()
     {
-        $s = new Description(array(
-            'operations' => array('foo' => new \stdClass())
-        ));
+        new Description([
+            'operations' => ['foo' => new \stdClass()]
+        ]);
     }
 
     public function testHasbaseUrl()

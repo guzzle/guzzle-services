@@ -53,50 +53,50 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnsuresFlatArraysAreFlat()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'location' => 'xml',
             'name'     => 'foo',
             'type'     => 'array',
-            'items'    => array('type' => 'string')
-        ));
+            'items'    => ['type' => 'string'],
+        ]);
 
         $xml = '<xml><foo>bar</foo><foo>baz</foo></xml>';
-        $this->xmlTest($param, $xml, array('foo' => array('bar', 'baz')));
-        $this->xmlTest($param, '<xml><foo>bar</foo></xml>', array('foo' => array('bar')));
+        $this->xmlTest($param, $xml, ['foo' => ['bar', 'baz']]);
+        $this->xmlTest($param, '<xml><foo>bar</foo></xml>', ['foo' => ['bar']]);
     }
 
     public function xmlDataProvider()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'location' => 'xml',
             'name'     => 'Items',
             'type'     => 'array',
-            'items'    => array(
+            'items'    => [
                 'type'       => 'object',
                 'name'       => 'Item',
-                'properties' => array(
-                    'Bar' => array('type' => 'string'),
-                    'Baz' => array('type' => 'string')
-                )
-            )
-        ));
+                'properties' => [
+                    'Bar' => ['type' => 'string'],
+                    'Baz' => ['type' => 'string'],
+                ],
+            ],
+        ]);
 
-        return array(
-            array($param, '<Test><Items><Item><Bar>1</Bar></Item><Item><Bar>2</Bar></Item></Items></Test>', array(
-                'Items' => array(
-                    array('Bar' => 1),
-                    array('Bar' => 2)
-                )
-            )),
-            array($param, '<Test><Items><Item><Bar>1</Bar></Item></Items></Test>', array(
-                'Items' => array(
-                    array('Bar' => 1)
-                )
-            )),
-            array($param, '<Test><Items /></Test>', array(
-                'Items' => array()
-            ))
-        );
+        return [
+            [$param, '<Test><Items><Item><Bar>1</Bar></Item><Item><Bar>2</Bar></Item></Items></Test>', [
+                'Items' => [
+                    ['Bar' => 1],
+                    ['Bar' => 2],
+                ],
+            ]],
+            [$param, '<Test><Items><Item><Bar>1</Bar></Item></Items></Test>', [
+                'Items' => [
+                    ['Bar' => 1],
+                ]
+            ]],
+            [$param, '<Test><Items /></Test>', [
+                'Items' => [],
+            ]]
+        ];
     }
 
     /**
@@ -120,51 +120,51 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanRenameValues()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'TerminatingInstances',
             'type'     => 'array',
             'location' => 'xml',
             'sentAs'   => 'instancesSet',
-            'items'    => array(
+            'items'    => [
                 'name'       => 'item',
                 'type'       => 'object',
                 'sentAs'     => 'item',
-                'properties' => array(
-                    'InstanceId'    => array(
+                'properties' => [
+                    'InstanceId'    => [
                         'type'   => 'string',
                         'sentAs' => 'instanceId',
-                    ),
-                    'CurrentState'  => array(
+                    ],
+                    'CurrentState'  => [
                         'type'       => 'object',
                         'sentAs'     => 'currentState',
-                        'properties' => array(
-                            'Code' => array(
+                        'properties' => [
+                            'Code' => [
                                 'type'   => 'numeric',
                                 'sentAs' => 'code',
-                            ),
-                            'Name' => array(
+                            ],
+                            'Name' => [
                                 'type'   => 'string',
                                 'sentAs' => 'name',
-                            ),
-                        ),
-                    ),
-                    'PreviousState' => array(
+                            ],
+                        ],
+                    ],
+                    'PreviousState' => [
                         'type'       => 'object',
                         'sentAs'     => 'previousState',
-                        'properties' => array(
-                            'Code' => array(
+                        'properties' => [
+                            'Code' => [
                                 'type'   => 'numeric',
                                 'sentAs' => 'code',
-                            ),
-                            'Name' => array(
+                            ],
+                            'Name' => [
                                 'type'   => 'string',
                                 'sentAs' => 'name',
-                            ),
-                        ),
-                    ),
-                ),
-            )
-        ));
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ]);
 
         $xml = '
             <xml>
@@ -184,21 +184,21 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'TerminatingInstances' => array(
-                array(
+        $this->xmlTest($param, $xml, [
+            'TerminatingInstances' => [
+                [
                     'InstanceId'    => 'i-3ea74257',
-                    'CurrentState'  => array(
+                    'CurrentState'  => [
                         'Code' => '32',
                         'Name' => 'shutting-down',
-                    ),
-                    'PreviousState' => array(
+                    ],
+                    'PreviousState' => [
                         'Code' => '16',
                         'Name' => 'running',
-                    )
-                )
-            )
-        ));
+                    ],
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -206,60 +206,60 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanRenameAttributes()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'RunningQueues',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
+            'items'    => [
                 'type'       => 'object',
                 'sentAs'     => 'item',
-                'properties' => array(
-                    'QueueId'       => array(
+                'properties' => [
+                    'QueueId'       => [
                         'type'   => 'string',
                         'sentAs' => 'queue_id',
-                        'data'   => array(
+                        'data'   => [
                             'xmlAttribute' => true,
-                        ),
-                    ),
-                    'CurrentState'  => array(
+                        ],
+                    ],
+                    'CurrentState'  => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'Code' => array(
+                        'properties' => [
+                            'Code' => [
                                 'type'   => 'numeric',
                                 'sentAs' => 'code',
-                                'data'   => array(
+                                'data'   => [
                                     'xmlAttribute' => true,
-                                ),
-                            ),
-                            'Name' => array(
+                                ],
+                            ],
+                            'Name' => [
                                 'sentAs' => 'name',
-                                'data'   => array(
+                                'data'   => [
                                     'xmlAttribute' => true,
-                                ),
-                            ),
-                        ),
-                    ),
-                    'PreviousState' => array(
+                                ],
+                            ],
+                        ],
+                    ],
+                    'PreviousState' => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'Code' => array(
+                        'properties' => [
+                            'Code' => [
                                 'type'   => 'numeric',
                                 'sentAs' => 'code',
-                                'data'   => array(
+                                'data'   => [
                                     'xmlAttribute' => true,
-                                ),
-                            ),
-                            'Name' => array(
+                                ],
+                            ],
+                            'Name' => [
                                 'sentAs' => 'name',
-                                'data'   => array(
+                                'data'   => [
                                     'xmlAttribute' => true,
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            )
-        ));
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ]);
 
         $xml = '
             <wrap>
@@ -271,21 +271,21 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
                 </RunningQueues>
             </wrap>';
 
-        $this->xmlTest($param, $xml, array(
-            'RunningQueues' => array(
-                array(
+        $this->xmlTest($param, $xml, [
+            'RunningQueues' => [
+                [
                     'QueueId'       => 'q-3ea74257',
-                    'CurrentState'  => array(
+                    'CurrentState'  => [
                         'Code' => '32',
                         'Name' => 'processing',
-                    ),
-                    'PreviousState' => array(
+                    ],
+                    'PreviousState' => [
                         'Code' => '16',
                         'Name' => 'wait',
-                    ),
-                ),
-            )
-        ));
+                    ],
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -293,33 +293,33 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddsEmptyArraysWhenValueIsMissing()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'Foo',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
+            'items'    => [
                 'type'       => 'object',
-                'properties' => array(
-                    'Baz' => array('type' => 'array'),
-                    'Bar' => array(
+                'properties' => [
+                    'Baz' => ['type' => 'array'],
+                    'Bar' => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'Baz' => array('type' => 'array'),
-                        )
-                    )
-                )
-            )
-        ));
+                        'properties' => [
+                            'Baz' => ['type' => 'array'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
         $xml = '<xml><Foo><Bar></Bar></Foo></xml>';
 
-        $this->xmlTest($param, $xml, array(
-            'Foo' => array(
-                array(
-                    'Bar' => array()
-                )
-            )
-        ));
+        $this->xmlTest($param, $xml, [
+            'Foo' => [
+                [
+                    'Bar' => [],
+                ]
+            ],
+        ]);
     }
 
     /**
@@ -328,17 +328,17 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testDiscardingUnknownProperties()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'                 => 'foo',
             'type'                 => 'object',
             'additionalProperties' => false,
-            'properties'           => array(
-                'bar' => array(
+            'properties'           => [
+                'bar' => [
                     'type' => 'string',
                     'name' => 'bar',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -349,11 +349,11 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'foo' => array(
+        $this->xmlTest($param, $xml, [
+            'foo' => [
                 'bar' => 15
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -362,17 +362,17 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testDiscardingUnknownPropertiesWithAliasing()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'                 => 'foo',
             'type'                 => 'object',
             'additionalProperties' => false,
-            'properties'           => array(
-                'bar' => array(
+            'properties'           => [
+                'bar' => [
                     'name'   => 'bar',
                     'sentAs' => 'baz',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -383,11 +383,11 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'foo' => array(
-                'bar' => 15
-            )
-        ));
+        $this->xmlTest($param, $xml, [
+            'foo' => [
+                'bar' => 15,
+            ],
+        ]);
     }
 
     /**
@@ -395,39 +395,39 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessingOfNestedAdditionalProperties()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'                 => 'foo',
             'type'                 => 'object',
             'additionalProperties' => true,
-            'properties'           => array(
-                'bar'                        => array(
+            'properties'           => [
+                'bar' => [
                     'name'   => 'bar',
                     'sentAs' => 'baz',
-                ),
-                'nestedNoAdditional'         => array(
-                    'type'                 => 'object',
+                ],
+                'nestedNoAdditional'  => [
+                    'type' => 'object',
                     'additionalProperties' => false,
-                    'properties'           => array(
-                        'id' => array(
-                            'type' => 'integer'
-                        )
-                    )
-                ),
-                'nestedWithAdditional'       => array(
-                    'type'                 => 'object',
+                    'properties' => [
+                        'id' => [
+                            'type' => 'integer',
+                        ],
+                    ],
+                ],
+                'nestedWithAdditional' => [
+                    'type' => 'object',
                     'additionalProperties' => true,
-                ),
-                'nestedWithAdditionalSchema' => array(
-                    'type'                 => 'object',
-                    'additionalProperties' => array(
+                ],
+                'nestedWithAdditionalSchema' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
                         'type'  => 'array',
-                        'items' => array(
-                            'type' => 'string'
-                        )
-                    ),
-                ),
-            ),
-        ));
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -458,24 +458,23 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'foo' => array(
-                'bar'                        => '15',
-                'additional'                 => 'include me',
-                'nestedNoAdditional'         => array(
-                    'id' => '15'
-                ),
-                'nestedWithAdditional'       => array(
+        $this->xmlTest($param, $xml, [
+            'foo' => [
+                'bar' => '15',
+                'additional' => 'include me',
+                'nestedNoAdditional' => [
+                    'id' => '15',
+                ],
+                'nestedWithAdditional' => [
                     'id'         => '15',
-                    'additional' => 'include me'
-                ),
-                'nestedWithAdditionalSchema' => array(
-                    'arrayA' => array('1', '2', '3'),
-                    'arrayB' => array('A', 'B', 'C'),
-                )
-
-            )
-        ));
+                    'additional' => 'include me',
+                ],
+                'nestedWithAdditionalSchema' => [
+                    'arrayA' => ['1', '2', '3'],
+                    'arrayB' => ['A', 'B', 'C'],
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -483,11 +482,11 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertsMultipleAssociativeElementsToArray()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'                 => 'foo',
             'type'                 => 'object',
-            'additionalProperties' => true
-        ));
+            'additionalProperties' => true,
+        ]);
 
         $xml = '
             <xml>
@@ -518,63 +517,63 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnderstandsNamespaces()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'nstest',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
+            'items'    => [
                 'name'       => 'item',
                 'type'       => 'object',
                 'sentAs'     => 'item',
-                'properties' => array(
-                    'id'           => array(
+                'properties' => [
+                    'id'           => [
                         'type' => 'string',
-                    ),
-                    'isbn:number'  => array(
+                    ],
+                    'isbn:number'  => [
                         'type' => 'string',
-                    ),
-                    'meta'         => array(
+                    ],
+                    'meta'         => [
                         'type'       => 'object',
                         'sentAs'     => 'abstract:meta',
-                        'properties' => array(
-                            'foo' => array(
+                        'properties' => [
+                            'foo' => [
                                 'type' => 'numeric',
-                            ),
-                            'bar' => array(
+                            ],
+                            'bar' => [
                                 'type'       => 'object',
-                                'properties' => array(
-                                    'attribute' => array(
+                                'properties' =>[
+                                    'attribute' => [
                                         'type' => 'string',
-                                        'data' => array(
+                                        'data' => [
                                             'xmlAttribute' => true,
-                                            'xmlNs'        => 'abstract'
-                                        ),
-                                    )
-                                )
-                            ),
-                        ),
-                    ),
-                    'gamma'        => array(
+                                            'xmlNs'        => 'abstract',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'gamma'        => [
                         'type'                 => 'object',
-                        'data'                 => array(
-                            'xmlNs' => 'abstract'
-                        ),
-                        'additionalProperties' => true
-                    ),
-                    'nonExistent'  => array(
+                        'data'                 => [
+                            'xmlNs' => 'abstract',
+                        ],
+                        'additionalProperties' => true,
+                    ],
+                    'nonExistent'  => [
                         'type'                 => 'object',
-                        'data'                 => array(
-                            'xmlNs' => 'abstract'
-                        ),
-                        'additionalProperties' => true
-                    ),
-                    'nonExistent2' => array(
+                        'data'                 => [
+                            'xmlNs' => 'abstract',
+                        ],
+                        'additionalProperties' => true,
+                    ],
+                    'nonExistent2' => [
                         'type'                 => 'object',
-                        'additionalProperties' => true
-                    ),
-                ),
-            )
-        ));
+                        'additionalProperties' => true,
+                    ],
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -605,36 +604,36 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'nstest' => array(
-                array(
+        $this->xmlTest($param, $xml, [
+            'nstest' => [
+                [
                     'id'          => '101',
                     'isbn:number' => 1568491379,
-                    'meta'        => array(
+                    'meta'        => [
                         'foo' => 10,
-                        'bar' => array(
-                            'attribute' => 'foo'
-                        ),
-                    ),
-                    'gamma'       => array(
-                        'foo' => 'bar'
-                    )
-                ),
-                array(
+                        'bar' => [
+                            'attribute' => 'foo',
+                        ],
+                    ],
+                    'gamma'       => [
+                        'foo' => 'bar',
+                    ],
+                ],
+                [
                     'id'          => '102',
                     'isbn:number' => 1568491999,
-                    'meta'        => array(
+                    'meta'        => [
                         'foo' => 20,
-                        'bar' => array(
+                        'bar' => [
                             'attribute' => 'bar'
-                        ),
-                    ),
-                    'gamma'       => array(
-                        'foo' => 'baz'
-                    )
-                ),
-            )
-        ));
+                        ],
+                    ],
+                    'gamma'       => [
+                        'foo' => 'baz',
+                    ],
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -642,30 +641,30 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanWalkUndefinedPropertiesWithNamespace()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'nstest',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
-                'name'                 => 'item',
-                'type'                 => 'object',
-                'sentAs'               => 'item',
-                'additionalProperties' => array(
+            'items'    => [
+                'name' => 'item',
+                'type' => 'object',
+                'sentAs' => 'item',
+                'additionalProperties' => [
                     'type' => 'object',
-                    'data' => array(
+                    'data' => [
                         'xmlNs' => 'abstract'
-                    ),
-                ),
-                'properties'           => array(
-                    'id'          => array(
+                    ],
+                ],
+                'properties' => [
+                    'id' => [
                         'type' => 'string',
-                    ),
-                    'isbn:number' => array(
+                    ],
+                    'isbn:number' => [
                         'type' => 'string',
-                    )
-                )
-            )
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -690,26 +689,26 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'nstest' => array(
-                array(
+        $this->xmlTest($param, $xml, [
+            'nstest' => [
+                [
                     'id'          => '101',
                     'isbn:number' => 1568491379,
-                    'meta'        => array(
+                    'meta'        => [
                         'foo' => 10,
-                        'bar' => 'baz'
-                    )
-                ),
-                array(
+                        'bar' => 'baz',
+                    ],
+                ],
+                [
                     'id'          => '102',
                     'isbn:number' => 1568491999,
-                    'meta'        => array(
+                    'meta'        => [
                         'foo' => 20,
-                        'bar' => 'foo'
-                    )
-                ),
-            )
-        ));
+                        'bar' => 'foo',
+                    ],
+                ],
+            ]
+        ]);
     }
 
     /**
@@ -717,18 +716,18 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanWalkSimpleArrayWithNamespace()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'nstest',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
+            'items'    => [
                 'type'   => 'string',
                 'sentAs' => 'number',
-                'data'   => array(
+                'data'   => [
                     'xmlNs' => 'isbn'
-                )
-            )
-        ));
+                ],
+            ],
+        ]);
 
         $xml = '
             <xml>
@@ -740,13 +739,13 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'nstest' => array(
+        $this->xmlTest($param, $xml, [
+            'nstest' => [
                 1568491379,
                 1568491999,
                 1568492999,
-            )
-        ));
+            ],
+        ]);
     }
 
     /**
@@ -754,15 +753,15 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanWalkSimpleArrayWithNamespace2()
     {
-        $param = new Parameter(array(
+        $param = new Parameter([
             'name'     => 'nstest',
             'type'     => 'array',
             'location' => 'xml',
-            'items'    => array(
+            'items'    => [
                 'type'   => 'string',
                 'sentAs' => 'isbn:number',
-            )
-        ));
+            ]
+        ]);
 
         $xml = '
             <xml>
@@ -774,13 +773,13 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             </xml>
         ';
 
-        $this->xmlTest($param, $xml, array(
-            'nstest' => array(
+        $this->xmlTest($param, $xml, [
+            'nstest' => [
                 1568491379,
                 1568491999,
                 1568492999,
-            )
-        ));
+            ],
+        ]);
     }
 
     private function xmlTest(Parameter $param, $xml, $expected)
