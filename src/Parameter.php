@@ -9,28 +9,73 @@ use GuzzleHttp\Command\ToArrayInterface;
 class Parameter implements ToArrayInterface
 {
     private $originalData;
+
+    /** @var string $name */
     private $name;
+
+    /** @var string $description */
     private $description;
+
+    /** @var string|array $type */
     private $type;
+
+    /** @var bool $required*/
     private $required;
+
+    /** @var string $enum */
     private $enum;
+
+    /** @var string $pattern */
     private $pattern;
+
+    /** @var int $minimum*/
     private $minimum;
+
+    /** @var int $maximum */
     private $maximum;
+
+    /** @var int $minLength */
     private $minLength;
+
+    /** @var int $maxLength */
     private $maxLength;
+
+    /** @var int $minItems */
     private $minItems;
+
+    /** @var int $maxItems */
     private $maxItems;
+
+    /** @var mixed $default */
     private $default;
+
+    /** @var bool $static */
     private $static;
+
+    /** @var array $filters */
     private $filters;
+
+    /** @var string $location */
     private $location;
+
+    /** @var string $sentAs */
     private $sentAs;
+
+    /** @var array $data */
     private $data;
+
+    /** @var array $properties */
     private $properties = [];
+
+    /** @var array $additionalProperties */
     private $additionalProperties;
+
+    /** @var array $items */
     private $items;
+
+    /** @var string $format */
     private $format;
+
     private $propertiesCache = null;
 
     /** @var Description */

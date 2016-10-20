@@ -48,6 +48,12 @@ class JsonLocation extends AbstractLocation
         return $result;
     }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $model
+     * @return ResultInterface
+     */
     public function after(
         ResultInterface $result,
         ResponseInterface $response,
@@ -77,6 +83,12 @@ class JsonLocation extends AbstractLocation
         return $result;
     }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $param
+     * @return Result|ResultInterface
+     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,

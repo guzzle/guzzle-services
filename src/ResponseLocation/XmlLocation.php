@@ -34,6 +34,12 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $model
+     * @return Result|ResultInterface
+     */
     public function after(
         ResultInterface $result,
         ResponseInterface $response,
@@ -55,6 +61,12 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $param
+     * @return ResultInterface
+     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
@@ -113,6 +125,11 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
+    /**
+     * @param Parameter $param
+     * @param \SimpleXMLElement $node
+     * @return array
+     */
     private function processArray(Parameter $param, \SimpleXMLElement $node)
     {
         // Cast to an array if the value was a string, but should be an array

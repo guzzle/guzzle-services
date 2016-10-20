@@ -52,6 +52,11 @@ class Serializer
         $this->description = $description;
     }
 
+
+    /**
+     * @param CommandInterface $command
+     * @return RequestInterface
+     */
     public function __invoke(CommandInterface $command)
     {
         $request = $this->createRequest($command);

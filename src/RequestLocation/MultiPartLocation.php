@@ -11,6 +11,7 @@ use Psr\Http\Message\RequestInterface;
  */
 class MultiPartLocation extends AbstractLocation
 {
+    /** @var string $contentType */
     protected $contentType = 'multipart/form-data; boundary=';
 
     /** @var array $formParamsData */
@@ -26,6 +27,12 @@ class MultiPartLocation extends AbstractLocation
         parent::__construct($locationName);
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter $param
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,

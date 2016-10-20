@@ -267,6 +267,10 @@ class XmlLocation extends AbstractLocation
 
     /**
      * Add an array to the XML
+     *
+     * @param \XMLWriter $writer
+     * @param Parameter $param
+     * @param $value
      */
     protected function addXmlArray(\XMLWriter $writer, Parameter $param, &$value)
     {
@@ -279,6 +283,10 @@ class XmlLocation extends AbstractLocation
 
     /**
      * Add an object to the XML
+     *
+     * @param \XMLWriter $writer
+     * @param Parameter $param
+     * @param $value
      */
     protected function addXmlObject(\XMLWriter $writer, Parameter $param, &$value)
     {
@@ -301,6 +309,11 @@ class XmlLocation extends AbstractLocation
         }
     }
 
+    /**
+     * @param $value
+     * @param Parameter $param
+     * @param Operation $operation
+     */
     private function visitWithValue(
         $value,
         Parameter $param,

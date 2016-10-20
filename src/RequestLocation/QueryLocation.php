@@ -9,7 +9,6 @@ use Psr\Http\Message\RequestInterface;
 
 /**
  * Adds query string values to requests
- * @TODO fix
  */
 class QueryLocation extends AbstractLocation
 {

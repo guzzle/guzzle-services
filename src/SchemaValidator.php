@@ -29,6 +29,11 @@ class SchemaValidator
         $this->castIntegerToStringType = $castIntegerToStringType;
     }
 
+    /**
+     * @param Parameter $param
+     * @param $value
+     * @return bool
+     */
     public function validate(Parameter $param, &$value)
     {
         $this->errors = [];

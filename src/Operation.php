@@ -82,6 +82,9 @@ class Operation implements ToArrayInterface
         $this->resolveParameters();
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return $this->config;
@@ -252,6 +255,11 @@ class Operation implements ToArrayInterface
         }
     }
 
+    /**
+     * @param $name
+     * @param array $config
+     * @return array
+     */
     private function resolveExtends($name, array $config)
     {
         if (!$this->description->hasOperation($name)) {
@@ -269,6 +277,11 @@ class Operation implements ToArrayInterface
         return $result;
     }
 
+    /**
+     * Process the description and extract the parameter config
+     *
+     * @return void
+     */
     private function resolveParameters()
     {
         // Parameters need special handling when adding
