@@ -293,7 +293,26 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsExpectedResult()
     {
-        $loginResponse = new Response(200, [], '{"LoginResponse":{"result":{"type":4,"username":{"uid":38664492,"content":"skyfillers-api-test"},"token":"3FB1F21014D630481D35CBC30CBF4043"},"status":{"code":200,"content":"OK"}}}');
+        $loginResponse = new Response(
+            200,
+            [],
+            '{
+                "LoginResponse":{
+                    "result":{
+                        "type":4,
+                        "username":{
+                            "uid":38664492,
+                            "content":"skyfillers-api-test"
+                        },
+                        "token":"3FB1F21014D630481D35CBC30CBF4043"
+                    },
+                    "status":{
+                        "code":200,
+                        "content":"OK"
+                    }
+                }
+            }'
+        );
         $mock = new MockHandler([$loginResponse]);
 
         $description = new Description([

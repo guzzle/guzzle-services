@@ -50,5 +50,4 @@ class FormParamLocationTest extends \PHPUnit_Framework_TestCase
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('foo=bar&add=props', $request->getBody()->getContents());
     }
-
 }

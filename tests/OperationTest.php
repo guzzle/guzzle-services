@@ -173,7 +173,11 @@ class OperationTest extends \PHPUnit_Framework_TestCase
                 'test_function' => array('type' => 'string', 'filters' => __CLASS__ . '::strtoupper')
             ),
             'errorResponses' => array(
-                array('code' => 503, 'reason' => 'InsufficientCapacity', 'class' => 'Guzzle\\Exception\\RuntimeException')
+                array(
+                    'code' => 503,
+                    'reason' => 'InsufficientCapacity',
+                    'class' => 'Guzzle\\Exception\\RuntimeException'
+                )
             )
         ), new Description([]));
     }

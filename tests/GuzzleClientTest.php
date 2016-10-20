@@ -148,14 +148,20 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         );
 
         $client->doXmlLocation(['foo' => 'Foo']);
-        $this->assertEquals("<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo></Request>\n", (string) $mock->getLastRequest()->getBody());
+        $this->assertEquals(
+            "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo></Request>\n",
+            (string) $mock->getLastRequest()->getBody()
+        );
 
         $client->doXmlLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
             'baz' => 'Baz'
         ]);
-        $this->assertEquals("<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n", $mock->getLastRequest()->getBody());
+        $this->assertEquals(
+            "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n",
+            $mock->getLastRequest()->getBody()
+        );
     }
 
     public function testHasConfig()
@@ -672,8 +678,11 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    private function getServiceClient(array $responses, MockHandler $mock = null, callable $commandToRequestTransformer = null)
-    {
+    private function getServiceClient(
+        array $responses,
+        MockHandler $mock = null,
+        callable $commandToRequestTransformer = null
+    ) {
         $mock = $mock ?: new MockHandler();
 
         foreach ($responses as $response) {

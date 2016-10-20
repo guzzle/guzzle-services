@@ -247,7 +247,7 @@ class XmlLocation extends AbstractLocation
             // that the node contains a list of elements
             if (!is_array($result[$name])) {
                 $result[$name] = [$result[$name]];
-            } else if (!isset($result[$name][0])) {
+            } elseif (!isset($result[$name][0])) {
                 // Convert the first child into the first element of a numerically indexed array
                 $firstResult = $result[$name];
                 $result[$name] = [];

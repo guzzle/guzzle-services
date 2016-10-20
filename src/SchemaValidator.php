@@ -127,7 +127,6 @@ class SchemaValidator
         }
 
         if ($type == 'object') {
-
             // Determine whether or not this "value" has properties and should
             // be traversed
             $traverse = $temporaryValue = false;
@@ -153,7 +152,6 @@ class SchemaValidator
             }
 
             if ($traverse) {
-
                 if ($properties = $param->getProperties()) {
                     // if properties were found, validate each property
                     foreach ($properties as $property) {
@@ -181,7 +179,7 @@ class SchemaValidator
                     $diff = array_diff($keys, array_keys($properties));
                     if (!empty($diff)) {
                         // Determine which keys are not in the properties
-                        if ($additional instanceOf Parameter) {
+                        if ($additional instanceof Parameter) {
                             foreach ($diff as $key) {
                                 $this->recursiveProcess($additional, $value[$key], "{$path}[{$key}]", $depth);
                             }
@@ -242,12 +240,11 @@ class SchemaValidator
 
         // Perform type specific validation for strings, arrays, and integers
         if ($type == 'string') {
-
             // Strings can have enums which are a list of predefined values
             if (($enum = $param->getEnum()) && !in_array($value, $enum)) {
                 $this->errors[] = "{$path} must be one of " . implode(' or ', array_map(function ($s) {
                         return '"' . addslashes($s) . '"';
-                    }, $enum));
+                }, $enum));
             }
             // Strings can have a regex pattern that the value must match
             if (($pattern  = $param->getPattern()) && !preg_match($pattern, $value)) {
@@ -268,7 +265,6 @@ class SchemaValidator
             }
 
         } elseif ($type == 'array') {
-
             $size = null;
             if ($min = $param->getMinItems()) {
                 $size = count($value);

@@ -498,8 +498,8 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
                 'operations' => [
                     'foo' => $operation
                 ]
-            ]
-        ));
+            ])
+        );
 
         $command = $client->getCommand('foo', $input);
 

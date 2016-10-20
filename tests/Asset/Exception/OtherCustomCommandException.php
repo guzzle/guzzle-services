@@ -8,4 +8,6 @@ use GuzzleHttp\Command\Exception\CommandException;
  *
  * @package GuzzleHttp\Tests\Command\Guzzle\Asset\Exception
  */
-class OtherCustomCommandException extends CommandException {}
+class OtherCustomCommandException extends CommandException
+{
+}
