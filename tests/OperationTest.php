@@ -16,7 +16,6 @@ class OperationTest extends \PHPUnit_Framework_TestCase
 
     public function testOperationIsDataObject()
     {
-        $description = new Description([]);
         $c = new Operation([
             'name'               => 'test',
             'summary'            => 'doc',
@@ -40,7 +39,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
                     'name'     => 'key_2'
                 ]
             ]
-        ], $description);
+        ]);
 
         $this->assertEquals('test', $c->getName());
         $this->assertEquals('doc', $c->getSummary());
@@ -93,12 +92,12 @@ class OperationTest extends \PHPUnit_Framework_TestCase
             'parameters' => [
                 'data' => ['type' => 'string']
             ]
-        ], new Description([]));
+        ]);
     }
 
     public function testAddsNameToParametersIfNeeded()
     {
-        $command = new Operation(['parameters' => ['foo' => []]], new Description([]));
+        $command = new Operation(['parameters' => ['foo' => []]]);
         $this->assertEquals('foo', $command->getParam('foo')->getName());
     }
 
@@ -110,13 +109,13 @@ class OperationTest extends \PHPUnit_Framework_TestCase
 
     public function testHasNotes()
     {
-        $o = new Operation(['notes' => 'foo'], new Description([]));
+        $o = new Operation(['notes' => 'foo']);
         $this->assertEquals('foo', $o->getNotes());
     }
 
     public function testHasData()
     {
-        $o = new Operation(['data' => ['foo' => 'baz', 'bar' => 123]], new Description([]));
+        $o = new Operation(['data' => ['foo' => 'baz', 'bar' => 123]]);
         $this->assertEquals('baz', $o->getData('foo'));
         $this->assertEquals(123, $o->getData('bar'));
         $this->assertNull($o->getData('wfefwe'));
@@ -129,7 +128,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnsuresParametersAreArrays()
     {
-        new Operation(['parameters' => ['foo' => true]], new Description([]));
+        new Operation(['parameters' => ['foo' => true]]);
     }
 
     public function testHasDescription()
@@ -148,7 +147,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
             'parameters' => [
                 'foo' => ['type' => 'integer'],
             ],
-        ], new Description([]));
+        ]);
         $this->assertEquals('string', $o->getAdditionalParameters()->getType());
     }
 
@@ -179,7 +178,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
                     'class' => 'Guzzle\\Exception\\RuntimeException',
                 ],
             ],
-        ], new Description([]));
+        ]);
     }
 
     public function testCanExtendFromOtherOperations()

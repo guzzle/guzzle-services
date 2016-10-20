@@ -42,7 +42,7 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
             'additionalParameters' => [
                 'location' => 'header'
             ]
-        ], new Description([]));
+        ]);
         $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);
 

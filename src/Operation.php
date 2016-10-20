@@ -49,7 +49,7 @@ class Operation implements ToArrayInterface
      * @param DescriptionInterface  $description Service description used to resolve models if $ref tags are found
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $config = [], DescriptionInterface $description)
+    public function __construct(array $config = [], DescriptionInterface $description = null)
     {
         static $defaults = [
             'name' => '',
@@ -66,7 +66,7 @@ class Operation implements ToArrayInterface
             'errorResponses' => []
         ];
 
-        $this->description = $description;
+        $this->description = $description === null ? new Description([]) : $description;
 
         if (isset($config['extends'])) {
             $config = $this->resolveExtends($config['extends'], $config);

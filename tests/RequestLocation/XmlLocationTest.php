@@ -32,7 +32,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $location->visit($command, $request, $param);
         $param = new Parameter(['name' => 'bar']);
         $location->visit($command, $request, $param);
-        $operation = new Operation([], new Description([]));
+        $operation = new Operation();
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
 
@@ -52,7 +52,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $request = new Request('POST', 'http://httbin.org');
         $operation = new Operation([
             'data' => ['xmlAllowEmpty' => true]
-        ], new Description([]));
+        ]);
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
         $this->assertEquals('<?xml version="1.0"?>' . "\n"
@@ -77,7 +77,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             'additionalParameters' => [
                 'location' => 'xml'
             ]
-        ], new Description([]));
+        ]);
         $command['bam'] = 'boo';
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
@@ -95,7 +95,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $location = new XmlLocation();
         $operation = new Operation([
             'data' => ['xmlEncoding' => 'UTF-8']
-        ], new Description([]));
+        ]);
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);

@@ -25,7 +25,7 @@ class FormParamLocationTest extends \PHPUnit_Framework_TestCase
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
-        $operation = new Operation([], new Description([]));
+        $operation = new Operation();
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('foo=bar', $request->getBody()->getContents());
         $this->assertArraySubset([0 => 'application/x-www-form-urlencoded'], $request->getHeader('Content-Type'));
@@ -46,7 +46,7 @@ class FormParamLocationTest extends \PHPUnit_Framework_TestCase
             'additionalParameters' => [
                 'location' => 'formParam'
             ]
-        ], new Description([]));
+        ]);
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('foo=bar&add=props', $request->getBody()->getContents());
     }

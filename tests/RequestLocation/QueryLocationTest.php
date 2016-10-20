@@ -41,7 +41,7 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
             'additionalParameters' => [
                 'location' => 'query'
             ]
-        ], new Description([]));
+        ]);
         $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);
 
