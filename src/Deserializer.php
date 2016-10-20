@@ -41,13 +41,13 @@ class Deserializer
 
     /**
      * @param DescriptionInterface $description
-     * @param ResponseLocationInterface[] $responseLocations Extra response locations
      * @param $process
+     * @param ResponseLocationInterface[] $responseLocations Extra response locations
      */
     public function __construct(
         DescriptionInterface $description,
-        array $responseLocations = [],
-        $process
+        $process,
+        array $responseLocations = []
     ) {
         static $defaultResponseLocations;
         if (!$defaultResponseLocations) {
