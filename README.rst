@@ -4,8 +4,8 @@ Guzzle Services
 
 Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.
 
-.. image:: https://travis-ci.org/guzzle/guzzle-services.svg?branch=guzzle6-pr1
-    :target: https://travis-ci.org/guzzle/guzzle-services
+.. image:: https://travis-ci.org/Konafets/guzzle-services.svg?branch=guzzle6-pr1
+    :target: https://travis-ci.org/Konafets/guzzle-services
 .. image:: https://scrutinizer-ci.com/g/Konafets/guzzle-services/badges/quality-score.png?b=guzzle6-pr1
     :target: https://scrutinizer-ci.com/g/Konafets/guzzle-services/?branch=guzzle6-pr1
 .. image:: https://scrutinizer-ci.com/g/Konafets/guzzle-services/badges/coverage.png?b=guzzle6-pr1
