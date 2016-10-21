@@ -638,4 +638,16 @@ class Parameter implements ToArrayInterface
 
         return $this;
     }
+
+
+    /**
+     * Check if a parameter has a specific variable and if it set.
+     *
+     * @param $var
+     * @return bool
+     */
+    public function has($var)
+    {
+        return isset($this->{$var}) && !empty($this->{$var});
+    }
 }

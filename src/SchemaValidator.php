@@ -222,7 +222,7 @@ class SchemaValidator
             $message = "{$path} is " . ($param->getType()
                 ? ('a required ' . implode(' or ', (array) $param->getType()))
                 : 'required');
-            if ($param->getDescription()) {
+            if ($param->has('description')) {
                 $message .= ': ' . $param->getDescription();
             }
             $this->errors[] = $message;
