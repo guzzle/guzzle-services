@@ -15,7 +15,7 @@ class GuzzleClient extends ServiceClient
     /** @var array $config */
     private $config;
 
-    /** @var Description Guzzle service description */
+    /** @var DescriptionInterface Guzzle service description */
     private $description;
 
     /**

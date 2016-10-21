@@ -16,7 +16,7 @@ class ValidatedDescriptionHandler
     /** @var SchemaValidator $validator */
     private $validator;
 
-    /** @var Description $description */
+    /** @var DescriptionInterface $description */
     private $description;
 
     /**
