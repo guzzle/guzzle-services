@@ -10,7 +10,7 @@ use GuzzleHttp\Command\Command;
 use GuzzleHttp\Psr7\Request;
 
 /**
- * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation
+ * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
 class FormParamLocationTest extends \PHPUnit_Framework_TestCase
