@@ -18,7 +18,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         'minLength'       => 2,
         'maxLength'       => 5,
         'location'        => 'body',
-        'static'          => 'static!',
+        'static'          => true,
         'filters'         => ['trim', 'json_encode']
     ];
 
@@ -33,7 +33,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $p->getMinLength());
         $this->assertEquals(5, $p->getMaxLength());
         $this->assertEquals('body', $p->getLocation());
-        $this->assertEquals('static!', $p->getStatic());
+        $this->assertTrue($p->isStatic());
         $this->assertEquals(['trim', 'json_encode'], $p->getFilters());
         $p->setName('abc');
         $this->assertEquals('abc', $p->getName());

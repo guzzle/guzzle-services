@@ -473,9 +473,9 @@ class Parameter implements ToArrayInterface
     /**
      * Get whether or not the default value can be changed
      *
-     * @return mixed|null
+     * @return bool
      */
-    public function getStatic()
+    public function isStatic()
     {
         return $this->static;
     }

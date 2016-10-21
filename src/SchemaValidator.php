@@ -117,7 +117,7 @@ class SchemaValidator
         $required = $param->getRequired();
         // if the value is null and the parameter is not required or is static,
         // then skip any further recursion
-        if ((null === $value && !$required) || $param->getStatic()) {
+        if ((null === $value && !$required) || $param->isStatic()) {
             return true;
         }
 
