@@ -62,6 +62,7 @@ class FormParamLocation extends AbstractLocation
     ) {
         $data = $this->formParamsData;
         $this->formParamsData = null;
+        $modify = [];
 
         // Add additional parameters to the form_params array
         $additional = $operation->getAdditionalParameters();

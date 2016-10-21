@@ -38,6 +38,8 @@ class MultiPartLocation extends AbstractLocation
         RequestInterface $request,
         Parameter $param
     ) {
+        $modify = [];
+
         $this->multipartData['multipart'] = [
             'name' => $param->getWireName(),
             'contents' => $this->prepareValue($command[$param->getName()], $param)
