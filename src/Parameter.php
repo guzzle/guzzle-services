@@ -2,6 +2,7 @@
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * API parameter object used with service descriptions
@@ -643,11 +644,12 @@ class Parameter implements ToArrayInterface
     /**
      * Check if a parameter has a specific variable and if it set.
      *
-     * @param $var
+     * @param string $var
      * @return bool
      */
     public function has($var)
     {
+        Assert::string($var);
         return isset($this->{$var}) && !empty($this->{$var});
     }
 }

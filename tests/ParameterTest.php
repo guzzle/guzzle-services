@@ -339,4 +339,41 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($data, $p->toArray());
     }
+
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected a string. Got: array
+     */
+    public function testThrowsWhenNotPassString()
+    {
+        $emptyParam = new Parameter();
+        $this->assertFalse($emptyParam->has([]));
+        $this->assertFalse($emptyParam->has(new \stdClass()));
+        $this->assertFalse($emptyParam->has('1'));
+        $this->assertFalse($emptyParam->has(1));
+    }
+
+    public function testHasReturnsFalseForWrongOrEmptyValues()
+    {
+        $emptyParam = new Parameter();
+        $this->assertFalse($emptyParam->has(''));
+        $this->assertFalse($emptyParam->has('description'));
+        $this->assertFalse($emptyParam->has('noExisting'));
+    }
+
+    public function testHasReturnsTrueForCorrectValues()
+    {
+        $p = new Parameter([
+            'minimum' => 2,
+            'maximum' => 3,
+            'minItems' => 4,
+            'maxItems' => 5,
+        ]);
+
+        $this->assertTrue($p->has('minimum'));
+        $this->assertTrue($p->has('maximum'));
+        $this->assertTrue($p->has('minItems'));
+        $this->assertTrue($p->has('maxItems'));
+    }
 }
