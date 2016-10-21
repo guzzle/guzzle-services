@@ -61,7 +61,7 @@ class FormParamLocation extends AbstractLocation
         Operation $operation
     ) {
         $data = $this->formParamsData;
-        $this->formParamsData = null;
+        $this->formParamsData = [];
         $modify = [];
 
         // Add additional parameters to the form_params array

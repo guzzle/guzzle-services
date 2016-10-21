@@ -91,7 +91,7 @@ class XmlLocation extends AbstractLocation
         }
 
         // If data was found that needs to be serialized, then do so
-        $xml = null;
+        $xml = '';
         if ($this->writer) {
             $xml = $this->finishDocument($this->writer);
         } elseif ($operation->getData('xmlAllowEmpty')) {
@@ -100,7 +100,7 @@ class XmlLocation extends AbstractLocation
             $xml = $this->finishDocument($writer);
         }
 
-        if ($xml) {
+        if ($xml !== '') {
             $request = $request->withBody(Psr7\stream_for($xml));
             // Don't overwrite the Content-Type if one is set
             if ($this->contentType && !$request->hasHeader('Content-Type')) {

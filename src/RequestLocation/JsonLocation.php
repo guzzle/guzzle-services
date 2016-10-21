@@ -63,7 +63,7 @@ class JsonLocation extends AbstractLocation
         Operation $operation
     ) {
         $data = $this->jsonData;
-        $this->jsonData = null;
+        $this->jsonData = [];
 
         // Add additional parameters to the JSON document
         $additional = $operation->getAdditionalParameters();
