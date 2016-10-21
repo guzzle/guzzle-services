@@ -224,7 +224,7 @@ class XmlLocation extends AbstractLocation
         } elseif ($additional === null || $additional === true) {
             // Blindly transform the XML into an array preserving as much data
             // as possible. Remove processed, aliased properties.
-            $array = array_diff_key(static::xmlToArray($node), $knownProps);
+            $array = array_diff_key(self::xmlToArray($node), $knownProps);
             // Remove @attributes that were explicitly plucked from the
             // attributes list.
             if (isset($array['@attributes']) && $knownAttributes) {
@@ -261,7 +261,7 @@ class XmlLocation extends AbstractLocation
         foreach ($children as $name => $child) {
             $attributes = (array) $child->attributes($ns, true);
             if (!isset($result[$name])) {
-                $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+                $childArray = self::xmlToArray($child, $ns, $nesting + 1);
                 $result[$name] = $attributes
                     ? array_merge($attributes, $childArray)
                     : $childArray;
@@ -277,7 +277,7 @@ class XmlLocation extends AbstractLocation
                 $result[$name] = [];
                 $result[$name][] = $firstResult;
             }
-            $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+            $childArray = self::xmlToArray($child, $ns, $nesting + 1);
             if ($attributes) {
                 $result[$name][] = array_merge($attributes, $childArray);
             } else {
