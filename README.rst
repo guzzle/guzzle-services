@@ -23,7 +23,7 @@ Provides an implementation of the Guzzle Command library that uses Guzzle servic
         'operations' => [
             'testing' => [
                 'httpMethod' => 'GET',
-                'uri' => '/get/{foo}',
+                'uri' => '/get{?foo}',
                 'responseModel' => 'getResponse',
                 'parameters' => [
                     'foo' => [
