@@ -29,7 +29,12 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->serviceClient = $this->createMock(GuzzleClient::class);
+        $this->serviceClient = $this->getMockBuilder(GuzzleClient::class)
+                            ->disableOriginalConstructor()
+                            ->disableOriginalClone()
+                            ->disableArgumentCloning()
+                            ->disallowMockingUnknownTypes()
+                            ->getMock();
         $this->command = $this->getMockBuilder(CommandInterface::class)->getMock();
     }
 
