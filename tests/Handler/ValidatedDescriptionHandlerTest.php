@@ -2,8 +2,8 @@
 namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler

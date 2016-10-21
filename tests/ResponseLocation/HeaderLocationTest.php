@@ -1,7 +1,6 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation;
 use GuzzleHttp\Command\Result;

@@ -2,11 +2,10 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\ServiceClientInterface;
 use GuzzleHttp\Handler\MockHandler;

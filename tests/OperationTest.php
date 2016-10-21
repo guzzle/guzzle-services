@@ -1,8 +1,8 @@
 <?php
 namespace Guzzle\Tests\Service\Description;
 
-use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\Operation;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Operation

@@ -1,12 +1,11 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
-use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
-use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Psr7\Request;
 
 /**

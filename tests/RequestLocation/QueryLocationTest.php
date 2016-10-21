@@ -1,13 +1,12 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
+use GuzzleHttp\Command\Command;
+use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
-use GuzzleHttp\Command\Guzzle\Operation;
-use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Command;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation

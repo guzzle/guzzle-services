@@ -3,11 +3,11 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
