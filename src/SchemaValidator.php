@@ -114,7 +114,7 @@ class SchemaValidator
         // Update the value by adding default or static values
         $value = $param->getValue($value);
 
-        $required = $param->getRequired();
+        $required = $param->isRequired();
         // if the value is null and the parameter is not required or is static,
         // then skip any further recursion
         if ((null === $value && !$required) || $param->isStatic()) {

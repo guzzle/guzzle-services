@@ -27,7 +27,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $p = new Parameter($this->data);
         $this->assertEquals('foo', $p->getName());
         $this->assertEquals('bar', $p->getType());
-        $this->assertEquals(true, $p->getRequired());
+        $this->assertTrue($p->isRequired());
         $this->assertEquals('123', $p->getDefault());
         $this->assertEquals('456', $p->getDescription());
         $this->assertEquals(2, $p->getMinLength());

@@ -342,7 +342,7 @@ class Parameter implements ToArrayInterface
      *
      * @return bool
      */
-    public function getRequired()
+    public function isRequired()
     {
         return $this->required;
     }
