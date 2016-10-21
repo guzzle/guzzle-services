@@ -67,10 +67,10 @@ class Parameter implements ToArrayInterface
     /** @var array $properties */
     private $properties = [];
 
-    /** @var array $additionalProperties */
+    /** @var array|bool|Parameter $additionalProperties */
     private $additionalProperties;
 
-    /** @var array $items */
+    /** @var array|Parameter $items */
     private $items;
 
     /** @var string $format */
@@ -450,7 +450,7 @@ class Parameter implements ToArrayInterface
 
     /**
      * Retrieve a known property from the parameter by name or a data property
-     * by name. When not specific name value is specified, all data properties
+     * by name. When no specific name value is passed, all data properties
      * will be returned.
      *
      * @param string|null $name Specify a particular property name to retrieve
@@ -551,7 +551,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the item data of the parameter
      *
-     * @return Parameter|null
+     * @return Parameter
      */
     public function getItems()
     {

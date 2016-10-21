@@ -13,7 +13,7 @@ use Psr\Http\Message\RequestInterface;
  */
 class JsonLocation extends AbstractLocation
 {
-    /** @var bool Whether or not to add a Content-Type header when JSON is found */
+    /** @var string Whether or not to add a Content-Type header when JSON is found */
     private $jsonContentType;
 
     /** @var array */

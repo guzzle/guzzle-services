@@ -60,8 +60,8 @@ class SchemaValidator
     /**
      * From the allowable types, determine the type that the variable matches
      *
-     * @param string $type  Parameter type
-     * @param mixed  $value Value to determine the type
+     * @param string|array $type Parameter type
+     * @param mixed $value Value to determine the type
      *
      * @return string|false Returns the matching type on
      */

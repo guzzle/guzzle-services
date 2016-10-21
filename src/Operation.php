@@ -14,7 +14,7 @@ class Operation implements ToArrayInterface
     /** @var Parameter Additional parameters schema */
     private $additionalParameters;
 
-    /** @var Description */
+    /** @var DescriptionInterface */
     private $description;
 
     /** @var array Config data */

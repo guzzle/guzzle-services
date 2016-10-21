@@ -15,7 +15,7 @@ class XmlLocation extends AbstractLocation
     /** @var \XMLWriter XML writer resource */
     private $writer;
 
-    /** @var bool Content-Type header added when XML is found */
+    /** @var string Content-Type header added when XML is found */
     private $contentType;
 
     /** @var Parameter[] Buffered elements to write */
