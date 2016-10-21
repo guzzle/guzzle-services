@@ -26,7 +26,7 @@ class Description implements DescriptionInterface
     /** @var array Any extra API data */
     private $extraData = [];
 
-    /** @var string baseUri/basePath */
+    /** @var Uri baseUri/basePath */
     private $baseUri;
 
     /** @var SchemaFormatter */
@@ -57,7 +57,7 @@ class Description implements DescriptionInterface
         if (isset($config['baseUrl'])) {
             $config['baseUri'] = $config['baseUrl'];
         }
-        $this->baseUri = new Uri(isset($config['baseUri']) ? $config['baseUri'] : '');
+        $this->baseUri = isset($config['baseUri']) ? new Uri($config['baseUri']) : new Uri();
 
         // Ensure that the models and operations properties are always arrays
         $this->models = (array) $this->models;
