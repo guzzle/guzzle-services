@@ -124,6 +124,7 @@ class Deserializer
         }
 
         // Call the after() method of each found visitor
+        /** @var ResponseLocationInterface $visitor */
         foreach ($context['visitors'] as $visitor) {
             $result = $visitor->after($result, $response, $model);
         }
@@ -158,8 +159,7 @@ class Deserializer
         $result = $this->responseLocations[$location]->before(
             $result,
             $response,
-            $model,
-            $context
+            $model
         );
 
         return $result;
@@ -208,7 +208,7 @@ class Deserializer
 
         // Actually visit each response element
         foreach ($visitProperties as $property) {
-            $result = $this->responseLocations[$property[0]]->visit($result, $response, $property[1], $context);
+            $result = $this->responseLocations[$property[0]]->visit($result, $response, $property[1]);
         }
 
         return $result;
@@ -240,7 +240,7 @@ class Deserializer
         }
 
         // Visit each item in the response
-        $result = $this->responseLocations[$location]->visit($result, $response, $model, $context);
+        $result = $this->responseLocations[$location]->visit($result, $response, $model);
 
         return $result;
     }
