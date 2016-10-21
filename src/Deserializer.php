@@ -75,7 +75,7 @@ class Deserializer
      * @param CommandInterface      $command
      * @return Result|ResultInterface|void|ResponseInterface
      */
-    public function __invoke(ResponseInterface $response, RequestInterface $request = null, CommandInterface $command)
+    public function __invoke(ResponseInterface $response, RequestInterface $request, CommandInterface $command)
     {
         // If the user don't want to process the result, just return the plain response here
         if ($this->process === false) {
