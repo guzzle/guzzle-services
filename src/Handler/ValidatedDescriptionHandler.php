@@ -63,7 +63,6 @@ class ValidatedDescriptionHandler
                             $command[$name] = $value;
                         }
                     }
-
                 }
             }
 
