@@ -881,4 +881,42 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ]
         );
     }
+
+    public function testDocumentationExampleFromReadme()
+    {
+        $client = new HttpClient();
+        $description = new Description([
+            'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'testing' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get{?foo}',
+                        'responseModel' => 'getResponse',
+                        'parameters' => [
+                            'foo' => [
+                                'type' => 'string',
+                                'location' => 'uri'
+                            ],
+                            'bar' => [
+                                'type' => 'string',
+                                'location' => 'query'
+                            ]
+                        ]
+                    ]
+                ],
+                'models' => [
+                    'getResponse' => [
+                        'type' => 'object',
+                        'additionalProperties' => [
+                            'location' => 'json'
+                        ]
+                    ]
+                ]
+        ]);
+
+        $guzzle = new GuzzleClient($client, $description);
+
+        $result = $guzzle->testing(['foo' => 'bar']);
+        $this->assertEquals('bar', $result['args']['foo']);
+    }
 }
