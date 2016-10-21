@@ -235,7 +235,8 @@ class Deserializer
             return;
         }
 
-        if (!isset($foundVisitors[$location])) {
+        // Trigger the before method on each unique visitor location
+        if (!isset($context['visitors'][$location])) {
             $result = $this->triggerBeforeVisitor($location, $model, $result, $response, $context);
         }
 
