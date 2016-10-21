@@ -23,7 +23,7 @@ class Parameter implements ToArrayInterface
     /** @var bool $required*/
     private $required;
 
-    /** @var string $enum */
+    /** @var array|null $enum */
     private $enum;
 
     /** @var string $pattern */
