@@ -41,7 +41,7 @@ class Deserializer
 
     /**
      * @param DescriptionInterface $description
-     * @param $process
+     * @param bool $process
      * @param ResponseLocationInterface[] $responseLocations Extra response locations
      */
     public function __construct(
@@ -256,7 +256,7 @@ class Deserializer
      * @param ResponseInterface $response
      * @param RequestInterface  $request
      * @param CommandInterface  $command
-     * @param $operation
+     * @param Operation         $operation
      */
     protected function handleErrorResponses(
         ResponseInterface $response,

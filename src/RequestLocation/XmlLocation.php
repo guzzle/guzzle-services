@@ -256,7 +256,7 @@ class XmlLocation extends AbstractLocation
      *
      * @param \XMLWriter $writer
      *
-     * @return \string the writer resource
+     * @return string the writer resource
      */
     protected function finishDocument($writer)
     {

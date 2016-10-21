@@ -7,8 +7,6 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation;
-use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
-use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;

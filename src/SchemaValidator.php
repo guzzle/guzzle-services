@@ -63,7 +63,7 @@ class SchemaValidator
      * @param string $type  Parameter type
      * @param mixed  $value Value to determine the type
      *
-     * @return string|bool Returns the matching type on
+     * @return string|false Returns the matching type on
      */
     protected function determineType($type, $value)
     {
