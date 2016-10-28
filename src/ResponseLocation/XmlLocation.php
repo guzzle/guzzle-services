@@ -36,7 +36,7 @@ class XmlLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $model
     ) {
-        $this->xml = simplexml_load_string($response->getBody());
+        $this->xml = simplexml_load_string((string) $response->getBody());
 
         return $result;
     }
