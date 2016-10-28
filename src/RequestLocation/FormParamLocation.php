@@ -13,7 +13,7 @@ use Psr\Http\Message\RequestInterface;
 class FormParamLocation extends AbstractLocation
 {
     /** @var string $contentType */
-    protected $contentType = 'application/x-www-form-urlencoded';
+    protected $contentType = 'application/x-www-form-urlencoded; charset=utf-8';
 
     /** @var array $formParamsData */
     protected $formParamsData = [];
