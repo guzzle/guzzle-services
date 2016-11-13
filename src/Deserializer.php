@@ -38,7 +38,6 @@ class Deserializer
     /** @var boolean $process */
     private $process;
 
-
     /**
      * @param DescriptionInterface $description
      * @param bool $process
@@ -65,7 +64,6 @@ class Deserializer
         $this->description = $description;
         $this->process = $process;
     }
-
 
     /**
      * Deserialize the response into the specified result representation
@@ -102,7 +100,6 @@ class Deserializer
         return $this->visit($model, $response);
     }
 
-
     /**
      * Handles visit() and after() methods of the Response locations
      *
@@ -131,7 +128,6 @@ class Deserializer
 
         return $result;
     }
-
 
     /**
      * Handles the before() method of Response locations
@@ -164,7 +160,6 @@ class Deserializer
 
         return $result;
     }
-
 
     /**
      * Visits the outer object
@@ -214,7 +209,6 @@ class Deserializer
         return $result;
     }
 
-
     /**
      * Visits the outer array
      *
@@ -245,7 +239,6 @@ class Deserializer
 
         return $result;
     }
-
 
     /**
      * Reads the "errorResponses" from commands, and trigger appropriate exceptions

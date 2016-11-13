@@ -677,7 +677,6 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $result['statusCode']);
     }
 
-
     private function getServiceClient(
         array $responses,
         MockHandler $mock = null,

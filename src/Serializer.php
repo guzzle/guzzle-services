@@ -50,7 +50,6 @@ class Serializer
         $this->description = $description;
     }
 
-
     /**
      * @param CommandInterface $command
      * @return RequestInterface

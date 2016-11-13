@@ -51,7 +51,6 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($description));
     }
 
-
     public function testDoNothingIfNoException()
     {
         $mock = new MockHandler([new Response(200)]);
@@ -80,7 +79,6 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client = new GuzzleClient($httpClient, $description);
         $client->foo(['bar' => 'baz']);
     }
-
 
     /**
      * @expectedException \GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException
@@ -290,7 +288,6 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client = new GuzzleClient($httpClient, $description);
         $client->foo(['bar' => 'baz']);
     }
-
 
     public function testReturnsExpectedResult()
     {

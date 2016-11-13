@@ -24,7 +24,6 @@ class XmlLocation extends AbstractLocation
         parent::__construct($locationName);
     }
 
-
     /**
      * @param ResultInterface $result
      * @param ResponseInterface $response

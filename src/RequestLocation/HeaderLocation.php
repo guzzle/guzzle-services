@@ -23,7 +23,6 @@ class HeaderLocation extends AbstractLocation
         parent::__construct($locationName);
     }
 
-
     /**
      * @param CommandInterface $command
      * @param RequestInterface $request

@@ -340,7 +340,6 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $p->toArray());
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Expected a string. Got: array

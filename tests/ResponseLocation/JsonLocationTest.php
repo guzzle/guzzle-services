@@ -77,7 +77,6 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider jsonProvider
      * @group ResponseLocation
