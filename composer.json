@@ -33,6 +33,9 @@
             "GuzzleHttp\\Tests\\Command\\Guzzle\\": "tests/"
         }
     },
+    "suggest": {
+        "gimler/guzzle-description-loader": "^0.0.4"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.6-dev"
