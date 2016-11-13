@@ -27,7 +27,7 @@ class FormParamLocationTest extends \PHPUnit_Framework_TestCase
         $operation = new Operation();
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('foo=bar', $request->getBody()->getContents());
-        $this->assertArraySubset([0 => 'application/x-www-form-urlencoded'], $request->getHeader('Content-Type'));
+        $this->assertArraySubset([0 => 'application/x-www-form-urlencoded; charset=utf-8'], $request->getHeader('Content-Type'));
     }
 
     /**
