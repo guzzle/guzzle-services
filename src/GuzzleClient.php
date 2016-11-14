@@ -75,6 +75,9 @@ class GuzzleClient extends ServiceClient
             }
         }
 
+        // Merge in default command options
+        $args += $this->getConfig('defaults');
+
         return parent::getCommand($name, $args);
     }
 
