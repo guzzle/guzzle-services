@@ -2,7 +2,6 @@
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * API parameter object used with service descriptions
@@ -648,7 +647,9 @@ class Parameter implements ToArrayInterface
      */
     public function has($var)
     {
-        Assert::string($var);
+        if (!is_string($var)) {
+            throw new \InvalidArgumentException('Expected a string. Got: ' . (is_object($var) ? get_class($var) : gettype($var)));
+        }
         return isset($this->{$var}) && !empty($this->{$var});
     }
 }
