@@ -107,7 +107,7 @@ class ProcessResponse implements SubscriberInterface
         } elseif ($model->getType() == 'array') {
             $this->visitOuterArray($model, $result, $command, $response, $context);
         } else {
-            throw new \InvalidArgumentException('Invalid response model: ' . $model->getType());
+            return $response->getBody()->getContents();
         }
 
         // Call the after() method of each found visitor
