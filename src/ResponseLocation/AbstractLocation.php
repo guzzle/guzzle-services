@@ -2,12 +2,17 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\ResultInterface;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class AbstractLocation
+ *
+ * @package GuzzleHttp\Command\Guzzle\ResponseLocation
+ */
 abstract class AbstractLocation implements ResponseLocationInterface
 {
-    /** @var string */
+    /** @var string $locationName */
     protected $locationName;
 
     /**
@@ -20,27 +25,45 @@ abstract class AbstractLocation implements ResponseLocationInterface
         $this->locationName = $locationName;
     }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $model
+     * @return ResultInterface
+     */
     public function before(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $model
+    ) {
+        return $result;
+    }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $model
+     * @return ResultInterface
+     */
     public function after(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $model
+    ) {
+        return $result;
+    }
 
+    /**
+     * @param ResultInterface $result
+     * @param ResponseInterface $response
+     * @param Parameter $param
+     * @return ResultInterface
+     */
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
-    ) {}
+        Parameter $param
+    ) {
+        return $result;
+    }
 }

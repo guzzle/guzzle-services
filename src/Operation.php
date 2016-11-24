@@ -1,7 +1,7 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle;
 
-use GuzzleHttp\ToArrayInterface;
+use GuzzleHttp\Command\ToArrayInterface;
 
 /**
  * Guzzle operation
@@ -14,7 +14,7 @@ class Operation implements ToArrayInterface
     /** @var Parameter Additional parameters schema */
     private $additionalParameters;
 
-    /** @var Description */
+    /** @var DescriptionInterface */
     private $description;
 
     /** @var array Config data */
@@ -49,7 +49,7 @@ class Operation implements ToArrayInterface
      * @param DescriptionInterface  $description Service description used to resolve models if $ref tags are found
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $config = [], DescriptionInterface $description)
+    public function __construct(array $config = [], DescriptionInterface $description = null)
     {
         static $defaults = [
             'name' => '',
@@ -66,7 +66,7 @@ class Operation implements ToArrayInterface
             'errorResponses' => []
         ];
 
-        $this->description = $description;
+        $this->description = $description === null ? new Description([]) : $description;
 
         if (isset($config['extends'])) {
             $config = $this->resolveExtends($config['extends'], $config);
@@ -82,6 +82,9 @@ class Operation implements ToArrayInterface
         $this->resolveParameters();
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return $this->config;
@@ -252,6 +255,11 @@ class Operation implements ToArrayInterface
         }
     }
 
+    /**
+     * @param $name
+     * @param array $config
+     * @return array
+     */
     private function resolveExtends($name, array $config)
     {
         if (!$this->description->hasOperation($name)) {
@@ -269,6 +277,11 @@ class Operation implements ToArrayInterface
         return $result;
     }
 
+    /**
+     * Process the description and extract the parameter config
+     *
+     * @return void
+     */
     private function resolveParameters()
     {
         // Parameters need special handling when adding

@@ -2,8 +2,8 @@
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\ResultInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Location visitor used to parse values out of a response into an associative
@@ -16,55 +16,46 @@ interface ResponseLocationInterface
      * result of a command with default data (e.g. populating with JSON data in
      * the response then adding to the parsed data).
      *
-     * @param CommandInterface  $command  Command being visited
+     * @param ResultInterface   $result   Result being created
      * @param ResponseInterface $response Response being visited
      * @param Parameter         $model    Response model
-     * @param mixed             $result   Result associative array value
-     *                                    being updated by reference.
-     * @param array             $context  Parsing context
+     *
+     * @return ResultInterface Modified result
      */
     public function before(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     );
 
     /**
      * Called after visiting all parameters
      *
-     * @param CommandInterface  $command  Command being visited
+     * @param ResultInterface   $result   Result being created
      * @param ResponseInterface $response Response being visited
      * @param Parameter         $model    Response model
-     * @param mixed             $result   Result associative array value
-     *                                    being updated by reference.
-     * @param array             $context  Parsing context
+     *
+     * @return ResultInterface Modified result
      */
     public function after(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $model,
-        &$result,
-        array $context = []
+        Parameter $model
     );
 
     /**
      * Called once for each parameter being visited that matches the location
      * type.
      *
-     * @param CommandInterface  $command  Command being visited
+     * @param ResultInterface   $result   Result being created
      * @param ResponseInterface $response Response being visited
      * @param Parameter         $param    Parameter being visited
-     * @param mixed             $result   Result associative array value
-     *                                    being updated by reference.
-     * @param array             $context  Parsing context
+     *
+     * @return ResultInterface Modified result
      */
     public function visit(
-        CommandInterface $command,
+        ResultInterface $result,
         ResponseInterface $response,
-        Parameter $param,
-        &$result,
-        array $context = []
+        Parameter $param
     );
 }

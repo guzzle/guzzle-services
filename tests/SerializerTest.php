@@ -1,19 +1,20 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Command\Command;
-use GuzzleHttp\Command\CommandTransaction;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Serializer;
+use GuzzleHttp\Psr7\Request;
 
+/**
+ * @covers \GuzzleHttp\Command\Guzzle\Serializer
+ */
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function testAllowsUriTemplates()
     {
         $description = new Description([
-            'baseUrl' => 'http://test.com',
+            'baseUri' => 'http://test.com',
             'operations' => [
                 'test' => [
                     'httpMethod'         => 'GET',
@@ -29,12 +30,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $client = new Client();
-        $guzzle = new GuzzleClient($client, $description);
         $command = new Command('test', ['key' => 'bar']);
-        $trans = new CommandTransaction($guzzle, $command);
-        $s = new Serializer($description);
-        $request = $s($trans);
-        $this->assertEquals('http://test.com/api/bar/foo', $request->getUrl());
+        $serializer = new Serializer($description);
+        /** @var Request $request */
+        $request = $serializer($command);
+        $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
 }

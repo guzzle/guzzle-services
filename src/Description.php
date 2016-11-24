@@ -1,7 +1,7 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle;
 
-use GuzzleHttp\Url;
+use GuzzleHttp\Psr7\Uri;
 
 /**
  * Represents a Guzzle service description
@@ -26,8 +26,8 @@ class Description implements DescriptionInterface
     /** @var array Any extra API data */
     private $extraData = [];
 
-    /** @var string baseUrl/basePath */
-    private $baseUrl;
+    /** @var Uri baseUri/basePath */
+    private $baseUri;
 
     /** @var SchemaFormatter */
     private $formatter;
@@ -52,8 +52,12 @@ class Description implements DescriptionInterface
             }
         }
 
-        // Set the baseUrl
-        $this->baseUrl = Url::fromString(isset($config['baseUrl']) ? $config['baseUrl'] : '');
+        // Set the baseUri
+        // Account for the old style of using baseUrl
+        if (isset($config['baseUrl'])) {
+            $config['baseUri'] = $config['baseUrl'];
+        }
+        $this->baseUri = isset($config['baseUri']) ? new Uri($config['baseUri']) : new Uri();
 
         // Ensure that the models and operations properties are always arrays
         $this->models = (array) $this->models;
@@ -91,13 +95,13 @@ class Description implements DescriptionInterface
     }
 
     /**
-     * Get the basePath/baseUrl of the description
+     * Get the basePath/baseUri of the description
      *
-     * @return Url
+     * @return Uri
      */
-    public function getBaseUrl()
+    public function getBaseUri()
     {
-        return $this->baseUrl;
+        return $this->baseUri;
     }
 
     /**

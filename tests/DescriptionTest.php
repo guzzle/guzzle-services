@@ -2,9 +2,12 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\Guzzle\SchemaFormatter;
 
 /**
- * @covers GuzzleHttp\Command\Guzzle\Description
+ * @covers \GuzzleHttp\Command\Guzzle\Description
  */
 class DescriptionTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,18 +15,18 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->operations = array(
+        $this->operations = [
             'test_command' => [
                 'name'        => 'test_command',
                 'description' => 'documentationForCommand',
                 'httpMethod'  => 'DELETE',
-                'class'       => 'Guzzle\\Tests\\Service\\Mock\\Command\\MockCommand',
-                'parameters'  => array(
-                    'bucket'  => array('required' => true),
-                    'key'     => array('required' => true)
-                )
+                'class'       => 'FooModel',
+                'parameters'  => [
+                    'bucket'  => ['required' => true],
+                    'key'     => ['required' => true]
+                ]
             ]
-        );
+        ];
     }
 
     public function testConstructor()
@@ -46,7 +49,7 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($d->hasModel('Tag'));
         $this->assertTrue($d->hasModel('Person'));
         $this->assertFalse($d->hasModel('Foo'));
-        $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $d->getModel('Tag'));
+        $this->assertInstanceOf(Parameter::class, $d->getModel('Tag'));
         $this->assertEquals(['Tag', 'Person'], array_keys($d->getModels()));
     }
 
@@ -73,12 +76,12 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 
     public function testHasAttributes()
     {
-        $d = new Description(array(
-            'operations'  => array(),
+        $d = new Description([
+            'operations'  => [],
             'name'        => 'Name',
             'description' => 'Description',
             'apiVersion'  => '1.24'
-        ));
+        ]);
 
         $this->assertEquals('Name', $d->getName());
         $this->assertEquals('Description', $d->getDescription());
@@ -116,15 +119,21 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidatesOperationTypes()
     {
-        $s = new Description(array(
-            'operations' => array('foo' => new \stdClass())
-        ));
+        new Description([
+            'operations' => ['foo' => new \stdClass()]
+        ]);
     }
 
-    public function testHasBaseUrl()
+    public function testHasbaseUrl()
     {
         $description = new Description(['baseUrl' => 'http://foo.com']);
-        $this->assertEquals('http://foo.com', $description->getBaseUrl());
+        $this->assertEquals('http://foo.com', $description->getBaseUri());
+    }
+
+    public function testHasbaseUri()
+    {
+        $description = new Description(['baseUri' => 'http://foo.com']);
+        $this->assertEquals('http://foo.com', $description->getBaseUri());
     }
 
     public function testModelsHaveNames()
@@ -152,7 +161,7 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
             'name' => 'foo'
         ]]]]];
         $s = new Description($desc);
-        $this->assertInstanceOf('GuzzleHttp\\Command\\Guzzle\\Operation', $s->getOperation('foo'));
+        $this->assertInstanceOf(Operation::class, $s->getOperation('foo'));
         $this->assertSame($s->getOperation('foo'), $s->getOperation('foo'));
     }
 
@@ -164,7 +173,7 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 
     public function testCanUseCustomFormatter()
     {
-        $formatter = $this->getMockBuilder('GuzzleHttp\\Common\\Guzzle\\SchemaFormatter')
+        $formatter = $this->getMockBuilder(SchemaFormatter::class)
             ->setMethods(['format'])
             ->getMock();
         $formatter->expects($this->once())

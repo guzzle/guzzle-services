@@ -1,10 +1,10 @@
 <?php
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Command\CommandInterface;
+use Psr\Http\Message\RequestInterface;
 
 abstract class AbstractLocation implements RequestLocationInterface
 {
@@ -21,19 +21,33 @@ abstract class AbstractLocation implements RequestLocationInterface
         $this->locationName = $locationName;
     }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Parameter $param
+     * @return RequestInterface
+     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
-        Parameter $param,
-        array $context
-    ) {}
+        Parameter $param
+    ) {
+        return $request;
+    }
 
+    /**
+     * @param CommandInterface $command
+     * @param RequestInterface $request
+     * @param Operation $operation
+     * @return RequestInterface
+     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
-        Operation $operation,
-        array $context
-    ) {}
+        Operation $operation
+    ) {
+        return $request;
+    }
 
     /**
      * Prepare (filter and set desired name for request item) the value for
