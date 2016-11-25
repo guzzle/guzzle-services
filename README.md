@@ -71,4 +71,35 @@ Composer), instead of just ``composer``.
 
 * Load Service description from file [https://github.com/gimler/guzzle-description-loader]
 
+## Transition guide from Guzzle 5.0 to 6.0
+ 
+### Change regarding PostField and PostFile
+
+The request locations `postField` and `postFile` were removed in favor of `formParam` and `multipart`. If your description looks like
+ 
+```php
+[
+    'baseUri' => 'http://httpbin.org/',
+    'operations' => [
+        'testing' => [
+            'httpMethod' => 'GET',
+            'uri' => '/get{?foo}',
+            'responseModel' => 'getResponse',
+            'parameters' => [
+                'foo' => [
+                    'type' => 'string',
+                    'location' => 'postField'
+                ],
+                'bar' => [
+                    'type' => 'string',
+                    'location' => 'postFile'
+                ]
+            ]
+        ]
+    ],
+]
+```
+
+you need to change `postField` to `formParam` and `postFile` to `multipart`. 
+
 More documentation coming soon.

@@ -105,7 +105,7 @@ class Parameter implements ToArrayInterface
      *
      * - location: (string) The location of a request used to apply a parameter.
      *   Custom locations can be registered with a command, but the defaults
-     *   are uri, query, header, body, json, xml, postField, postFile.
+     *   are uri, query, header, body, json, xml, formParam, multipart.
      *
      * - sentAs: (string) Specifies how the data being modeled is sent over the
      *   wire. For example, you may wish to include certain headers in a
