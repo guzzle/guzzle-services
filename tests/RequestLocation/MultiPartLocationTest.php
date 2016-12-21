@@ -2,6 +2,7 @@
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
+use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
@@ -22,6 +23,8 @@ class MultiPartLocationTest extends \PHPUnit_Framework_TestCase
         $request = new Request('POST', 'http://httbin.org', []);
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
+        $operation = new Operation();
+        $request = $location->after($command, $request, $operation);
         $actual = $request->getBody()->getContents();
 
         $this->assertNotFalse(strpos($actual, 'name="foo"'));
