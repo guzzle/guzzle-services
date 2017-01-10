@@ -14,18 +14,47 @@ use GuzzleHttp\Psr7\Request;
  */
 class QueryLocationTest extends \PHPUnit_Framework_TestCase
 {
+    public function queryProvider()
+    {
+        return [
+            [['foo' => 'bar'], 'foo=bar'],
+            [['foo' => [1, 2]], 'foo[0]=1&foo[1]=2'],
+            [['foo' => ['bar' => 'baz', 'bim' => [4, 5]]], 'foo[bar]=baz&foo[bim][0]=4&foo[bim][1]=5']
+        ];
+    }
+
     /**
+     * @dataProvider queryProvider
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(array $params, $expected)
     {
         $location = new QueryLocation();
-        $command = new Command('foo', ['foo' => 'bar']);
+        $command = new Command('foo', $params);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
 
-        $this->assertEquals('bar', Psr7\parse_query($request->getUri()->getQuery())['foo']);
+        $this->assertEquals($expected, urldecode($request->getUri()->getQuery()));
+    }
+
+    public function testVisitsMultipleLocations()
+    {
+        $request = new Request('POST', 'http://httbin.org');
+
+        // First location
+        $location = new QueryLocation();
+        $command = new Command('foo', ['foo' => 'bar']);
+        $param = new Parameter(['name' => 'foo']);
+        $request = $location->visit($command, $request, $param);
+
+        // Second location
+        $location = new QueryLocation();
+        $command = new Command('baz', ['baz' => [6, 7]]);
+        $param = new Parameter(['name' => 'baz']);
+        $request = $location->visit($command, $request, $param);
+
+        $this->assertEquals('foo=bar&baz[0]=6&baz[1]=7', urldecode($request->getUri()->getQuery()));
     }
 
     /**
