@@ -163,6 +163,47 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             $mock->getLastRequest()->getBody()
         );
     }
+    
+    public function testExecuteWithMultiPartLocation()
+    {
+        $mock = new MockHandler();
+
+        $client = $this->getServiceClient(
+            [
+                new Response(200, [], '{"foo":"bar"}'),
+                new Response(200, [], '{"foo":"bar"}'),
+                new Response(200, [], '{"foo":"bar"}')
+            ],
+            $mock
+        );
+
+        $client->doMultiPartLocation(['foo' => 'Foo']);
+        $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
+        $this->assertContains('name="foo"', $multiPartRequestBody);
+        $this->assertContains('Foo', $multiPartRequestBody);
+
+        $client->doMultiPartLocation([
+            'foo' => 'Foo',
+            'bar' => 'Bar',
+            'baz' => 'Baz'
+        ]);
+
+        $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
+        $this->assertContains('name="foo"', $multiPartRequestBody);
+        $this->assertContains('Foo', $multiPartRequestBody);
+        $this->assertContains('name="bar"', $multiPartRequestBody);
+        $this->assertContains('Bar', $multiPartRequestBody);
+        $this->assertContains('name="baz"', $multiPartRequestBody);
+        $this->assertContains('Baz', $multiPartRequestBody);
+
+        $client->doMultiPartLocation([
+            'file' => fopen(dirname(__FILE__) . '/Asset/test.html', 'r'),
+        ]);
+        $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
+        $this->assertContains('name="file"', $multiPartRequestBody);
+        $this->assertContains('filename="test.html"', $multiPartRequestBody);
+        $this->assertContains('<title>Title</title>', $multiPartRequestBody);
+    }
 
     public function testHasConfig()
     {
@@ -856,7 +897,38 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
                                 'location' => 'xml'
                             ]
                         ],
-                        'responseModel' => 'HeaderResponse'
+                        'responseModel' => 'XmlResponse'
+                    ],
+                    'doMultiPartLocation' => [
+                        'httpMethod' => 'POST',
+                        'uri' => '/multipartLocation',
+                        'parameters' => [
+                            'foo' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Testing multipart request location',
+                                'location' => 'multipart'
+                            ],
+                            'bar' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Testing multipart request location',
+                                'location' => 'multipart'
+                            ],
+                            'baz' => [
+                                'type' => 'string',
+                                'required' => false,
+                                'description' => 'Testing multipart request location',
+                                'location' => 'multipart'
+                            ],
+                            'file' => [
+                                'type' => 'any',
+                                'required' => false,
+                                'description' => 'Testing multipart request location',
+                                'location' => 'multipart'
+                            ]
+                        ],
+                        'responseModel' => 'MultipartResponse'
                     ],
                 ],
                 'models'  => [
