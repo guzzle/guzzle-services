@@ -157,7 +157,7 @@ class GuzzleClient extends ServiceClient
         $stack = $this->getHandlerStack();
 
         if (!isset($config['validate']) || $config['validate'] === true) {
-            $stack->push(new ValidatedDescriptionHandler($this->description));
+            $stack->push(new ValidatedDescriptionHandler($this->description), 'validate_description');
         }
 
         if (!isset($config['process']) || $config['process'] === true) {

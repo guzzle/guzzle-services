@@ -42,7 +42,7 @@ class QueryLocation extends AbstractLocation
             $param
         );
 
-        $uri = $uri->withQuery(Psr7\build_query($query));
+        $uri = $uri->withQuery(http_build_query($query, null, '&', PHP_QUERY_RFC3986));
 
         return $request->withUri($uri);
     }
@@ -71,7 +71,7 @@ class QueryLocation extends AbstractLocation
                         $additional
                     );
 
-                    $uri = $uri->withQuery(Psr7\build_query($query));
+                    $uri = $uri->withQuery(http_build_query($query, null, '&', PHP_QUERY_RFC3986));
                     $request = $request->withUri($uri);
                 }
             }
