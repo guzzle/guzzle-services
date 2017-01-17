@@ -41,7 +41,11 @@ class ValidatedDescriptionHandler
             $operation = $this->description->getOperation($command->getName());
 
             foreach ($operation->getParams() as $name => $schema) {
-                $value = $schema->filter($command[$name]);
+                $value = $command[$name];
+
+                if ($value) {
+                    $value = $schema->filter($value);
+                }
 
                 if (! $this->validator->validate($schema, $value)) {
                     $errors = array_merge($errors, $this->validator->getErrors());
