@@ -53,7 +53,7 @@ class SchemaFormatter
             $dateTime = new \DateTime($dateTime);
         }
 
-        if ($dateTime instanceof \DateTime) {
+        if ($dateTime instanceof \DateTimeInterface) {
             static $utc;
             if (!$utc) {
                 $utc = new \DateTimeZone('UTC');
