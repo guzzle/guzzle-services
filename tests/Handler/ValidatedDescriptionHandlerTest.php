@@ -94,9 +94,9 @@ class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
                 'foo' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'j',
                     'parameters' => [
                         'bar' => [
+                            'location' => 'uri',
                             'type'     => 'string',
                             'format'   => 'date-time',
                             'required' => true
