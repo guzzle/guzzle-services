@@ -86,4 +86,27 @@ class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
         $client = new GuzzleClient(new HttpClient(), $description);
         $client->foo(['bar' => new \stdClass()]);
     }
+
+    public function testFilterBeforeValidate()
+    {
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'parameters' => [
+                        'bar' => [
+                            'location' => 'uri',
+                            'type'     => 'string',
+                            'format'   => 'date-time',
+                            'required' => true
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $client = new GuzzleClient(new HttpClient(), $description);
+        $client->foo(['bar' => new \DateTimeImmutable()]); // Should not throw any exception
+    }
 }
