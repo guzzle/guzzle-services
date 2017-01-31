@@ -24,18 +24,17 @@ class QueryLocationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider queryProvider
      * @group RequestLocation
      */
-    public function testVisitsLocation(array $params, $expected)
+    public function testVisitsLocation()
     {
         $location = new QueryLocation();
-        $command = new Command('foo', $params);
+        $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
         $request = $location->visit($command, $request, $param);
 
-        $this->assertEquals($expected, urldecode($request->getUri()->getQuery()));
+        $this->assertEquals('foo=bar', urldecode($request->getUri()->getQuery()));
     }
 
     public function testVisitsMultipleLocations()
