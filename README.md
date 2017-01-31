@@ -99,3 +99,31 @@ The request locations `postField` and `postFile` were removed in favor of `formP
 you need to change `postField` to `formParam` and `postFile` to `multipart`. 
 
 More documentation coming soon.
+
+## Cookbook
+
+### Changing the way query params are serialized
+
+By default, query params are serialized using strict RFC3986 rules, using `http_build_query` method. With this, array params are serialized this way:
+
+```php
+$client->myMethod(['foo' => ['bar', 'baz']]);
+
+// Query params will be foo[0]=bar&foo[1]=baz
+```
+
+However, a lot of APIs in the wild require the numeric indices to be removed, so that the query params end up being `foo[]=bar&foo[]=baz`. You
+can easily change the behaviour by creating your own serializer and overriding the "query" request location:
+
+```php
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
+use GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer;
+use GuzzleHttp\Command\Guzzle\Serializer;
+
+$queryLocation   = new QueryLocation('query', new Rfc3986Serializer(true));
+$serializer      = new Serializer($description, ['query' => $queryLocation]);
+$guzzleClient    = new GuzzleClient($client, $description, $serializer);
+```
+
+You can also create your own serializer if you have specific needs.

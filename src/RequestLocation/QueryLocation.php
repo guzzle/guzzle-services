@@ -4,6 +4,8 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\Guzzle\QuerySerializer\QuerySerializerInterface;
+use GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 
@@ -13,13 +15,21 @@ use Psr\Http\Message\RequestInterface;
 class QueryLocation extends AbstractLocation
 {
     /**
+     * @var QuerySerializerInterface
+     */
+    private $querySerializer;
+
+    /**
      * Set the name of the location
      *
-     * @param string $locationName
+     * @param string                        $locationName
+     * @param QuerySerializerInterface|null $querySerializer
      */
-    public function __construct($locationName = 'query')
+    public function __construct($locationName = 'query', QuerySerializerInterface $querySerializer = null)
     {
         parent::__construct($locationName);
+
+        $this->querySerializer = $querySerializer ?: new Rfc3986Serializer();
     }
 
     /**
@@ -42,7 +52,7 @@ class QueryLocation extends AbstractLocation
             $param
         );
 
-        $uri = $uri->withQuery(http_build_query($query, null, '&', PHP_QUERY_RFC3986));
+        $uri = $uri->withQuery($this->querySerializer->aggregate($query));
 
         return $request->withUri($uri);
     }
@@ -71,7 +81,7 @@ class QueryLocation extends AbstractLocation
                         $additional
                     );
 
-                    $uri = $uri->withQuery(http_build_query($query, null, '&', PHP_QUERY_RFC3986));
+                    $uri = $uri->withQuery($this->querySerializer->aggregate($query));
                     $request = $request->withUri($uri);
                 }
             }
