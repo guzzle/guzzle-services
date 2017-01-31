@@ -362,4 +362,176 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitsNestedArrayOfArrays()
+    {
+        $json = [
+            'scalar' => 'foo',
+            'nested' => [
+                [
+                    'bar' => 123,
+                    'baz' => false,
+                ],
+                [
+                    'bar' => 345,
+                    'baz' => true,
+                ],
+                [
+                    'bar' => 678,
+                    'baz' => true,
+                ],
+            ]
+        ];
+
+        $body = \GuzzleHttp\json_encode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j'
+                ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'scalar' => [
+                            // for some reason (probably because location is also set on array of arrays)
+                            // array of arrays sibling elements must have location set to `json`
+                            // otherwise JsonLocation ignores them
+                            'location' => 'json',
+                            'type' => 'string'
+                        ],
+                        'nested' => [
+                            // array of arrays type must be set to `array`
+                            // without that JsonLocation throws an exception
+                            'type' => 'array',
+                            // for array of arrays `location` must be set to `json`
+                            // otherwise JsonLocation returns an empty array
+                            'location' => 'json',
+                            'items' => [
+                                // although this is array of arrays, array items type
+                                // must be set as `object`
+                                'type' => 'object',
+                                'properties' => [
+                                    'bar' => [
+                                        'type' => 'integer',
+                                    ],
+                                    'baz' => [
+                                        'type' => 'boolean',
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+        $expected = [
+            'scalar' => 'foo',
+            'nested' => [
+                [
+                    'bar' => 123,
+                    'baz' => false,
+                ],
+                [
+                    'bar' => 345,
+                    'baz' => true,
+                ],
+                [
+                    'bar' => 678,
+                    'baz' => true,
+                ],
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitsNestedArrayOfObjects()
+    {
+        $json = json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}');
+
+        $body = \GuzzleHttp\json_encode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j'
+                ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'scalar' => [
+                            'type' => 'string'
+                        ],
+                        'nested' => [
+                            // array of objects type must be set to `array`
+                            // without that JsonLocation throws an exception
+                            'type' => 'array',
+                            'items' => [
+                                // array elements type must be set to `object`
+                                'type' => 'object',
+                                'properties' => [
+                                    'bar' => [
+                                        'type' => 'integer',
+                                    ],
+                                    'baz' => [
+                                        'type' => 'boolean',
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+        $expected = [
+            'scalar' => 'foo',
+            'nested' => [
+                [
+                    'bar' => 123,
+                    'baz' => false,
+                ],
+                [
+                    'bar' => 345,
+                    'baz' => true,
+                ],
+                [
+                    'bar' => 678,
+                    'baz' => true,
+                ],
+            ]
+        ];
+        $this->assertEquals($expected, $result->toArray());
+    }
 }
