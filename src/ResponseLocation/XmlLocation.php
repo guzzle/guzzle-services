@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 class XmlLocation extends AbstractLocation
 {
     /** @var \SimpleXMLElement XML document being visited */
-    private $xml;
+    protected $xml;
 
     /**
      * Set the name of the location
