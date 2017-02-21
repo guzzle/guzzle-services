@@ -412,8 +412,8 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
                     'type' => 'object',
                     'filters' => [
                         // This filter unwraps the result
-                        function (ResultInterface $result) {
-                            return new Result($result['Result']);
+                        function (array $data) {
+                            return $data['Result'];
                         }
                     ],
                     'additionalProperties' => [
