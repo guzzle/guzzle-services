@@ -89,7 +89,7 @@ class Parameter implements ToArrayInterface
      * - name: (string) Unique name of the parameter
      *
      * - type: (string|array) Type of variable (string, number, integer,
-     *   boolean, object, array, numeric, null, any). Types are using for
+     *   boolean, object, array, numeric, null, any). Types are used for
      *   validation and determining the structure of a parameter. You can use a
      *   union type by providing an array of simple types. If one of the union
      *   types matches the provided value, then the value is valid.
@@ -112,7 +112,7 @@ class Parameter implements ToArrayInterface
      *   response model that have a normalized casing of FooBar, but the actual
      *   header is x-foo-bar. In this case, sentAs would be set to x-foo-bar.
      *
-     * - filters: (array) Array of static method names to to run a parameter
+     * - filters: (array) Array of static method names to run a parameter
      *   value through. Each value in the array must be a string containing the
      *   full class path to a static method or an array of complex filter
      *   information. You can specify static methods of classes using the full
