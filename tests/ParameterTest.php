@@ -254,6 +254,31 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         ], $p->toArray());
     }
 
+    public function testExtendedModelsAreDeeplyMerged()
+    {
+        $quiGon = [
+            'type' => 'object',
+            'properties' => [
+                'lightSaber' => ['enum' => ['red', 'green', 'blue'], 'default' => 'green']
+            ]
+        ];
+
+        $obiWan = [
+            'extends' => 'QuiGon',
+            'properties' => [
+                'jediType' => ['enum' => ['youngling', 'padawan', 'knight', 'master']]
+            ]
+        ];
+
+        $description = new Description([
+            'models' => ['QuiGon' => $quiGon, 'ObiWan' => $obiWan]
+        ]);
+
+        $obiModel = $description->getModel('ObiWan');
+        $this->assertEquals('master', $obiModel->getProperty('jediType')->getEnum()[3]);
+        $this->assertEquals('green', $obiModel->getProperty('lightSaber')->getDefault());
+    }
+
     public function testHasKeyMethod()
     {
         $p = new Parameter(['name' => 'foo', 'sentAs' => 'bar']);
