@@ -322,7 +322,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $data = [
             'type' => 'object',
             'properties' => [
-                'foo' => ['type' => 'string'],
+                'foo' => 'string',
                 'bar' => ['type' => 'string'],
             ]
         ];
@@ -330,7 +330,6 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GuzzleHttp\\Command\\Guzzle\\Parameter', $p->getProperty('foo'));
         $this->assertSame($p->getProperty('foo'), $p->getProperty('foo'));
         $this->assertNull($p->getProperty('wefwe'));
-
         $properties = $p->getProperties();
         $this->assertInternalType('array', $properties);
         foreach ($properties as $prop) {
