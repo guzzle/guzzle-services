@@ -18,7 +18,7 @@ use GuzzleHttp\Command\Guzzle\Description;
 
 $client = new Client();
 $description = new Description([
-	'baseUri' => 'http://httpbin.org/',
+	'baseUrl' => 'http://httpbin.org/',
 	'operations' => [
 		'testing' => [
 			'httpMethod' => 'GET',
