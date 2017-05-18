@@ -7,6 +7,8 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Result;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Command\ServiceClientInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -382,5 +384,50 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->assertArraySubset($expected, $result['LoginResponse']);
+    }
+
+    public function testFiltersResult()
+    {
+        $fooResponse = new Response(
+            200,
+            [],
+            // Response data is wrapped around a "Result" key
+            '{"Result": {"foo": "bar"}}'
+        );
+
+        $mock = new MockHandler([$fooResponse]);
+
+        $description = new Description([
+            'name' => 'Test API',
+            'baseUri' => 'http://httpbin.org',
+            'operations' => [
+                'foo' => [
+                    'uri' => '/foo',
+                    'httpMethod' => 'POST',
+                    'responseModel' => 'WrappedResult',
+                ]
+            ],
+            'models' => [
+                'WrappedResult' => [
+                    'type' => 'object',
+                    'filters' => [
+                        // This filter unwraps the result
+                        function (array $data) {
+                            return $data['Result'];
+                        }
+                    ],
+                    'additionalProperties' => [
+                        'location' => 'json',
+                    ],
+                ],
+            ],
+        ]);
+
+        $httpClient = new HttpClient(['handler' => $mock]);
+        $client     = new GuzzleClient($httpClient, $description);
+        $result     = $client->foo([]);
+
+        // Result should come unwrapped
+        $this->assertSame(['foo' => 'bar'], $result->toArray());
     }
 }

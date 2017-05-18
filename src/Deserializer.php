@@ -126,7 +126,7 @@ class Deserializer
             $result = $visitor->after($result, $response, $model);
         }
 
-        return $result;
+        return new Result($model->filter($result->toArray()));
     }
 
     /**
