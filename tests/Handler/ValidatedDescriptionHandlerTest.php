@@ -2,7 +2,6 @@
 namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 
@@ -109,42 +108,5 @@ class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
 
         $client = new GuzzleClient(new HttpClient(), $description);
         $client->foo(['bar' => new \DateTimeImmutable()]); // Should not throw any exception
-    }
-
-    public function testValidationDoesNotMutateCommand()
-    {
-        $description = new Description([
-            'operations' => [
-                'foo' => [
-                    'uri' => 'http://httpbin.org',
-                    'httpMethod' => 'GET',
-                    'parameters' => [
-                        'bar' => [
-                            'location' => 'query',
-                            'type'     => 'string',
-                            'filters'  => ['json_encode'],
-                            'required' => true,
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-
-        $client  = new GuzzleClient(new HttpClient(), $description);
-        $command = new Command('foo', ['bar' => ['baz' => 'bat']]);
-
-        $paramsBeforeValidation = $command->toArray();
-
-        $client->getHandlerStack()->after('validate_description', function (callable $next) use ($paramsBeforeValidation) {
-            return function (Command $command) use ($next, $paramsBeforeValidation) {
-                $paramsAfterValidation = $command->toArray();
-
-                $this->assertSame($paramsBeforeValidation, $paramsAfterValidation);
-
-                return $next($command);
-            };
-        });
-
-        $client->execute($command);
     }
 }

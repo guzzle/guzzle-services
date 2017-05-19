@@ -49,6 +49,10 @@ class ValidatedDescriptionHandler
 
                 if (! $this->validator->validate($schema, $value)) {
                     $errors = array_merge($errors, $this->validator->getErrors());
+                } elseif ($value !== $command[$name]) {
+                    // Update the config value if it changed and no validation
+                    // errors were encountered
+                    $command[$name] = $value;
                 }
             }
 
@@ -60,6 +64,8 @@ class ValidatedDescriptionHandler
                         $params->setName($name);
                         if (! $this->validator->validate($params, $value)) {
                             $errors = array_merge($errors, $this->validator->getErrors());
+                        } elseif ($value !== $command[$name]) {
+                            $command[$name] = $value;
                         }
                     }
                 }
