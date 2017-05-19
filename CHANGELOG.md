@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.1.2](https://github.com/guzzle/guzzle-services/tree/1.1.2) (2017-05-19)
+[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.1...1.1.2)
+
+**Closed issues:**
+
+- Operations extends is broken in 1.1.1 [\#145](https://github.com/guzzle/guzzle-services/issues/145)
+- Default values ignored in 1.1 [\#146](https://github.com/guzzle/guzzle-services/issues/146)
+
 ## [1.1.1](https://github.com/guzzle/guzzle-services/tree/1.1.1) (2017-05-15)
 [Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.0...1.1.1)
 
