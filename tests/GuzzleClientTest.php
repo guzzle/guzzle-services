@@ -990,4 +990,48 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $result = $guzzle->testing(['foo' => 'bar']);
         $this->assertEquals('bar', $result['args']['foo']);
     }
+
+    public function testDescriptionWithExtends()
+        {
+            $client = new HttpClient();
+            $description = new Description([
+                    'baseUrl' => 'http://httpbin.org/',
+                    'operations' => [
+                        'testing' => [
+                            'httpMethod' => 'GET',
+                            'uri' => '/get',
+                            'responseModel' => 'getResponse',
+                            'parameters' => [
+                                'foo' => [
+                                    'type' => 'string',
+                                    'default' => 'foo',
+                                    'location' => 'query'
+                                ]
+                            ]
+                        ],
+                        'testing_extends' => [
+                            'extends' => 'testing',
+                            'responseModel' => 'getResponse',
+                            'parameters' => [
+                                'bar' => [
+                                    'type' => 'string',
+                                    'location' => 'query'
+                                ]
+                            ]
+                        ],
+                    ],
+                    'models' => [
+                        'getResponse' => [
+                            'type' => 'object',
+                            'additionalProperties' => [
+                                'location' => 'json'
+                            ]
+                        ]
+                    ]
+            ]);
+            $guzzle = new GuzzleClient($client, $description);
+            $result = $guzzle->testing_extends(['bar' => 'bar']);
+            $this->assertEquals('bar', $result['args']['bar']);
+            $this->assertEquals('foo', $result['args']['foo']);
+        }
 }
