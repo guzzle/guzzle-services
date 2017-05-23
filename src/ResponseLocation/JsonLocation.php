@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 class JsonLocation extends AbstractLocation
 {
     /** @var array The JSON document being visited */
-    private $json = [];
+    protected $json = [];
 
     /**
      * Set the name of the location
