@@ -113,10 +113,13 @@ class GuzzleClient extends ServiceClient
     private function getDeserializer($responseToResultTransformer)
     {
         $process = (! isset($this->config['process']) || $this->config['process'] === true);
+        $locations = isset($this->config['response_locations']) && is_array($this->config['response_locations']) ?
+            $this->config['response_locations'] : []
+        ;
 
         return $responseToResultTransformer !== null
             ? $responseToResultTransformer
-            : new Deserializer($this->description, $process);
+            : new Deserializer($this->description, $process, $locations);
     }
 
     /**
