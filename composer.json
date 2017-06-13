@@ -1,5 +1,5 @@
 {
-    "name": "guzzlehttp/guzzle-services",
+    "name": "pierozi/guzzle-services",
     "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
     "license": "MIT",
     "authors": [
