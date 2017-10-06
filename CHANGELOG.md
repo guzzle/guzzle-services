@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased](https://github.com/guzzle/guzzle-services/tree/HEAD)
+## [1.1.3](https://github.com/guzzle/guzzle-services/tree/1.1.3) (2017-10-06)
 
 [Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.2...HEAD)
 
