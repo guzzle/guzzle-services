@@ -35,6 +35,50 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $result = $location->visit($result, $response, $parameter);
         $this->assertEquals('BAR', $result['val']);
     }
+    /**
+     * @group ResponseLocation
+     * @param $name
+     * @param $expected
+     */
+    public function testVisitsWiredArray()
+    {
+        $json = ['car_models' => ['ferrari', 'aston martin']];
+        $body = \GuzzleHttp\json_encode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $guzzle = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'getCars' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'Cars'
+                ]
+            ],
+            'models' => [
+                'Cars' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'cars' => [
+                            'type' => 'array',
+                            'sentAs' => 'car_models',
+                            'items' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ],
+                ]
+            ]
+        ]);
+
+        $guzzle = new GuzzleClient($guzzle, $description);
+        $result = $guzzle->getCars();
+
+        $this->assertEquals(['cars' => ['ferrari', 'aston martin']], $result->toArray());
+    }
 
     /**
      * @group ResponseLocation
