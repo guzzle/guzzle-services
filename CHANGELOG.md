@@ -1,5 +1,9 @@
 # Change Log
 
+**Closed issues:**
+
+- Fix weird "equal equal not" operator [\#154](https://github.com/guzzle/guzzle-services/issues/154)   
+
 ## [1.1.3](https://github.com/guzzle/guzzle-services/tree/1.1.3) (2017-10-06)
 
 [Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.2...HEAD)
