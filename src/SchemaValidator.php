@@ -139,6 +139,7 @@ class SchemaValidator
             // Convert the value to an array
             if (!$valueIsArray && $value instanceof ToArrayInterface) {
                 $value = $value->toArray();
+                $valueIsArray = true;
             }
 
             if ($valueIsArray) {

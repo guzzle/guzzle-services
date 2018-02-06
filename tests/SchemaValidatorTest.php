@@ -95,9 +95,11 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
             'type'       => 'object',
             'properties' => [
                 'foo' => ['required' => 'true'],
+                'baz' => ['required' => 'true'],
             ],
         ]);
-        $this->assertTrue($this->validator->validate($p, $o));
+        $this->assertFalse($this->validator->validate($p, $o));
+        $this->assertEquals(['[test][baz] is required'], $this->validator->getErrors());
     }
 
     public function testMergesValidationErrorsInPropertiesWithParent()
