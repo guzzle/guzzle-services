@@ -11,6 +11,8 @@ use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Tests\Command\Guzzle\Fixture\ResponseLocation\CustomResponseLocation;
+use GuzzleHttp\Tests\Command\Guzzle\Fixture\ResponseLocation\CustomResponseLocationFoo;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
@@ -167,6 +169,61 @@ class JsonLocationTest extends TestCase
         /** @var ResultInterface $result */
         $result = $guzzle->foo();
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitsCustomLocation()
+    {
+        $json = [
+            'foo' => 'bar',
+            'baz' => 'bam',
+        ];
+        $body = \GuzzleHttp\json_encode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $guzzle = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'c',
+                ],
+            ],
+            'models' => [
+                'c' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'custom-object-foo',
+                    ],
+                ],
+            ],
+        ]);
+
+        $config = [
+            'response_locations' => [
+                'custom-object-foo' => new CustomResponseLocation('custom-object-foo'),
+            ]
+        ];
+
+        $guzzle = new GuzzleClient(
+            $guzzle,
+            $description,
+            null,
+            null,
+            null,
+            $config
+        );
+
+        /** @var CustomResponseLocationFoo $result */
+        $result = $guzzle->foo();
+        $this->assertInstanceOf(CustomResponseLocationFoo::class, $result);
+        $this->assertEquals('bar', $result->foo);
+        $this->assertEquals('bam', $result->baz);
     }
 
     /**
