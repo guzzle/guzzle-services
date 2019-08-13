@@ -596,6 +596,103 @@ class Parameter implements ToArrayInterface
     }
 
     /**
+     * From the allowable types, determine the type that a value matches.
+     *
+     * @param mixed $value Value for which a type should be determined.
+     *
+     * @return string|false Either the type that matches the specified value, or
+     *     false if a determination isn't possible.
+     */
+    public function determineType($value)
+    {
+        $type = $this->getType();
+
+        foreach ((array) $type as $t) {
+            if ($t == 'string'
+                && (is_string($value) || (is_object($value) && method_exists($value, '__toString')))
+            ) {
+                return 'string';
+            } elseif ($t == 'object' && (is_object($value) || $this->isAssociativeArray($value))) {
+                return 'object';
+            } elseif ($t == 'array' && $this->isIndexedArray($value)) {
+                return 'array';
+            } elseif ($t == 'integer' && is_integer($value)) {
+                return 'integer';
+            } elseif ($t == 'boolean' && is_bool($value)) {
+                return 'boolean';
+            } elseif ($t == 'number' && is_numeric($value)) {
+                return 'number';
+            } elseif ($t == 'numeric' && is_numeric($value)) {
+                return 'numeric';
+            } elseif ($t == 'null' && !$value) {
+                return 'null';
+            } elseif ($t == 'any') {
+                return 'any';
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether or not a given value is an associative array or not.
+     *
+     * This is needed to help disambiguate an array that can be encoded as a
+     * JSON object (associative array) from one that can be encoded as a JSON
+     * array (non-associative array).
+     *
+     * Special case: an empty array is considered to be an associative array,
+     * vacuously.
+     *
+     * @param mixed $value
+     *   The value to be checked.
+     *
+     * @return boolean
+     *   TRUE if the value is an empty or associative array; FALSE if the value
+     *   is not an array, or is an indexed array.
+     */
+    private function isAssociativeArray($value) {
+      if (!is_array($value)) {
+        return false;
+      }
+
+      $is_empty = ($value === []);
+
+      // If array without any associative keys is strictly equal to the array,
+      // it's not an associative array.
+      $has_numeric_keys = (array_values($value) !== $value);
+
+      return $is_empty || $has_numeric_keys;
+    }
+
+    /**
+     * Determine whether or not a given value is an indexed array or not.
+     *
+     * This is needed to help disambiguate an array that can be encoded as a
+     * JSON object (associative array) from one that can be encoded as a JSON
+     * array (non-associative array).
+     *
+     * Special case: an empty array is considered to be an indexed array,
+     * vacuously.
+     *
+     * @param mixed $value
+     *   The value to be checked.
+     *
+     * @return boolean
+     *   TRUE if the value is an empty or indexed array; FALSE if the value is
+     *   not an array, or is an associative array.
+     */
+    private function isIndexedArray($value) {
+      if (!is_array($value)) {
+        return false;
+      }
+
+      $is_empty = ($value === []);
+
+      return $is_empty || !$this->isAssociativeArray($value);
+    }
+
+    /**
      * Set the array of filters used by the parameter
      *
      * @param array $filters Array of functions to use as filters

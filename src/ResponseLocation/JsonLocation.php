@@ -97,22 +97,33 @@ class JsonLocation extends AbstractLocation
         $name = $param->getName();
         $key = $param->getWireName();
 
+        $wholeValue = $this->json;
+
+        if (array_key_exists($key, $wholeValue)) {
+            $haveNestedElement = true;
+            $nestedElement     = $wholeValue[$key];
+        } else {
+            $haveNestedElement = false;
+            $nestedElement     = null;
+        }
+
+        $valueType = $param->determineType($wholeValue);
+
         // Check if the result should be treated as a list
-        if ($param->getType() == 'array') {
+        if ($valueType === 'array') {
             // Treat as javascript array
-            if ($name) {
+            if (!empty($name)) {
                 // name provided, store it under a key in the array
-                $subArray = isset($this->json[$key]) ? $this->json[$key] : null;
-                $result[$name] = $this->recurse($param, $subArray);
+                $result[$name] = $this->recurse($param, $nestedElement);
             } else {
                 // top-level `array` or an empty name
                 $result = new Result(array_merge(
                     $result->toArray(),
-                    $this->recurse($param, $this->json)
+                    $this->recurse($param, $wholeValue)
                 ));
             }
-        } elseif (isset($this->json[$key])) {
-            $result[$name] = $this->recurse($param, $this->json[$key]);
+        } elseif ($haveNestedElement) {
+            $result[$name] = $this->recurse($param, $nestedElement);
         }
 
         return $result;
@@ -132,7 +143,7 @@ class JsonLocation extends AbstractLocation
         }
 
         $result = [];
-        $type = $param->getType();
+        $type = $param->determineType($value);
 
         if ($type == 'array') {
             $items = $param->getItems();
