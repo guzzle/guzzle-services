@@ -32,7 +32,11 @@ class StatusCodeLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $param
     ) {
-        $result[$param->getName()] = $param->filter($response->getStatusCode());
+        $value = $response->getStatusCode();
+        $filteredValue =
+            $param->filter($value, Parameter::FILTER_STAGE_RESPONSE_WIRE);
+
+        $result[$param->getName()] = $filteredValue;
 
         return $result;
     }

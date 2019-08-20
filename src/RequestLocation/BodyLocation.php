@@ -35,15 +35,20 @@ class BodyLocation extends AbstractLocation
         RequestInterface $request,
         Parameter $param
     ) {
-        $oldValue = $request->getBody()->getContents();
+        $existingResponse = $request->getBody()->getContents();
 
         $value = $command[$param->getName()];
-        $value = $param->getName() . '=' . $param->filter($value);
+        $filteredValue =
+            $param->filter($value, Parameter::FILTER_STAGE_REQUEST_WIRE);
 
-        if ($oldValue !== '') {
-            $value = $oldValue . '&' . $value;
+        $valueForResponse = sprintf('%s=%s', $param->getName(), $filteredValue);
+
+        if ($existingResponse == '') {
+            $response = $valueForResponse;
+        } else {
+            $response = $existingResponse . '&' . $valueForResponse;
         }
 
-        return $request->withBody(Psr7\stream_for($value));
+        return $request->withBody(Psr7\stream_for($response));
     }
 }

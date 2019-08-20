@@ -8,6 +8,43 @@ use GuzzleHttp\Command\ToArrayInterface;
  */
 class Parameter implements ToArrayInterface
 {
+    /**
+     * The name of the filter stage that happens before a parameter is
+     * validated, for filtering raw data (e.g. clean-up before validation).
+     */
+    const FILTER_STAGE_BEFORE_VALIDATION = 'before_validation';
+
+    /**
+     * The name of the filter stage that happens immediately after a parameter
+     * has been validated but before it is evaluated by location handlers to be
+     * written out on the wire.
+     */
+    const FILTER_STAGE_AFTER_VALIDATION = 'after_validation';
+
+    /**
+     * The name of the filter stage that happens right before a validated value
+     * is being written out "on the wire" (e.g. for adjusting the structure or
+     * format of the data before sending it to the server).
+     */
+    const FILTER_STAGE_REQUEST_WIRE = 'request_wire';
+
+    /**
+     * The name of the filter stage that happens right after a value has been
+     * read out of a response "on the wire" (e.g. for adjusting the structure or
+     * format of the data after receiving it back from the server).
+     */
+    const FILTER_STAGE_RESPONSE_WIRE = 'response_wire';
+
+    /**
+     * A list of all allowed filter stages.
+     */
+    const FILTER_STAGES = [
+        self::FILTER_STAGE_BEFORE_VALIDATION,
+        self::FILTER_STAGE_AFTER_VALIDATION,
+        self::FILTER_STAGE_REQUEST_WIRE,
+        self::FILTER_STAGE_RESPONSE_WIRE
+    ];
+
     private $originalData;
 
     /** @var string $name */
@@ -117,14 +154,23 @@ class Parameter implements ToArrayInterface
      *   full class path to a static method or an array of complex filter
      *   information. You can specify static methods of classes using the full
      *   namespace class name followed by '::' (e.g. Foo\Bar::baz). Some
-     *   filters require arguments in order to properly filter a value. For
-     *   complex filters, use a hash containing a 'method' key pointing to a
-     *   static method, and an 'args' key containing an array of positional
-     *   arguments to pass to the method. Arguments can contain keywords that
-     *   are replaced when filtering a value: '@value' is replaced with the
-     *   value being validated, '@api' is replaced with the Parameter object.
+     *   filters require arguments in order to properly filter a value.
      *
-     * - properties: When the type is an object, you can specify nested parameters
+     *   For complex filters, use a hash containing a 'method' key pointing to a
+     *   static method, an 'args' key containing an array of positional
+     *   arguments to pass to the method, and an optional 'stage' key. Arguments
+     *   can contain keywords that are replaced when filtering a value: '@value'
+     *   is replaced with the value being validated, '@api' is replaced with the
+     *   Parameter object, and '@stage' is replaced with the current filter
+     *   stage (if any was provided).
+     *
+     *   The optional 'stage' key can be provided to control when the filter is
+     *   invoked. The key can indicate that a filter should only be invoked
+     *   'before_validation', 'after_validation', when being written out to the
+     *   'request_wire' or being read from the 'response_wire'.
+     *
+     * - properties: When the type is an object, you can specify nested
+     *   parameters
      *
      * - additionalProperties: (array) This attribute defines a schema for all
      *   properties that are not explicitly defined in an object type
@@ -250,14 +296,30 @@ class Parameter implements ToArrayInterface
      * parameter.
      *
      * @param mixed $value Value to filter
+     * @param string $stage An optional specifier of what filter stage to
+     *     invoke. If null, then all filters are invoked no matter what stage
+     *     they apply to. Otherwise, only filters for the specified stage are
+     *     invoked.
      *
      * @return mixed Returns the filtered value
      * @throws \RuntimeException when trying to format when no service
      *     description is available.
+     * @throws \InvalidArgumentException if an invalid validation stage is
+     *     provided.
      */
-    public function filter($value)
+    public function filter($value, $stage = null)
     {
-        // Formats are applied exclusively and supersed filters
+        if (($stage !== null) && !in_array($stage, self::FILTER_STAGES)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '$stage must be one of [%s], but was given "%s"',
+                    implode(', ', self::FILTER_STAGES),
+                    $stage
+                )
+            );
+        }
+
+        // Formats are applied exclusively and supercede filters
         if ($this->format) {
             if (!$this->serviceDescription) {
                 throw new \RuntimeException('No service description was set so '
@@ -273,24 +335,7 @@ class Parameter implements ToArrayInterface
 
         // Apply filters to the value
         if ($this->filters) {
-            foreach ($this->filters as $filter) {
-                if (is_array($filter)) {
-                    // Convert complex filters that hold value place holders
-                    foreach ($filter['args'] as &$data) {
-                        if ($data == '@value') {
-                            $data = $value;
-                        } elseif ($data == '@api') {
-                            $data = $this;
-                        }
-                    }
-                    $value = call_user_func_array(
-                        $filter['method'],
-                        $filter['args']
-                    );
-                } else {
-                    $value = call_user_func($filter, $value);
-                }
-            }
+            $value = $this->invokeCustomFilters($value, $stage);
         }
 
         return $value;
@@ -628,6 +673,17 @@ class Parameter implements ToArrayInterface
                     'A [method] value must be specified for each complex filter'
                 );
             }
+
+            if (isset($filter['stage'])
+                && !in_array($filter['stage'], self::FILTER_STAGES)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        '[stage] value must be one of [%s], but was given "%s"',
+                        implode(', ', self::FILTER_STAGES),
+                        $filter['stage']
+                    )
+                );
+            }
         }
 
         if (!$this->filters) {
@@ -651,5 +707,128 @@ class Parameter implements ToArrayInterface
             throw new \InvalidArgumentException('Expected a string. Got: ' . (is_object($var) ? get_class($var) : gettype($var)));
         }
         return isset($this->{$var}) && !empty($this->{$var});
+    }
+
+    /**
+     * Filters the given data using filter methods specified in the config.
+     *
+     * If $stage is provided, only filters that apply to the provided filter
+     * stage will be invoked. To preserve legacy behavior, filters that do not
+     * specify a stage are implicitly invoked only in the pre-validation stage.
+     *
+     * @param mixed $value The value to filter.
+     * @param string $stage An optional specifier of what filter stage to
+     *     invoke. If null, then all filters are invoked no matter what stage
+     *     they apply to. Otherwise, only filters for the specified stage are
+     *     invoked.
+     *
+     * @return mixed The filtered value.
+     */
+    private function invokeCustomFilters($value, $stage) {
+        $filteredValue = $value;
+
+        foreach ($this->filters as $filter) {
+            if (is_array($filter)) {
+                $filteredValue =
+                    $this->invokeComplexFilter($filter, $value, $stage);
+            } else {
+                $filteredValue =
+                    $this->invokeSimpleFilter($filter, $value, $stage);
+            }
+        }
+
+        return $filteredValue;
+    }
+
+    /**
+     * Invokes a filter that uses value substitution and/or should only be
+     * invoked for a particular filter stage.
+     *
+     * If $stage is provided, and the filter specifies a stage, it is not
+     * invoked unless $stage matches the stage the filter indicates it applies
+     * to. If the filter is not invoked, $value is returned exactly as it was
+     * provided to this method.
+     *
+     * To preserve legacy behavior, if the filter does not specify a stage, it
+     * is implicitly invoked only in the pre-validation stage.
+     *
+     * @param array $filter Information about the filter to invoke.
+     * @param mixed $value The value to filter.
+     * @param string $stage An optional specifier of what filter stage to
+     *     invoke. If null, then the filter is invoked no matter what stage it
+     *     indicates it applies to. Otherwise, the filter is only invoked if it
+     *     matches the specified stage.
+     *
+     * @return mixed The filtered value.
+     */
+    private function invokeComplexFilter(array $filter, $value, $stage) {
+        if (isset($filter['stage'])) {
+            $filterStage = $filter['stage'];
+        } else {
+            $filterStage = self::FILTER_STAGE_AFTER_VALIDATION;
+        }
+
+        if (($stage === null) || ($filterStage == $stage)) {
+            // Convert complex filters that hold value place holders
+            $filterArgs =
+                $this->expandFilterArgs($filter['args'], $value, $stage);
+
+            $filteredValue =
+                call_user_func_array($filter['method'], $filterArgs);
+        } else {
+            $filteredValue = $value;
+        }
+
+        return $filteredValue;
+    }
+
+    /**
+     * Replaces any placeholders in filter arguments with values from the
+     * current context.
+     *
+     * @param array $filterArgs The array of arguments to pass to the filter
+     *     function. Some of the elements of this array are expected to be
+     *     placeholders that will be replaced by this function.
+     *
+     * @return array The array of arguments, with all placeholders replaced.
+     */
+    function expandFilterArgs(array $filterArgs, $value, $stage) {
+        $replacements = [
+            '@value'  => $value,
+            '@api'    => $this,
+            '@stage'  => $stage,
+        ];
+
+        foreach ($filterArgs as &$argValue) {
+            if (isset($replacements[$argValue])) {
+              $argValue = $replacements[$argValue];
+            }
+        }
+
+        return $filterArgs;
+    }
+
+    /**
+     * Invokes a filter only provides a function or method name to invoke,
+     * without additional parameters.
+     *
+     * If $stage is provided, the filter is not invoked unless we are in the
+     * pre-validation stage, to preserve legacy behavior.
+     *
+     * @param array $filter Information about the filter to invoke.
+     * @param mixed $value The value to filter.
+     * @param string $stage An optional specifier of what filter stage to
+     *     invoke. If null, then the filter is invoked no matter what.
+     *     Otherwise, the filter is only invoked if the value is
+     *     FILTER_STAGE_AFTER_VALIDATION.
+     *
+     * @return mixed The filtered value.
+     */
+    private function invokeSimpleFilter($filter, $value, $stage) {
+        if ($stage === self::FILTER_STAGE_AFTER_VALIDATION) {
+            return $value;
+        } else {
+            return call_user_func($filter, $value);
+        }
     }
 }

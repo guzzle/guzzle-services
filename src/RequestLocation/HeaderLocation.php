@@ -36,8 +36,10 @@ class HeaderLocation extends AbstractLocation
         Parameter $param
     ) {
         $value = $command[$param->getName()];
+        $filteredValue =
+            $param->filter($value, Parameter::FILTER_STAGE_REQUEST_WIRE);
 
-        return $request->withHeader($param->getWireName(), $param->filter($value));
+        return $request->withHeader($param->getWireName(), $filteredValue);
     }
 
     /**
@@ -57,7 +59,12 @@ class HeaderLocation extends AbstractLocation
         if ($additional && ($additional->getLocation() === $this->locationName)) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
-                    $request = $request->withHeader($key, $additional->filter($value));
+                    $filteredValue = $additional->filter(
+                        $value,
+                        Parameter::FILTER_STAGE_REQUEST_WIRE
+                    );
+
+                    $request = $request->withHeader($key, $filteredValue);
                 }
             }
         }

@@ -3,6 +3,7 @@
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
+use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 
 /**
@@ -43,17 +44,30 @@ class ValidatedDescriptionHandler
             foreach ($operation->getParams() as $name => $schema) {
                 $value = $command[$name];
 
-                if ($value) {
-                    $value = $schema->filter($value);
-                }
+                $preValidationValue = $schema->filter(
+                    $value,
+                    Parameter::FILTER_STAGE_BEFORE_VALIDATION
+                );
 
-                if (! $this->validator->validate($schema, $value)) {
-                    $errors = array_merge($errors, $this->validator->getErrors());
-                } elseif ($value !== $command[$name]) {
-                    // Update the config value if it changed and no validation errors were encountered.
-                    // This happen when the user extending an operation
-                    // See https://github.com/guzzle/guzzle-services/issues/145
-                    $command[$name] = $value;
+                if (!$this->validator->validate($schema, $preValidationValue)) {
+                    $errors =
+                        array_merge($errors, $this->validator->getErrors());
+                } else {
+                    $postValidationValue = $schema->filter(
+                        $preValidationValue,
+                        Parameter::FILTER_STAGE_AFTER_VALIDATION
+                    );
+
+                    if ($postValidationValue !== $command[$name]) {
+                        // Update the parameter value if it has changed and no
+                        // validation errors were encountered. This ensures the
+                        // parameter has a value even when the user is extending
+                        // an operation.
+                        //
+                        // See:
+                        // https://github.com/guzzle/guzzle-services/issues/145
+                        $command[$name] = $postValidationValue;
+                    }
                 }
             }
 

@@ -128,7 +128,10 @@ class JsonLocation extends AbstractLocation
     private function recurse(Parameter $param, $value)
     {
         if (!is_array($value)) {
-            return $param->filter($value);
+            $filteredValue =
+                $param->filter($value, Parameter::FILTER_STAGE_RESPONSE_WIRE);
+
+            return $filteredValue;
         }
 
         $result = [];
@@ -171,6 +174,6 @@ class JsonLocation extends AbstractLocation
             }
         }
 
-        return $param->filter($result);
+        return $param->filter($result, Parameter::FILTER_STAGE_RESPONSE_WIRE);
     }
 }

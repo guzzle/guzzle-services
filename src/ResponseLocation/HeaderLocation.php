@@ -39,7 +39,11 @@ class HeaderLocation extends AbstractLocation
             if (is_array($header)) {
                 $header = array_shift($header);
             }
-            $result[$name] = $param->filter($header);
+
+            $filteredHeader =
+                $param->filter($header, Parameter::FILTER_STAGE_RESPONSE_WIRE);
+
+            $result[$name] = $filteredHeader;
         }
 
         return $result;
