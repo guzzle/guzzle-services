@@ -578,4 +578,88 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function polymorphicProvider()
+    {
+        return [
+            [
+                ['null', 'string', 'object', 'array'],
+                '{"value": null}',
+                ['value' => null]
+            ],
+            [
+                ['null', 'string', 'object', 'array'],
+                '{"value": "foo"}',
+                ['value' => 'foo']
+            ],
+            [
+                ['null', 'string', 'object', 'array'],
+                '{"value": ["a", "b", "c"]}',
+                ['value' => ['a', 'b', 'c']]
+            ],
+            [
+                ['null', 'string', 'array', 'object'],
+                '{"value": ["a", "b", "c"]}',
+                ['value' => ['a', 'b', 'c']]
+            ],
+            [
+                ['null', 'string', 'object', 'array'],
+                '{"value": {"worked": true, "failed": false}}',
+                ['value' => ['worked' => true, 'failed' => false]]
+            ],
+            [
+                ['null', 'string', 'array', 'object'],
+                '{"value": {"worked": true, "failed": false}}',
+                ['value' => ['worked' => true, 'failed' => false]]
+            ]
+        ];
+    }
+
+
+    /**
+     * @dataProvider polymorphicProvider
+     * @group ResponseLocation
+     */
+    public function testRecognizesPolymorphicReturnTypes($allowedTypes, $responseJson,
+                                                         $expectedOutput)
+    {
+        $json = json_decode($responseJson);
+
+        $body = \GuzzleHttp\json_encode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j'
+                ]
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'value' => [
+                            'type' => $allowedTypes,
+                            'items' => [
+                              'type' => 'any'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $guzzle = new GuzzleClient($httpClient, $description);
+
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+
+        $this->assertEquals($expectedOutput, $result->toArray());
+    }
 }

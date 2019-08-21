@@ -232,7 +232,7 @@ class SchemaValidator
         // Validate that the type is correct. If the type is string but an
         // integer was passed, the class can be instructed to cast the integer
         // to a string to pass validation. This is the default behavior.
-        if ($type && (!$type = $this->determineType($type, $value))) {
+        if ($type && (!$type = $param->determineType($value))) {
             if ($this->castIntegerToStringType
                 && $param->getType() == 'string'
                 && is_integer($value)

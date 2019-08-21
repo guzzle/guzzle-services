@@ -122,6 +122,27 @@ class OperationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'baz', 'bar' => 123], $o->getData());
     }
 
+    public function testDefaultsHttpMethodToGET()
+    {
+        $o = new Operation();
+        $this->assertEquals('GET', $o->getHttpMethod());
+    }
+
+    public function testCanProvideAlternateHttpMethod()
+    {
+        $o = new Operation(['httpMethod' => 'POST']);
+        $this->assertEquals('POST', $o->getHttpMethod());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMesssage httpMethod must be a non-empty string
+     */
+    public function testEnsuresHttpMethodIsNotEmptyString()
+    {
+        new Operation(['httpMethod' => '']);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMesssage Parameters must be arrays
@@ -196,6 +217,7 @@ class OperationTest extends \PHPUnit_Framework_TestCase
                     'summary' => 'foo'
                 ],
                 'B' => [
+                    'httpMethod' => 'POST',
                     'extends' => 'A',
                     'summary' => 'Bar'
                 ],
@@ -210,17 +232,20 @@ class OperationTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $a = $d->getOperation('A');
+        $this->assertEquals('GET', $a->getHttpMethod());
         $this->assertEquals('foo', $a->getSummary());
         $this->assertTrue($a->hasParam('A'));
         $this->assertEquals('string', $a->getParam('B')->getType());
 
         $b = $d->getOperation('B');
         $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('POST', $b->getHttpMethod());
         $this->assertEquals('Bar', $b->getSummary());
         $this->assertEquals('string', $a->getParam('B')->getType());
 
         $c = $d->getOperation('C');
         $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('POST', $c->getHttpMethod());
         $this->assertEquals('Bar', $c->getSummary());
         $this->assertEquals('number', $c->getParam('B')->getType());
     }
