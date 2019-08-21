@@ -145,9 +145,15 @@ class Serializer
             /* @var Parameter $arg */
             if ($arg->getLocation() == 'uri') {
                 if (isset($command[$name])) {
-                    $variables[$name] = $arg->filter($command[$name]);
-                    if (!is_array($variables[$name])) {
-                        $variables[$name] = (string) $variables[$name];
+                    $filteredValue = $arg->filter(
+                        $command[$name],
+                        Parameter::FILTER_STAGE_REQUEST_WIRE
+                    );
+
+                    if (is_array($filteredValue)) {
+                        $variables[$name] = $filteredValue;
+                    } else {
+                        $variables[$name] = (string)$filteredValue;
                     }
                 }
             }

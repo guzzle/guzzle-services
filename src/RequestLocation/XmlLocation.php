@@ -154,7 +154,8 @@ class XmlLocation extends AbstractLocation
      */
     protected function addXml(\XMLWriter $writer, Parameter $param, $value)
     {
-        $value = $param->filter($value);
+        $filteredValue =
+            $param->filter($value, Parameter::FILTER_STAGE_REQUEST_WIRE);
         $type = $param->getType();
         $name = $param->getWireName();
         $prefix = null;
@@ -172,9 +173,9 @@ class XmlLocation extends AbstractLocation
                 }
             }
             if ($param->getType() == 'array') {
-                $this->addXmlArray($writer, $param, $value);
+                $this->addXmlArray($writer, $param, $filteredValue);
             } elseif ($param->getType() == 'object') {
-                $this->addXmlObject($writer, $param, $value);
+                $this->addXmlObject($writer, $param, $filteredValue);
             }
             if (!$param->getData('xmlFlattened')) {
                 $writer->endElement();
@@ -182,9 +183,21 @@ class XmlLocation extends AbstractLocation
             return;
         }
         if ($param->getData('xmlAttribute')) {
-            $this->writeAttribute($writer, $prefix, $name, $namespace, $value);
+            $this->writeAttribute(
+                $writer,
+                $prefix,
+                $name,
+                $namespace,
+                $filteredValue
+            );
         } else {
-            $this->writeElement($writer, $prefix, $name, $namespace, $value);
+            $this->writeElement(
+                $writer,
+                $prefix,
+                $name,
+                $namespace,
+                $filteredValue
+            );
         }
     }
 

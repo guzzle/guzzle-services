@@ -62,7 +62,7 @@ abstract class AbstractLocation implements RequestLocationInterface
     {
         return is_array($value)
             ? $this->resolveRecursively($value, $param)
-            : $param->filter($value);
+            : $param->filter($value, Parameter::FILTER_STAGE_REQUEST_WIRE);
     }
 
     /**
@@ -96,6 +96,6 @@ abstract class AbstractLocation implements RequestLocationInterface
             }
         }
 
-        return $param->filter($value);
+        return $param->filter($value, Parameter::FILTER_STAGE_REQUEST_WIRE);
     }
 }

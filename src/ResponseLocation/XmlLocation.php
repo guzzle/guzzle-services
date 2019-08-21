@@ -125,7 +125,8 @@ class XmlLocation extends AbstractLocation
 
         // Filter out the value
         if (isset($result)) {
-            $result = $param->filter($result);
+            $result =
+                $param->filter($result, Parameter::FILTER_STAGE_RESPONSE_WIRE);
         }
 
         return $result;
