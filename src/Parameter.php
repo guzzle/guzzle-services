@@ -256,7 +256,9 @@ class Parameter implements ToArrayInterface
         $this->required = (bool) $this->required;
         $this->data = (array) $this->data;
 
-        if ($this->filters) {
+        if (empty($this->filters)) {
+            $this->filters = [];
+        } else {
             $this->setFilters((array) $this->filters);
         }
 
@@ -320,7 +322,7 @@ class Parameter implements ToArrayInterface
         }
 
         // Formats are applied exclusively and supercede filters
-        if ($this->format) {
+        if (!empty($this->format)) {
             if (!$this->serviceDescription) {
                 throw new \RuntimeException('No service description was set so '
                     . 'the value cannot be formatted.');
@@ -334,7 +336,7 @@ class Parameter implements ToArrayInterface
         }
 
         // Apply filters to the value
-        if ($this->filters) {
+        if (!empty($this->filters)) {
             $value = $this->invokeCustomFilters($value, $stage);
         }
 
@@ -532,7 +534,7 @@ class Parameter implements ToArrayInterface
      */
     public function getFilters()
     {
-        return $this->filters ?: [];
+        return $this->filters;
     }
 
     /**
@@ -650,6 +652,7 @@ class Parameter implements ToArrayInterface
     private function setFilters(array $filters)
     {
         $this->filters = [];
+
         foreach ($filters as $filter) {
             $this->addFilter($filter);
         }
@@ -686,11 +689,7 @@ class Parameter implements ToArrayInterface
             }
         }
 
-        if (!$this->filters) {
-            $this->filters = [$filter];
-        } else {
-            $this->filters[] = $filter;
-        }
+        $this->filters[] = $filter;
 
         return $this;
     }
@@ -792,7 +791,7 @@ class Parameter implements ToArrayInterface
      *
      * @return array The array of arguments, with all placeholders replaced.
      */
-    function expandFilterArgs(array $filterArgs, $value, $stage) {
+    private function expandFilterArgs(array $filterArgs, $value, $stage) {
         $replacements = [
             '@value'  => $value,
             '@api'    => $this,
