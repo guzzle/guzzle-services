@@ -492,6 +492,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $stack = new HandlerStack($mock);
         $stack->push($history);
         $operation['uri'] = 'http://httpbin.org';
+        $operation['httpMethod'] = 'GET';
         $client = new GuzzleClient(
             new Client(['handler' => $stack]),
             new Description([
