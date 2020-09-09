@@ -12,6 +12,7 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -158,7 +159,7 @@ class Serializer
 
         return new Request(
             $operation->getHttpMethod(),
-            Uri::resolve($this->description->getBaseUri(), $uri)
+            UriResolver::resolve($this->description->getBaseUri(), new Uri($uri))
         );
     }
 }
