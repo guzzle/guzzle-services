@@ -21,8 +21,8 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
-        "guzzlehttp/guzzle": "^6.2|^7.0.1",
+        "php": ">=7.2.5",
+        "guzzlehttp/guzzle": "^7.0.1",
         "guzzlehttp/command": "~1.0",
         "guzzlehttp/uri-template": "^0.2.0"
     },
