@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Description;
@@ -17,7 +18,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation
  */
-class XmlLocationTest extends \PHPUnit_Framework_TestCase
+class XmlLocationTest extends TestCase
 {
     /**
      * @group RequestLocation

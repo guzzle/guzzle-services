@@ -1,13 +1,14 @@
 <?php
 namespace Guzzle\Tests\Service\Description;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Operation
  */
-class OperationTest extends \PHPUnit_Framework_TestCase
+class OperationTest extends TestCase
 {
     public static function strtoupper($string)
     {

@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -15,7 +16,7 @@ use GuzzleHttp\Psr7\Response;
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
  * @covers \GuzzleHttp\Command\Guzzle\Deserializer
  */
-class JsonLocationTest extends \PHPUnit_Framework_TestCase
+class JsonLocationTest extends TestCase
 {
 
     /**

@@ -1,12 +1,13 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\SchemaFormatter
  */
-class SchemaFormatterTest extends \PHPUnit_Framework_TestCase
+class SchemaFormatterTest extends TestCase
 {
     public function dateTimeProvider()
     {

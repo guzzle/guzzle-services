@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -12,7 +13,7 @@ use GuzzleHttp\Psr7\Request;
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class QueryLocationTest extends \PHPUnit_Framework_TestCase
+class QueryLocationTest extends TestCase
 {
     public function queryProvider()
     {

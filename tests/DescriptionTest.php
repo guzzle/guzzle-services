@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -9,7 +10,7 @@ use GuzzleHttp\Command\Guzzle\SchemaFormatter;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Description
  */
-class DescriptionTest extends \PHPUnit_Framework_TestCase
+class DescriptionTest extends TestCase
 {
     protected $operations;
 

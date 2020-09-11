@@ -1,6 +1,7 @@
 <?php
 namespace Guzzle\Tests\Service\Description;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\ToArrayInterface;
@@ -8,7 +9,7 @@ use GuzzleHttp\Command\ToArrayInterface;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\SchemaValidator
  */
-class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
+class SchemaValidatorTest extends TestCase
 {
     /** @var SchemaValidator */
     protected $validator;

@@ -1,13 +1,14 @@
 <?php
 namespace Guzzle\Tests\Service\Description;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Parameter;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Parameter
  */
-class ParameterTest extends \PHPUnit_Framework_TestCase
+class ParameterTest extends TestCase
 {
     protected $data = [
         'name'            => 'foo',

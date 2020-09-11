@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Description;
@@ -18,7 +19,7 @@ use Predis\Response\ResponseInterface;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Deserializer
  */
-class DeserializerTest extends \PHPUnit_Framework_TestCase
+class DeserializerTest extends TestCase
 {
     /** @var ServiceClientInterface|\PHPUnit_Framework_MockObject_MockObject */
     private $serviceClient;

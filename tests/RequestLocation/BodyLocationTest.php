@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation;
@@ -9,7 +10,7 @@ use GuzzleHttp\Psr7\Request;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\BodyLocation
  */
-class BodyLocationTest extends \PHPUnit_Framework_TestCase
+class BodyLocationTest extends TestCase
 {
     /**
      * @group RequestLocation

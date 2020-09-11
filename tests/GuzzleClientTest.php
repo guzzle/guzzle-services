@@ -1,6 +1,7 @@
 <?php
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Description;
@@ -16,7 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * @covers \GuzzleHttp\Command\Guzzle\GuzzleClient
  */
-class GuzzleClientTest extends \PHPUnit_Framework_TestCase
+class GuzzleClientTest extends TestCase
 {
     public function testExecuteCommandViaMagicMethod()
     {
