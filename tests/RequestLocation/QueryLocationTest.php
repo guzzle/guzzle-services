@@ -7,12 +7,13 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class QueryLocationTest extends \PHPUnit_Framework_TestCase
+class QueryLocationTest extends TestCase
 {
     public function queryProvider()
     {

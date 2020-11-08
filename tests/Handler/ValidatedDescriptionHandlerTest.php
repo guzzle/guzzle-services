@@ -4,19 +4,18 @@ namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler
  */
-class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
+class ValidatedDescriptionHandlerTest extends TestCase
 {
 
-    /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage Validation errors: [bar] is a required string
-     */
     public function testValidates()
     {
+        $this->expectExceptionMessage("Validation errors: [bar] is a required string");
+        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $description = new Description([
             'operations' => [
                 'foo' => [
@@ -59,12 +58,10 @@ class ValidatedDescriptionHandlerTest extends \PHPUnit_Framework_TestCase
         $client->foo([]);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage Validation errors: [bar] must be of type string
-     */
     public function testValidatesAdditionalParameters()
     {
+        $this->expectExceptionMessage("Validation errors: [bar] must be of type string");
+        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $description = new Description([
             'operations' => [
                 'foo' => [

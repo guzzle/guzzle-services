@@ -10,12 +10,13 @@ use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation
  * @covers \GuzzleHttp\Command\Guzzle\Deserializer
  */
-class JsonLocationTest extends \PHPUnit_Framework_TestCase
+class JsonLocationTest extends TestCase
 {
 
     /**

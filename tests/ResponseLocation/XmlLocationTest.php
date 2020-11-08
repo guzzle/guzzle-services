@@ -5,11 +5,12 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation
  */
-class XmlLocationTest extends \PHPUnit_Framework_TestCase
+class XmlLocationTest extends TestCase
 {
     /**
      * @group ResponseLocation
