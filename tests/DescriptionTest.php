@@ -5,15 +5,17 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Description
  */
-class DescriptionTest extends \PHPUnit_Framework_TestCase
+class DescriptionTest extends TestCase
 {
     protected $operations;
 
-    public function setup()
+    public function setup(): void
     {
         $this->operations = [
             'test_command' => [
@@ -65,11 +67,9 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($op->getResponseModel());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testRetrievingMissingModelThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $d = new Description([]);
         $d->getModel('foo');
     }
@@ -105,20 +105,16 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($d->getData('missing'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowsExceptionForMissingOperation()
     {
+        $this->expectException(InvalidArgumentException::class);
         $s = new Description([]);
         $this->assertNull($s->getOperation('foo'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidatesOperationTypes()
     {
+        $this->expectException(InvalidArgumentException::class);
         new Description([
             'operations' => ['foo' => new \stdClass()]
         ]);

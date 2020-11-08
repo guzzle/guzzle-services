@@ -1,13 +1,14 @@
 <?php
-namespace Guzzle\Tests\Service\Description;
+namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Parameter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Parameter
  */
-class ParameterTest extends \PHPUnit_Framework_TestCase
+class ParameterTest extends TestCase
 {
     protected $data = [
         'name'            => 'foo',
@@ -39,11 +40,9 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('abc', $p->getName());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidatesDescription()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new Parameter($this->data, ['description' => 'foo']);
     }
 
@@ -97,12 +96,10 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('FOO', $p->filter('foo'));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No service description
-     */
     public function testRequiresServiceDescriptionForFormatting()
     {
+        $this->expectExceptionMessage("No service description");
+        $this->expectException(\RuntimeException::class);
         $d = $this->data;
         $d['format'] = 'foo';
         $p = new Parameter($d);
@@ -137,12 +134,10 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $p->getType());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage A [method] value must be specified for each complex filter
-     */
     public function testValidatesComplexFilters()
     {
+        $this->expectExceptionMessage("A [method] value must be specified for each complex filter");
+        $this->expectException(\InvalidArgumentException::class);
         $p = new Parameter(['filters' => [['args' => 'foo']]]);
     }
 
@@ -188,7 +183,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $p->getItems());
         $out = $p->toArray();
         $this->assertEquals('array', $out['type']);
-        $this->assertInternalType('array', $out['items']);
+        $this->assertIsArray($out['items']);
     }
 
     public function testCanRetrieveKnownPropertiesUsingDataMethod()
@@ -332,7 +327,7 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($p->getProperty('wefwe'));
 
         $properties = $p->getProperties();
-        $this->assertInternalType('array', $properties);
+        $this->assertIsArray($properties);
         foreach ($properties as $prop) {
             $this->assertInstanceOf('GuzzleHttp\\Command\\Guzzle\\Parameter', $prop);
         }
@@ -340,12 +335,10 @@ class ParameterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $p->toArray());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected a string. Got: array
-     */
     public function testThrowsWhenNotPassString()
     {
+        $this->expectExceptionMessage("Expected a string. Got: array");
+        $this->expectException(\InvalidArgumentException::class);
         $emptyParam = new Parameter();
         $this->assertFalse($emptyParam->has([]));
         $this->assertFalse($emptyParam->has(new \stdClass()));

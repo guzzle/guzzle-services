@@ -7,11 +7,12 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\PostFileLocation;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation
  */
-class MultiPartLocationTest extends \PHPUnit_Framework_TestCase
+class MultiPartLocationTest extends TestCase
 {
     /**
      * @group RequestLocation

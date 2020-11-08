@@ -10,13 +10,14 @@ use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\GuzzleClient
  */
-class GuzzleClientTest extends \PHPUnit_Framework_TestCase
+class GuzzleClientTest extends TestCase
 {
     public function testExecuteCommandViaMagicMethod()
     {
@@ -179,8 +180,8 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 
         $client->doMultiPartLocation(['foo' => 'Foo']);
         $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
-        $this->assertContains('name="foo"', $multiPartRequestBody);
-        $this->assertContains('Foo', $multiPartRequestBody);
+        $this->assertStringContainsString('name="foo"', $multiPartRequestBody);
+        $this->assertStringContainsString('Foo', $multiPartRequestBody);
 
         $client->doMultiPartLocation([
             'foo' => 'Foo',
@@ -189,20 +190,20 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
-        $this->assertContains('name="foo"', $multiPartRequestBody);
-        $this->assertContains('Foo', $multiPartRequestBody);
-        $this->assertContains('name="bar"', $multiPartRequestBody);
-        $this->assertContains('Bar', $multiPartRequestBody);
-        $this->assertContains('name="baz"', $multiPartRequestBody);
-        $this->assertContains('Baz', $multiPartRequestBody);
+        $this->assertStringContainsString('name="foo"', $multiPartRequestBody);
+        $this->assertStringContainsString('Foo', $multiPartRequestBody);
+        $this->assertStringContainsString('name="bar"', $multiPartRequestBody);
+        $this->assertStringContainsString('Bar', $multiPartRequestBody);
+        $this->assertStringContainsString('name="baz"', $multiPartRequestBody);
+        $this->assertStringContainsString('Baz', $multiPartRequestBody);
 
         $client->doMultiPartLocation([
             'file' => fopen(dirname(__FILE__) . '/Asset/test.html', 'r'),
         ]);
         $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
-        $this->assertContains('name="file"', $multiPartRequestBody);
-        $this->assertContains('filename="test.html"', $multiPartRequestBody);
-        $this->assertContains('<title>Title</title>', $multiPartRequestBody);
+        $this->assertStringContainsString('name="file"', $multiPartRequestBody);
+        $this->assertStringContainsString('filename="test.html"', $multiPartRequestBody);
+        $this->assertStringContainsString('<title>Title</title>', $multiPartRequestBody);
     }
 
     public function testHasConfig()
@@ -342,12 +343,10 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage Validation errors: [baz] is a required string: baz
-     */
     public function testValidateDescriptionFailsDueMissingRequiredParameter()
     {
+        $this->expectExceptionMessage("Validation errors: [baz] is a required string: baz");
+        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
@@ -421,12 +420,10 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $result['statusCode']);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage Validation errors: [baz] must be of type integer
-     */
     public function testValidateDescriptionFailsDueTypeMismatch()
     {
+        $this->expectExceptionMessage("Validation errors: [baz] must be of type integer");
+        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
@@ -635,12 +632,10 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $guzzle->foo([]));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No operation found named Foo
-     */
     public function testThrowsWhenOperationNotFoundInDescription()
     {
+        $this->expectExceptionMessage("No operation found named Foo");
+        $this->expectException(\InvalidArgumentException::class);
         $client = new HttpClient();
         $description = new Description([]);
         $guzzle = new GuzzleClient(
