@@ -2,8 +2,9 @@
 namespace GuzzleHttp\Tests\Command\Guzzle\QuerySerializer;
 
 use GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer;
+use PHPUnit\Framework\TestCase;
 
-class Rfc3986SerializerTest extends \PHPUnit_Framework_TestCase
+class Rfc3986SerializerTest extends TestCase
 {
     public function queryProvider()
     {

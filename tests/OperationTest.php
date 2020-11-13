@@ -1,13 +1,14 @@
 <?php
-namespace Guzzle\Tests\Service\Description;
+namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Operation
  */
-class OperationTest extends \PHPUnit_Framework_TestCase
+class OperationTest extends TestCase
 {
     public static function strtoupper($string)
     {
@@ -122,12 +123,10 @@ class OperationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'baz', 'bar' => 123], $o->getData());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMesssage Parameters must be arrays
-     */
     public function testEnsuresParametersAreArrays()
     {
+        $this->expectExceptionMessage('Parameters must be arrays');
+        $this->expectException(\InvalidArgumentException::class);
         new Operation(['parameters' => ['foo' => true]]);
     }
 

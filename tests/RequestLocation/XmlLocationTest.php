@@ -13,11 +13,12 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation
  */
-class XmlLocationTest extends \PHPUnit_Framework_TestCase
+class XmlLocationTest extends TestCase
 {
     /**
      * @group RequestLocation
@@ -39,7 +40,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<?xml version="1.0"?>' . "\n"
             . '<Request><foo>bar</foo><bar>test</bar></Request>' . "\n", $xml);
         $header = $request->getHeader('Content-Type');
-        $this->assertArraySubset([0 => 'application/xml'], $header);
+        $this->assertEquals([0 => 'application/xml'], $header);
     }
 
     /**
@@ -59,7 +60,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             . '<Request/>' . "\n", $xml);
 
         $header = $request->getHeader('Content-Type');
-        $this->assertArraySubset([0 => 'application/xml'], $header);
+        $this->assertEquals([0 => 'application/xml'], $header);
     }
 
     /**
@@ -84,7 +85,7 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<?xml version="1.0"?>' . "\n"
             . '<Request><foo>bar</foo><foo>bar</foo><bam>boo</bam></Request>' . "\n", $xml);
         $header = $request->getHeader('Content-Type');
-        $this->assertArraySubset([0 => 'test'], $header);
+        $this->assertEquals([0 => 'test'], $header);
     }
 
     /**
@@ -512,10 +513,10 @@ class XmlLocationTest extends \PHPUnit_Framework_TestCase
             $request = $transaction['request'];
             if (empty($input)) {
                 if ($request->hasHeader('Content-Type')) {
-                    $this->assertArraySubset([0 => ''], $request->getHeader('Content-Type'));
+                    $this->assertEquals([0 => ''], $request->getHeader('Content-Type'));
                 }
             } else {
-                $this->assertArraySubset([0 => 'application/xml'], $request->getHeader('Content-Type'));
+                $this->assertEquals([0 => 'application/xml'], $request->getHeader('Content-Type'));
             }
 
             $body = str_replace(["\n", "<?xml version=\"1.0\"?>"], '', (string) $request->getBody());

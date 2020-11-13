@@ -4,16 +4,17 @@ namespace Guzzle\Tests\Service\Description;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\ToArrayInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\SchemaValidator
  */
-class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
+class SchemaValidatorTest extends TestCase
 {
     /** @var SchemaValidator */
     protected $validator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->validator = new SchemaValidator();
     }
@@ -65,7 +66,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $param = $this->getComplexParam();
         $result = $param->toArray();
-        $this->assertInternalType('array', $result['items']);
+        $this->assertIsArray($result['items']);
         $this->assertEquals('array', $result['type']);
         $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $param->getItems());
     }

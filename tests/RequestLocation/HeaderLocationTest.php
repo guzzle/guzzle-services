@@ -6,12 +6,13 @@ use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\HeaderLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class HeaderLocationTest extends \PHPUnit_Framework_TestCase
+class HeaderLocationTest extends TestCase
 {
     /**
      * @group RequestLocation
@@ -26,7 +27,7 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
 
         $header = $request->getHeader('foo');
         $this->assertTrue(is_array($header));
-        $this->assertArraySubset([0 => 'bar'], $request->getHeader('foo'));
+        $this->assertEquals([0 => 'bar'], $request->getHeader('foo'));
     }
 
     /**
@@ -47,6 +48,6 @@ class HeaderLocationTest extends \PHPUnit_Framework_TestCase
 
         $header = $request->getHeader('add');
         $this->assertTrue(is_array($header));
-        $this->assertArraySubset([0 => 'props'], $header);
+        $this->assertEquals([0 => 'props'], $header);
     }
 }

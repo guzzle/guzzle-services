@@ -6,12 +6,13 @@ use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation
  * @covers \GuzzleHttp\Command\Guzzle\RequestLocation\AbstractLocation
  */
-class JsonLocationTest extends \PHPUnit_Framework_TestCase
+class JsonLocationTest extends TestCase
 {
     /**
      * @group RequestLocation
@@ -26,7 +27,7 @@ class JsonLocationTest extends \PHPUnit_Framework_TestCase
         $operation = new Operation();
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('{"foo":"bar"}', $request->getBody()->getContents());
-        $this->assertArraySubset([0 => 'application/json'], $request->getHeader('Content-Type'));
+        $this->assertEquals([0 => 'application/json'], $request->getHeader('Content-Type'));
     }
 
     /**
