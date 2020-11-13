@@ -3,6 +3,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -13,20 +14,21 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException;
 use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\OtherCustomCommandException;
-use Predis\Response\ResponseInterface;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Deserializer
  */
-class DeserializerTest extends \PHPUnit_Framework_TestCase
+class DeserializerTest extends TestCase
 {
-    /** @var ServiceClientInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ServiceClientInterface|MockBuilder */
     private $serviceClient;
 
-    /** @var CommandInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var CommandInterface|MockBuilder */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceClient = $this->getMockBuilder(GuzzleClient::class)
                             ->disableOriginalConstructor()
@@ -80,11 +82,9 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException
-     */
     public function testCreateExceptionWithCode()
     {
+        $this->expectException(CustomCommandException::class);
         $response = new Response(404);
         $mock = new MockHandler([$response]);
 
@@ -165,11 +165,9 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException
-     */
     public function testCreateExceptionWithExactMatchOfReasonPhrase()
     {
+        $this->expectException(CustomCommandException::class);
         $response = new Response(404, [], null, '1.1', 'Bar');
         $mock = new MockHandler([$response]);
 
@@ -209,11 +207,9 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\OtherCustomCommandException
-     */
     public function testFavourMostPreciseMatch()
     {
+        $this->expectException(OtherCustomCommandException::class);
         $response = new Response(404, [], null, '1.1', 'Bar');
         $mock = new MockHandler([$response]);
 
@@ -254,12 +250,10 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    /**
-     * @expectedException \GuzzleHttp\Command\Exception\CommandException
-     * @expectedExceptionMessage 404
-     */
     public function testDoesNotAddResultWhenExceptionIsPresent()
     {
+        $this->expectExceptionMessage("404");
+        $this->expectException(CommandException::class);
         $description = new Description([
             'operations' => [
                 'foo' => [
@@ -381,6 +375,6 @@ class DeserializerTest extends \PHPUnit_Framework_TestCase
                 'content' => 'OK'
             ]
         ];
-        $this->assertArraySubset($expected, $result['LoginResponse']);
+        $this->assertEquals($expected, $result['LoginResponse']);
     }
 }

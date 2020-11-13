@@ -5,12 +5,13 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\BodyLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\BodyLocation
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\AbstractLocation
  */
-class BodyLocationTest extends \PHPUnit_Framework_TestCase
+class BodyLocationTest extends TestCase
 {
     /**
      * @group ResponseLocation

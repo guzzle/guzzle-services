@@ -2,11 +2,12 @@
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\SchemaFormatter
  */
-class SchemaFormatterTest extends \PHPUnit_Framework_TestCase
+class SchemaFormatterTest extends TestCase
 {
     public function dateTimeProvider()
     {
@@ -42,11 +43,9 @@ class SchemaFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, (new SchemaFormatter)->format($format, $value));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testValidatesDateTimeInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         (new SchemaFormatter)->format('date-time', false);
     }
 
@@ -55,6 +54,6 @@ class SchemaFormatterTest extends \PHPUnit_Framework_TestCase
         $t = time();
         $result = (new SchemaFormatter)->format('timestamp', $t);
         $this->assertSame($t, $result);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
     }
 }

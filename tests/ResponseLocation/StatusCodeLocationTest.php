@@ -5,12 +5,13 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\StatusCodeLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\StatusCodeLocation
  * @covers \GuzzleHttp\Command\Guzzle\ResponseLocation\AbstractLocation
  */
-class StatusCodeLocationTest extends \PHPUnit_Framework_TestCase
+class StatusCodeLocationTest extends TestCase
 {
     /**
      * @group ResponseLocation
