@@ -1,16 +1,17 @@
 sudo: false
+
 language: php
+
+dist: trusty
 
 php:
   - 7.3
   - 7.4
-  - hhvm
   - nightly
 
 matrix:
   fast_finish: true
   allow_failures:
-    - php: hhvm
     - php: nightly
 
 before_script:
