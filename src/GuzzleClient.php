@@ -148,11 +148,6 @@ class GuzzleClient extends ServiceClient
      */
     protected function processConfig(array $config)
     {
-        // set defaults as an array if not provided
-        if (!isset($config['defaults'])) {
-            $config['defaults'] = [];
-        }
-
         // Add the handlers based on the configuration option
         $stack = $this->getHandlerStack();
 
