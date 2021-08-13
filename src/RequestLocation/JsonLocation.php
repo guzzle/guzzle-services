@@ -5,6 +5,7 @@ use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\Utils;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
@@ -47,7 +48,7 @@ class JsonLocation extends AbstractLocation
             $param
         );
 
-        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($this->jsonData)));
+        return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($this->jsonData)));
     }
 
     /**
@@ -80,6 +81,6 @@ class JsonLocation extends AbstractLocation
             $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($data)));
+        return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($data)));
     }
 }

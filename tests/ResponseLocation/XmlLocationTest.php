@@ -4,6 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
 use GuzzleHttp\Command\Result;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +25,7 @@ class XmlLocationTest extends TestCase
             'filters' => ['strtoupper']
         ]);
         $model = new Parameter();
-        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
+        $response = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</vim></w>'));
         $result = new Result();
         $result = $location->before($result, $response, $model);
         $result = $location->visit($result, $response, $parameter);
@@ -40,7 +41,7 @@ class XmlLocationTest extends TestCase
         $location = new XmlLocation();
         $parameter = new Parameter();
         $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
-        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for('<w><vim>bar</vim></w>'));
+        $response = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</vim></w>'));
         $result = new Result();
         $result = $location->before($result, $response, $parameter);
         $result = $location->visit($result, $response, $parameter);
@@ -107,7 +108,7 @@ class XmlLocationTest extends TestCase
     {
         $location = new XmlLocation();
         $model = new Parameter();
-        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
+        $response = new Response(200, [], Psr7\Utils::streamFor($xml));
         $result = new Result();
         $result = $location->before($result, $response, $param);
         $result = $location->visit($result, $response, $param);
@@ -786,7 +787,7 @@ class XmlLocationTest extends TestCase
     {
         $location = new XmlLocation();
         $model = new Parameter();
-        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($xml));
+        $response = new Response(200, [], Psr7\Utils::streamFor($xml));
         $result = new Result();
         $result = $location->before($result, $response, $param);
         $result = $location->visit($result, $response, $param);

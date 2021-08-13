@@ -4,6 +4,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Result;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -55,7 +56,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
-        $client->foo([]);
+        self::assertInstanceOf(Result::class, $client->foo([]));
     }
 
     public function testValidatesAdditionalParameters()
@@ -104,6 +105,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
-        $client->foo(['bar' => new \DateTimeImmutable()]); // Should not throw any exception
+        // Should not throw any exception
+        self::assertInstanceOf(Result::class, $client->foo(['bar' => new \DateTimeImmutable()]));
     }
 }

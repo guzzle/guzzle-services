@@ -8,7 +8,7 @@
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./src</directory>
         </include>
     </coverage>
 </phpunit>

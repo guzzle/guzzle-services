@@ -75,10 +75,9 @@ class FormParamLocation extends AbstractLocation
         }
 
         $body = http_build_query($data['form_params'], '', '&');
-        $modify['body'] = Psr7\stream_for($body);
+        $modify['body'] = Psr7\Utils::streamFor($body);
         $modify['set_headers']['Content-Type'] = $this->contentType;
-        $request = Psr7\modify_request($request, $modify);
 
-        return $request;
+        return Psr7\Utils::modifyRequest($request, $modify);
     }
 }

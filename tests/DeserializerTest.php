@@ -8,6 +8,7 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ServiceClientInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -79,7 +80,7 @@ class DeserializerTest extends TestCase
         ]);
         $httpClient = new HttpClient(['handler' => $mock]);
         $client = new GuzzleClient($httpClient, $description);
-        $client->foo(['bar' => 'baz']);
+        self::assertInstanceOf(Result::class, $client->foo(['bar' => 'baz']));
     }
 
     public function testCreateExceptionWithCode()
@@ -162,7 +163,7 @@ class DeserializerTest extends TestCase
 
         $httpClient = new HttpClient(['handler' => $mock]);
         $client = new GuzzleClient($httpClient, $description);
-        $client->foo(['bar' => 'baz']);
+        self::assertInstanceOf(Result::class, $client->foo(['bar' => 'baz']));
     }
 
     public function testCreateExceptionWithExactMatchOfReasonPhrase()
