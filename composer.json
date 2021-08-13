@@ -20,10 +20,16 @@
             "homepage": "https://github.com/konafets"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:Bolid1/command.git"
+        }
+    ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.3 || ^8.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "guzzlehttp/command": "^1.1.0",
+        "guzzlehttp/command": "dev-master",
         "guzzlehttp/uri-template": "^0.2.0"
     },
     "require-dev": {
