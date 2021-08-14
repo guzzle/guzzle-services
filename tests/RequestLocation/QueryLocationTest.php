@@ -73,6 +73,6 @@ class QueryLocationTest extends TestCase
         $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);
 
-        $this->assertEquals('props', Psr7\parse_query($request->getUri()->getQuery())['add']);
+        $this->assertEquals('props', Psr7\Query::parse($request->getUri()->getQuery())['add']);
     }
 }
