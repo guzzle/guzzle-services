@@ -1,14 +1,5 @@
 # Guzzle Services
 
-[![License](https://poser.pugx.org/guzzlehttp/guzzle-services/license)](https://packagist.org/packages/guzzlehttp/guzzle-services)
-[![Build Status](https://travis-ci.org/guzzle/guzzle-services.svg?branch=master)](https://travis-ci.org/guzzle/guzzle-services)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guzzle/guzzle-services/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guzzle/guzzle-services/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/guzzle/guzzle-services/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/guzzle/guzzle-services/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/b08be676-b209-40b7-a6df-b6d13e8dff62/mini.png)](https://insight.sensiolabs.com/projects/b08be676-b209-40b7-a6df-b6d13e8dff62)
-[![Latest Stable Version](https://poser.pugx.org/guzzlehttp/guzzle-services/v/stable)](https://packagist.org/packages/guzzlehttp/guzzle-services)
-[![Latest Unstable Version](https://poser.pugx.org/guzzlehttp/guzzle-services/v/unstable)](https://packagist.org/packages/guzzlehttp/guzzle-services)
-[![Total Downloads](https://poser.pugx.org/guzzlehttp/guzzle-services/downloads)](https://packagist.org/packages/guzzlehttp/guzzle-services)
-
 Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.
 
 ```php
@@ -121,9 +112,9 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer;
 use GuzzleHttp\Command\Guzzle\Serializer;
 
-$queryLocation   = new QueryLocation('query', new Rfc3986Serializer(true));
-$serializer      = new Serializer($description, ['query' => $queryLocation]);
-$guzzleClient    = new GuzzleClient($client, $description, $serializer);
+$queryLocation = new QueryLocation('query', new Rfc3986Serializer(true));
+$serializer = new Serializer($description, ['query' => $queryLocation]);
+$guzzleClient = new GuzzleClient($client, $description, $serializer);
 ```
 
 You can also create your own serializer if you have specific needs.
