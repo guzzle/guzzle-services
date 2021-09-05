@@ -1,23 +1,27 @@
 {
     "name": "guzzlehttp/guzzle-services",
     "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
-    "type": "library",
     "license": "MIT",
     "authors": [
+        {
+            "name": "Graham Campbell",
+            "email": "hello@gjcampbell.co.uk",
+            "homepage": "https://github.com/GrahamCampbell"
+        },
         {
             "name": "Michael Dowling",
             "email": "mtdowling@gmail.com",
             "homepage": "https://github.com/mtdowling"
         },
         {
-            "name": "Jeremy Lindblom",
-            "email": "jeremeamia@gmail.com",
-            "homepage": "https://github.com/jeremeamia"
-        },
-        {
             "name": "Stefano Kowalke",
             "email": "blueduck@mail.org",
-            "homepage": "https://github.com/konafets"
+            "homepage": "https://github.com/Konafets"
+        },
+        {
+            "name": "Tobias Nyholm",
+            "email": "tobias.nyholm@gmail.com",
+            "homepage": "https://github.com/Nyholm"
         }
     ],
     "require": {
@@ -47,5 +51,9 @@
         "branch-alias": {
             "dev-master": "1.3-dev"
         }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }
