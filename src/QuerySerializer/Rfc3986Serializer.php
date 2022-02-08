@@ -22,7 +22,7 @@ class Rfc3986Serializer implements QuerySerializerInterface
      */
     public function aggregate(array $queryParams)
     {
-        $queryString = http_build_query($queryParams, null, '&', PHP_QUERY_RFC3986);
+        $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
 
         if ($this->removeNumericIndices) {
             $queryString = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $queryString);
