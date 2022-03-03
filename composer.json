@@ -28,7 +28,7 @@
         "php": "^7.2.5 || ^8.0",
         "guzzlehttp/guzzle": "^7.4.1",
         "guzzlehttp/command": "^1.2.2",
-        "guzzlehttp/psr7": "^1.8.3 || ^2.1"
+        "guzzlehttp/psr7": "^1.8.3 || ^2.1",
         "guzzlehttp/uri-template": "^1.0.1"
     },
     "require-dev": {
