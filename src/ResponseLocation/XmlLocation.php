@@ -144,7 +144,7 @@ class XmlLocation extends AbstractLocation
         $result = [];
         $ns = null;
 
-        if (strstr($sentAs, ':')) {
+        if (strstr($sentAs ?? '', ':')) {
             // Get namespace from the wire name
             list($ns, $sentAs) = explode(':', $sentAs);
         } else {
