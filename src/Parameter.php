@@ -6,6 +6,7 @@ use GuzzleHttp\Command\ToArrayInterface;
 /**
  * API parameter object used with service descriptions
  */
+#[AllowDynamicProperties]
 class Parameter implements ToArrayInterface
 {
     private $originalData;
