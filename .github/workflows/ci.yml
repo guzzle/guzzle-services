@@ -43,6 +43,7 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: 'none'
           extensions: mbstring
+          ini-values: error_reporting=E_ALL
 
       - name: Checkout code
         uses: actions/checkout@v3
