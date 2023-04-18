@@ -9,7 +9,7 @@ on:
 jobs:
   build-lowest-version:
     name: Build lowest version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Set up PHP
@@ -20,7 +20,7 @@ jobs:
           extensions: mbstring
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: composer update --no-interaction --prefer-stable --prefer-lowest --no-progress
@@ -30,11 +30,11 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 10
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0', '8.1']
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
 
     steps:
       - name: Set up PHP
@@ -45,11 +45,7 @@ jobs:
           extensions: mbstring
 
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Mimic PHP 8.0
-        run: composer config platform.php 8.0.999
-        if: matrix.php > 8
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
