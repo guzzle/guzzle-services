@@ -152,6 +152,8 @@ class JsonLocation extends AbstractLocation
                         );
                         // Remove from the value so that AP can later be handled
                         unset($value[$key]);
+                    } elseif (array_key_exists('default', $property->toArray())) {
+                      $result[$property->getName()] = $property->getDefault();
                     }
                 }
             }
