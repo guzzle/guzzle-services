@@ -177,8 +177,6 @@ class Parameter implements ToArrayInterface
      */
     public function __construct(array $data = [], array $options = [])
     {
-        $this->originalData = $data;
-
         if (isset($options['description'])) {
             $this->serviceDescription = $options['description'];
             if (!($this->serviceDescription instanceof DescriptionInterface)) {
@@ -202,6 +200,9 @@ class Parameter implements ToArrayInterface
             }
         }
 
+        // Set data after extend to allow nested models to pass properties
+        $this->originalData = $data;
+        
         // Pull configuration data into the parameter
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
