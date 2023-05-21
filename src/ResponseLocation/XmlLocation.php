@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -25,9 +26,6 @@ class XmlLocation extends AbstractLocation
     }
 
     /**
-     * @param ResultInterface $result
-     * @param ResponseInterface $response
-     * @param Parameter $model
      * @return ResultInterface
      */
     public function before(
@@ -41,9 +39,6 @@ class XmlLocation extends AbstractLocation
     }
 
     /**
-     * @param ResultInterface $result
-     * @param ResponseInterface $response
-     * @param Parameter $model
      * @return Result|ResultInterface
      */
     public function after(
@@ -68,9 +63,6 @@ class XmlLocation extends AbstractLocation
     }
 
     /**
-     * @param ResultInterface $result
-     * @param ResponseInterface $response
-     * @param Parameter $param
      * @return ResultInterface
      */
     public function visit(
@@ -100,6 +92,7 @@ class XmlLocation extends AbstractLocation
      *
      * @param Parameter         $param API parameter being processed
      * @param \SimpleXMLElement $node  Node being processed
+     *
      * @return array
      */
     private function recursiveProcess(
@@ -132,8 +125,6 @@ class XmlLocation extends AbstractLocation
     }
 
     /**
-     * @param Parameter $param
-     * @param \SimpleXMLElement $node
      * @return array
      */
     private function processArray(Parameter $param, \SimpleXMLElement $node)
@@ -174,6 +165,7 @@ class XmlLocation extends AbstractLocation
      *
      * @param Parameter         $param API parameter being parsed
      * @param \SimpleXMLElement $node  Value to process
+     *
      * @return array
      */
     private function processObject(Parameter $param, \SimpleXMLElement $node)
@@ -243,9 +235,8 @@ class XmlLocation extends AbstractLocation
     /**
      * Convert an XML document to an array.
      *
-     * @param \SimpleXMLElement $xml
-     * @param int               $nesting
-     * @param null              $ns
+     * @param int  $nesting
+     * @param null $ns
      *
      * @return array
      */

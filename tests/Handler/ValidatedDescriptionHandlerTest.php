@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\Handler;
 
 use GuzzleHttp\Client as HttpClient;
@@ -12,10 +13,9 @@ use PHPUnit\Framework\TestCase;
  */
 class ValidatedDescriptionHandlerTest extends TestCase
 {
-
     public function testValidates()
     {
-        $this->expectExceptionMessage("Validation errors: [bar] is a required string");
+        $this->expectExceptionMessage('Validation errors: [bar] is a required string');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $description = new Description([
             'operations' => [
@@ -25,12 +25,12 @@ class ValidatedDescriptionHandlerTest extends TestCase
                     'responseModel' => 'j',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
-                            'required' => true
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'string',
+                            'required' => true,
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
@@ -45,14 +45,14 @@ class ValidatedDescriptionHandlerTest extends TestCase
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
                     'responseModel' => 'j',
-                    'parameters' => []
-                ]
+                    'parameters' => [],
+                ],
             ],
             'models' => [
                 'j' => [
-                    'type' => 'object'
-                ]
-            ]
+                    'type' => 'object',
+                ],
+            ],
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
@@ -61,7 +61,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
 
     public function testValidatesAdditionalParameters()
     {
-        $this->expectExceptionMessage("Validation errors: [bar] must be of type string");
+        $this->expectExceptionMessage('Validation errors: [bar] must be of type string');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $description = new Description([
             'operations' => [
@@ -70,15 +70,15 @@ class ValidatedDescriptionHandlerTest extends TestCase
                     'httpMethod' => 'GET',
                     'responseModel' => 'j',
                     'additionalParameters' => [
-                        'type'     => 'string'
-                    ]
-                ]
+                        'type' => 'string',
+                    ],
+                ],
             ],
             'models' => [
                 'j' => [
-                    'type' => 'object'
-                ]
-            ]
+                    'type' => 'object',
+                ],
+            ],
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
@@ -95,13 +95,13 @@ class ValidatedDescriptionHandlerTest extends TestCase
                     'parameters' => [
                         'bar' => [
                             'location' => 'uri',
-                            'type'     => 'string',
-                            'format'   => 'date-time',
-                            'required' => true
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'string',
+                            'format' => 'date-time',
+                            'required' => true,
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $client = new GuzzleClient(new HttpClient(), $description);

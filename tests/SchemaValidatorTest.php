@@ -1,4 +1,5 @@
 <?php
+
 namespace Guzzle\Tests\Service\Description;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -74,9 +75,9 @@ class SchemaValidatorTest extends TestCase
     public function testEnforcesInstanceOfOnlyWhenObject()
     {
         $p = new Parameter([
-            'name'       => 'foo',
-            'type'       => ['object', 'string'],
-            'instanceOf' => get_class($this)
+            'name' => 'foo',
+            'type' => ['object', 'string'],
+            'instanceOf' => get_class($this),
         ]);
         $this->assertTrue($this->validator->validate($p, $this));
         $s = 'test';
@@ -92,8 +93,8 @@ class SchemaValidatorTest extends TestCase
             ->method('toArray')
             ->will($this->returnValue(['foo' => 'bar']));
         $p = new Parameter([
-            'name'       => 'test',
-            'type'       => 'object',
+            'name' => 'test',
+            'type' => 'object',
             'properties' => [
                 'foo' => ['required' => 'true'],
             ],
@@ -104,11 +105,11 @@ class SchemaValidatorTest extends TestCase
     public function testMergesValidationErrorsInPropertiesWithParent()
     {
         $p = new Parameter([
-            'name'       => 'foo',
-            'type'       => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'properties' => [
-                'bar'   => ['type' => 'string', 'required' => true, 'description' => 'This is what it does'],
-                'test'  => ['type' => 'string', 'minLength' => 2, 'maxLength' => 5],
+                'bar' => ['type' => 'string', 'required' => true, 'description' => 'This is what it does'],
+                'test' => ['type' => 'string', 'minLength' => 2, 'maxLength' => 5],
                 'test2' => ['type' => 'string', 'minLength' => 2, 'maxLength' => 2],
                 'test3' => ['type' => 'integer', 'minimum' => 100],
                 'test4' => ['type' => 'integer', 'maximum' => 10],
@@ -117,10 +118,10 @@ class SchemaValidatorTest extends TestCase
                 'test7' => ['type' => 'string', 'pattern' => '/[0-9]+/'],
                 'test8' => ['type' => 'number'],
                 'baz' => [
-                    'type'     => 'array',
+                    'type' => 'array',
                     'minItems' => 2,
                     'required' => true,
-                    "items"    => ["type" => "string"],
+                    'items' => ['type' => 'string'],
                 ],
             ],
         ]);
@@ -156,9 +157,9 @@ class SchemaValidatorTest extends TestCase
     public function testHandlesNullValuesInArraysWithDefaults()
     {
         $p = new Parameter([
-            'name'       => 'foo',
-            'type'       => 'object',
-            'required'   => true,
+            'name' => 'foo',
+            'type' => 'object',
+            'required' => true,
             'properties' => [
                 'bar' => [
                     'type' => 'object',
@@ -177,9 +178,9 @@ class SchemaValidatorTest extends TestCase
     public function testFailsWhenNullValuesInArraysWithNoDefaults()
     {
         $p = new Parameter([
-            'name'       => 'foo',
-            'type'       => 'object',
-            'required'   => true,
+            'name' => 'foo',
+            'type' => 'object',
+            'required' => true,
             'properties' => [
                 'bar' => [
                     'type' => 'object',
@@ -223,8 +224,8 @@ class SchemaValidatorTest extends TestCase
     public function testValidatesFalseAdditionalProperties()
     {
         $param = new Parameter([
-            'name'      => 'foo',
-            'type'      => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'properties' => [
                 'bar' => ['type' => 'string'],
             ],
@@ -240,11 +241,11 @@ class SchemaValidatorTest extends TestCase
     public function testAllowsUndefinedAdditionalProperties()
     {
         $param = new Parameter([
-            'name'      => 'foo',
-            'type'      => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'properties' => [
                 'bar' => ['type' => 'string'],
-            ]
+            ],
         ]);
         $value = ['test' => '123'];
         $this->assertTrue($this->validator->validate($param, $value));
@@ -253,8 +254,8 @@ class SchemaValidatorTest extends TestCase
     public function testValidatesAdditionalProperties()
     {
         $param = new Parameter([
-            'name'      => 'foo',
-            'type'      => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'properties' => [
                 'bar' => ['type' => 'string'],
             ],
@@ -271,7 +272,7 @@ class SchemaValidatorTest extends TestCase
             'name' => 'foo',
             'type' => 'object',
             'additionalProperties' => [
-                'type'  => 'array',
+                'type' => 'array',
                 'items' => ['type' => 'string'],
             ],
         ]);
@@ -309,20 +310,20 @@ class SchemaValidatorTest extends TestCase
     protected function getComplexParam()
     {
         return new Parameter([
-            'name'     => 'Foo',
-            'type'     => 'array',
+            'name' => 'Foo',
+            'type' => 'array',
             'required' => true,
-            'min'      => 1,
-            'items'    => [
-                'type'       => 'object',
+            'min' => 1,
+            'items' => [
+                'type' => 'object',
                 'properties' => [
                     'Baz' => [
-                        'type'    => 'string',
+                        'type' => 'string',
                     ],
                     'Bar' => [
                         'required' => true,
-                        'type'     => 'boolean',
-                        'default'  => true,
+                        'type' => 'boolean',
+                        'default' => true,
                     ],
                 ],
             ],

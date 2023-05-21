@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
@@ -26,7 +27,7 @@ class HeaderLocationTest extends TestCase
         $request = $location->visit($command, $request, $param);
 
         $header = $request->getHeader('foo');
-        $this->assertTrue(is_array($header));
+        $this->assertIsArray($header);
         $this->assertEquals([0 => 'bar'], $request->getHeader('foo'));
     }
 
@@ -40,14 +41,14 @@ class HeaderLocationTest extends TestCase
         $command['add'] = 'props';
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'header'
-            ]
+                'location' => 'header',
+            ],
         ]);
         $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);
 
         $header = $request->getHeader('add');
-        $this->assertTrue(is_array($header));
+        $this->assertIsArray($header);
         $this->assertEquals([0 => 'props'], $header);
     }
 }

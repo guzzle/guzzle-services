@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -20,9 +21,9 @@ class HeaderLocationTest extends TestCase
     {
         $location = new HeaderLocation();
         $parameter = new Parameter([
-            'name'    => 'val',
-            'sentAs'  => 'X-Foo',
-            'filters' => ['strtoupper']
+            'name' => 'val',
+            'sentAs' => 'X-Foo',
+            'filters' => ['strtoupper'],
         ]);
         $response = new Response(200, ['X-Foo' => 'bar']);
         $result = new Result();

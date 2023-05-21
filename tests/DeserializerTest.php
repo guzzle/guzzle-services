@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
@@ -65,18 +66,18 @@ class DeserializerTest extends TestCase
                     'responseModel' => 'j',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
-                            'location' => 'uri'
-                        ]
-                    ]
-                ]
+                            'location' => 'uri',
+                        ],
+                    ],
+                ],
             ],
             'models' => [
                 'j' => [
-                    'type' => 'object'
-                ]
-            ]
+                    'type' => 'object',
+                ],
+            ],
         ]);
         $httpClient = new HttpClient(['handler' => $mock]);
         $client = new GuzzleClient($httpClient, $description);
@@ -99,25 +100,25 @@ class DeserializerTest extends TestCase
                     'responseClass' => 'Foo',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'Unique user name (alphanumeric)',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                     ],
                     'errorResponses' => [
-                        ['code' => 404, 'class' => CustomCommandException::class]
-                    ]
-                ]
+                        ['code' => 404, 'class' => CustomCommandException::class],
+                    ],
+                ],
             ],
             'models' => [
                 'Foo' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'location' => 'json'
-                    ]
-                ]
-            ]
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
 
         $httpClient = new HttpClient(['handler' => $mock]);
@@ -140,25 +141,25 @@ class DeserializerTest extends TestCase
                     'responseClass' => 'Foo',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'Unique user name (alphanumeric)',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                     ],
                     'errorResponses' => [
-                        ['code' => 404, 'class' => CustomCommandException::class]
-                    ]
-                ]
+                        ['code' => 404, 'class' => CustomCommandException::class],
+                    ],
+                ],
             ],
             'models' => [
                 'Foo' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'location' => 'json'
-                    ]
-                ]
-            ]
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
 
         $httpClient = new HttpClient(['handler' => $mock]);
@@ -182,25 +183,25 @@ class DeserializerTest extends TestCase
                     'responseClass' => 'Foo',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'Unique user name (alphanumeric)',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                     ],
                     'errorResponses' => [
-                        ['code' => 404, 'phrase' => 'Bar', 'class' => CustomCommandException::class]
-                    ]
-                ]
+                        ['code' => 404, 'phrase' => 'Bar', 'class' => CustomCommandException::class],
+                    ],
+                ],
             ],
             'models' => [
                 'Foo' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'location' => 'json'
-                    ]
-                ]
-            ]
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
 
         $httpClient = new HttpClient(['handler' => $mock]);
@@ -224,26 +225,26 @@ class DeserializerTest extends TestCase
                     'responseClass' => 'Foo',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'Unique user name (alphanumeric)',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                     ],
                     'errorResponses' => [
                         ['code' => 404, 'class' => CustomCommandException::class],
                         ['code' => 404, 'phrase' => 'Bar', 'class' => OtherCustomCommandException::class],
-                    ]
-                ]
+                    ],
+                ],
             ],
             'models' => [
                 'Foo' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'location' => 'json'
-                    ]
-                ]
-            ]
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
 
         $httpClient = new HttpClient(['handler' => $mock]);
@@ -253,7 +254,7 @@ class DeserializerTest extends TestCase
 
     public function testDoesNotAddResultWhenExceptionIsPresent()
     {
-        $this->expectExceptionMessage("404");
+        $this->expectExceptionMessage('404');
         $this->expectException(CommandException::class);
         $description = new Description([
             'operations' => [
@@ -263,18 +264,18 @@ class DeserializerTest extends TestCase
                     'responseModel' => 'j',
                     'parameters' => [
                         'bar' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
-                            'location' => 'uri'
-                        ]
-                    ]
-                ]
+                            'location' => 'uri',
+                        ],
+                    ],
+                ],
             ],
             'models' => [
                 'j' => [
-                    'type' => 'object'
-                ]
-            ]
+                    'type' => 'object',
+                ],
+            ],
         ]);
 
         $mock = new MockHandler([new Response(404)]);
@@ -318,40 +319,40 @@ class DeserializerTest extends TestCase
                     'responseClass' => 'LoginResponse',
                     'parameters' => [
                         'username' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'Unique user name (alphanumeric)',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                         'password' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => true,
                             'description' => 'User\'s password',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                         'response' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => false,
                             'description' => 'Determines the response type: xml = result content will be xml formatted (default); plain = result content will be simple text, without structure; json  = result content will be json formatted',
-                            'location' => 'json'
+                            'location' => 'json',
                         ],
                         'token' => [
-                            'type'     => 'string',
+                            'type' => 'string',
                             'required' => false,
                             'description' => 'Provides the authentication token',
-                            'location' => 'json'
-                        ]
-                    ]
-                ]
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
             ],
             'models' => [
                 'LoginResponse' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'location' => 'json'
-                    ]
-                ]
-            ]
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
 
         $httpClient = new HttpClient(['handler' => $mock]);
@@ -367,14 +368,14 @@ class DeserializerTest extends TestCase
                 'type' => 4,
                 'username' => [
                     'uid' => 38664492,
-                    'content' => 'skyfillers-api-test'
+                    'content' => 'skyfillers-api-test',
                 ],
-                'token' => '3FB1F21014D630481D35CBC30CBF4043'
+                'token' => '3FB1F21014D630481D35CBC30CBF4043',
             ],
             'status' => [
                 'code' => 200,
-                'content' => 'OK'
-            ]
+                'content' => 'OK',
+            ],
         ];
         $this->assertEquals($expected, $result['LoginResponse']);
     }

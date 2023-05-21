@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -21,7 +22,7 @@ class ReasonPhraseLocationTest extends TestCase
         $location = new ReasonPhraseLocation();
         $parameter = new Parameter([
             'name' => 'val',
-            'filters' => ['strtolower']
+            'filters' => ['strtolower'],
         ]);
         $response = new Response(200);
         $result = new Result();

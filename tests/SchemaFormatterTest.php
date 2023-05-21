@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\SchemaFormatter;
@@ -40,19 +41,19 @@ class SchemaFormatterTest extends TestCase
      */
     public function testFilters($value, $format, $result)
     {
-        $this->assertEquals($result, (new SchemaFormatter)->format($format, $value));
+        $this->assertEquals($result, (new SchemaFormatter())->format($format, $value));
     }
 
     public function testValidatesDateTimeInput()
     {
         $this->expectException(\InvalidArgumentException::class);
-        (new SchemaFormatter)->format('date-time', false);
+        (new SchemaFormatter())->format('date-time', false);
     }
 
     public function testEnsuresTimestampsAreIntegers()
     {
         $t = time();
-        $result = (new SchemaFormatter)->format('timestamp', $t);
+        $result = (new SchemaFormatter())->format('timestamp', $t);
         $this->assertSame($t, $result);
         $this->assertIsInt($result);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
@@ -48,7 +49,7 @@ class GuzzleClientTest extends TestCase
         $client = $this->getServiceClient(
             [
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -59,7 +60,7 @@ class GuzzleClientTest extends TestCase
         $client->doQueryLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
         $last = $mock->getLastRequest();
         $this->assertEquals('foo=Foo&bar=Bar&baz=Baz', $last->getUri()->getQuery());
@@ -72,7 +73,7 @@ class GuzzleClientTest extends TestCase
         $client = $this->getServiceClient(
             [
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -83,7 +84,7 @@ class GuzzleClientTest extends TestCase
         $client->doBodyLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
         $this->assertEquals('foo=Foo&bar=Bar&baz=Baz', (string) $mock->getLastRequest()->getBody());
     }
@@ -95,7 +96,7 @@ class GuzzleClientTest extends TestCase
         $client = $this->getServiceClient(
             [
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -106,7 +107,7 @@ class GuzzleClientTest extends TestCase
         $client->doJsonLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
         $this->assertEquals('{"foo":"Foo","bar":"Bar","baz":"Baz"}', (string) $mock->getLastRequest()->getBody());
     }
@@ -118,7 +119,7 @@ class GuzzleClientTest extends TestCase
         $client = $this->getServiceClient(
             [
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -129,7 +130,7 @@ class GuzzleClientTest extends TestCase
         $client->doHeaderLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
         $this->assertEquals(['Foo'], $mock->getLastRequest()->getHeader('foo'));
         $this->assertEquals(['Bar'], $mock->getLastRequest()->getHeader('bar'));
@@ -143,7 +144,7 @@ class GuzzleClientTest extends TestCase
         $client = $this->getServiceClient(
             [
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -157,14 +158,14 @@ class GuzzleClientTest extends TestCase
         $client->doXmlLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
         $this->assertEquals(
             "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n",
             $mock->getLastRequest()->getBody()
         );
     }
-    
+
     public function testExecuteWithMultiPartLocation()
     {
         $mock = new MockHandler();
@@ -173,7 +174,7 @@ class GuzzleClientTest extends TestCase
             [
                 new Response(200, [], '{"foo":"bar"}'),
                 new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foo":"bar"}')
+                new Response(200, [], '{"foo":"bar"}'),
             ],
             $mock
         );
@@ -186,7 +187,7 @@ class GuzzleClientTest extends TestCase
         $client->doMultiPartLocation([
             'foo' => 'Foo',
             'bar' => 'Bar',
-            'baz' => 'Baz'
+            'baz' => 'Baz',
         ]);
 
         $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
@@ -198,7 +199,7 @@ class GuzzleClientTest extends TestCase
         $this->assertStringContainsString('Baz', $multiPartRequestBody);
 
         $client->doMultiPartLocation([
-            'file' => fopen(dirname(__FILE__) . '/Asset/test.html', 'r'),
+            'file' => fopen(dirname(__FILE__).'/Asset/test.html', 'r'),
         ]);
         $multiPartRequestBody = (string) $mock->getLastRequest()->getBody();
         $this->assertStringContainsString('name="file"', $multiPartRequestBody);
@@ -239,7 +240,7 @@ class GuzzleClientTest extends TestCase
             null,
             [
                 'validate' => true,
-                'process' => false
+                'process' => false,
             ]
         );
 
@@ -260,7 +261,7 @@ class GuzzleClientTest extends TestCase
             null,
             [
                 'validate' => false,
-                'process' => false
+                'process' => false,
             ]
         );
 
@@ -285,16 +286,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -303,20 +304,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -332,7 +333,7 @@ class GuzzleClientTest extends TestCase
             null,
             [
                 'validate' => true,
-                'process' => false
+                'process' => false,
             ]
         );
 
@@ -345,7 +346,7 @@ class GuzzleClientTest extends TestCase
 
     public function testValidateDescriptionFailsDueMissingRequiredParameter()
     {
-        $this->expectExceptionMessage("Validation errors: [baz] is a required string: baz");
+        $this->expectExceptionMessage('Validation errors: [baz] is a required string: baz');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $client = new HttpClient();
         $description = new Description(
@@ -361,16 +362,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => true,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -379,20 +380,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -408,7 +409,7 @@ class GuzzleClientTest extends TestCase
             null,
             [
                 'validate' => true,
-                'process' => false
+                'process' => false,
             ]
         );
 
@@ -422,7 +423,7 @@ class GuzzleClientTest extends TestCase
 
     public function testValidateDescriptionFailsDueTypeMismatch()
     {
-        $this->expectExceptionMessage("Validation errors: [baz] must be of type integer");
+        $this->expectExceptionMessage('Validation errors: [baz] must be of type integer');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
         $client = new HttpClient();
         $description = new Description(
@@ -438,16 +439,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'integer',
                                 'required' => true,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -456,20 +457,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -485,7 +486,7 @@ class GuzzleClientTest extends TestCase
             null,
             [
                 'validate' => true,
-                'process' => false
+                'process' => false,
             ]
         );
 
@@ -513,16 +514,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => true,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -531,20 +532,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -578,16 +579,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => true,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -596,20 +597,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -620,7 +621,7 @@ class GuzzleClientTest extends TestCase
         $guzzle = $this->getMockBuilder(GuzzleClient::class)
             ->setConstructorArgs([
                 $client,
-                $description
+                $description,
             ])
             ->setMethods(['execute'])
             ->getMock();
@@ -634,7 +635,7 @@ class GuzzleClientTest extends TestCase
 
     public function testThrowsWhenOperationNotFoundInDescription()
     {
-        $this->expectExceptionMessage("No operation found named Foo");
+        $this->expectExceptionMessage('No operation found named Foo');
         $this->expectException(\InvalidArgumentException::class);
         $client = new HttpClient();
         $description = new Description([]);
@@ -664,16 +665,16 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Bar',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => true,
                                 'description' => 'baz',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                         ],
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                 ],
                 'models' => [
@@ -682,20 +683,20 @@ class GuzzleClientTest extends TestCase
                         'properties' => [
                             'id' => [
                                 'location' => 'json',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'location' => [
                                 'location' => 'header',
                                 'sentAs' => 'Location',
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'age' => [
                                 'location' => 'json',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                             'statusCode' => [
                                 'location' => 'statusCode',
-                                'type' => 'integer'
+                                'type' => 'integer',
                             ],
                         ],
                     ],
@@ -726,7 +727,7 @@ class GuzzleClientTest extends TestCase
 
         return new GuzzleClient(
             new HttpClient([
-                'handler' => $mock
+                'handler' => $mock,
             ]),
             $this->getDescription(),
             $commandToRequestTransformer,
@@ -739,7 +740,7 @@ class GuzzleClientTest extends TestCase
     private function commandToRequestTransformer()
     {
         return function (CommandInterface $command) {
-            $data           = $command->toArray();
+            $data = $command->toArray();
             $data['action'] = $command->getName();
 
             return new Request('POST', '/', [], http_build_query($data));
@@ -764,10 +765,10 @@ class GuzzleClientTest extends TestCase
                 'baseUri' => 'http://httpbin.org/',
                 'operations' => [
                     'doThatThingYouDo' => [
-                        'responseModel' => 'Bar'
+                        'responseModel' => 'Bar',
                     ],
                     'doThatThingOtherYouDo' => [
-                        'responseModel' => 'Foo'
+                        'responseModel' => 'Foo',
                     ],
                     'doQueryLocation' => [
                         'httpMethod' => 'GET',
@@ -777,22 +778,22 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing query request location',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing query request location',
-                                'location' => 'query'
+                                'location' => 'query',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing query request location',
-                                'location' => 'query'
-                            ]
+                                'location' => 'query',
+                            ],
                         ],
-                        'responseModel' => 'QueryResponse'
+                        'responseModel' => 'QueryResponse',
                     ],
                     'doBodyLocation' => [
                         'httpMethod' => 'GET',
@@ -802,22 +803,22 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing body request location',
-                                'location' => 'body'
+                                'location' => 'body',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing body request location',
-                                'location' => 'body'
+                                'location' => 'body',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing body request location',
-                                'location' => 'body'
-                            ]
+                                'location' => 'body',
+                            ],
                         ],
-                        'responseModel' => 'BodyResponse'
+                        'responseModel' => 'BodyResponse',
                     ],
                     'doJsonLocation' => [
                         'httpMethod' => 'GET',
@@ -827,22 +828,22 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing json request location',
-                                'location' => 'json'
+                                'location' => 'json',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing json request location',
-                                'location' => 'json'
+                                'location' => 'json',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing json request location',
-                                'location' => 'json'
-                            ]
+                                'location' => 'json',
+                            ],
                         ],
-                        'responseModel' => 'JsonResponse'
+                        'responseModel' => 'JsonResponse',
                     ],
                     'doHeaderLocation' => [
                         'httpMethod' => 'GET',
@@ -852,22 +853,22 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing header request location',
-                                'location' => 'header'
+                                'location' => 'header',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing header request location',
-                                'location' => 'header'
+                                'location' => 'header',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing header request location',
-                                'location' => 'header'
-                            ]
+                                'location' => 'header',
+                            ],
                         ],
-                        'responseModel' => 'HeaderResponse'
+                        'responseModel' => 'HeaderResponse',
                     ],
                     'doXmlLocation' => [
                         'httpMethod' => 'GET',
@@ -877,22 +878,22 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing xml request location',
-                                'location' => 'xml'
+                                'location' => 'xml',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing xml request location',
-                                'location' => 'xml'
+                                'location' => 'xml',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing xml request location',
-                                'location' => 'xml'
-                            ]
+                                'location' => 'xml',
+                            ],
                         ],
-                        'responseModel' => 'XmlResponse'
+                        'responseModel' => 'XmlResponse',
                     ],
                     'doMultiPartLocation' => [
                         'httpMethod' => 'POST',
@@ -902,48 +903,48 @@ class GuzzleClientTest extends TestCase
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing multipart request location',
-                                'location' => 'multipart'
+                                'location' => 'multipart',
                             ],
                             'bar' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing multipart request location',
-                                'location' => 'multipart'
+                                'location' => 'multipart',
                             ],
                             'baz' => [
                                 'type' => 'string',
                                 'required' => false,
                                 'description' => 'Testing multipart request location',
-                                'location' => 'multipart'
+                                'location' => 'multipart',
                             ],
                             'file' => [
                                 'type' => 'any',
                                 'required' => false,
                                 'description' => 'Testing multipart request location',
-                                'location' => 'multipart'
-                            ]
+                                'location' => 'multipart',
+                            ],
                         ],
-                        'responseModel' => 'MultipartResponse'
+                        'responseModel' => 'MultipartResponse',
                     ],
                 ],
-                'models'  => [
+                'models' => [
                     'Foo' => [
                         'type' => 'object',
                         'properties' => [
                             'code' => [
-                                'location' => 'statusCode'
-                            ]
-                        ]
+                                'location' => 'statusCode',
+                            ],
+                        ],
                     ],
                     'Bar' => [
                         'type' => 'object',
                         'properties' => [
                             'code' => ['
-                                location' => 'statusCode'
-                            ]
-                        ]
-                    ]
-                ]
+                                location' => 'statusCode',
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -961,23 +962,23 @@ class GuzzleClientTest extends TestCase
                         'parameters' => [
                             'foo' => [
                                 'type' => 'string',
-                                'location' => 'uri'
+                                'location' => 'uri',
                             ],
                             'bar' => [
                                 'type' => 'string',
-                                'location' => 'query'
-                            ]
-                        ]
-                    ]
+                                'location' => 'query',
+                            ],
+                        ],
+                    ],
                 ],
                 'models' => [
                     'getResponse' => [
                         'type' => 'object',
                         'additionalProperties' => [
-                            'location' => 'json'
-                        ]
-                    ]
-                ]
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
         ]);
 
         $guzzle = new GuzzleClient($client, $description);
@@ -987,46 +988,46 @@ class GuzzleClientTest extends TestCase
     }
 
     public function testDescriptionWithExtends()
-        {
-            $client = new HttpClient();
-            $description = new Description([
-                    'baseUrl' => 'http://httpbin.org/',
-                    'operations' => [
-                        'testing' => [
-                            'httpMethod' => 'GET',
-                            'uri' => '/get',
-                            'responseModel' => 'getResponse',
-                            'parameters' => [
-                                'foo' => [
-                                    'type' => 'string',
-                                    'default' => 'foo',
-                                    'location' => 'query'
-                                ]
-                            ]
-                        ],
-                        'testing_extends' => [
-                            'extends' => 'testing',
-                            'responseModel' => 'getResponse',
-                            'parameters' => [
-                                'bar' => [
-                                    'type' => 'string',
-                                    'location' => 'query'
-                                ]
-                            ]
+    {
+        $client = new HttpClient();
+        $description = new Description([
+                'baseUrl' => 'http://httpbin.org/',
+                'operations' => [
+                    'testing' => [
+                        'httpMethod' => 'GET',
+                        'uri' => '/get',
+                        'responseModel' => 'getResponse',
+                        'parameters' => [
+                            'foo' => [
+                                'type' => 'string',
+                                'default' => 'foo',
+                                'location' => 'query',
+                            ],
                         ],
                     ],
-                    'models' => [
-                        'getResponse' => [
-                            'type' => 'object',
-                            'additionalProperties' => [
-                                'location' => 'json'
-                            ]
-                        ]
-                    ]
-            ]);
-            $guzzle = new GuzzleClient($client, $description);
-            $result = $guzzle->testing_extends(['bar' => 'bar']);
-            $this->assertEquals('bar', $result['args']['bar']);
-            $this->assertEquals('foo', $result['args']['foo']);
-        }
+                    'testing_extends' => [
+                        'extends' => 'testing',
+                        'responseModel' => 'getResponse',
+                        'parameters' => [
+                            'bar' => [
+                                'type' => 'string',
+                                'location' => 'query',
+                            ],
+                        ],
+                    ],
+                ],
+                'models' => [
+                    'getResponse' => [
+                        'type' => 'object',
+                        'additionalProperties' => [
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
+        ]);
+        $guzzle = new GuzzleClient($client, $description);
+        $result = $guzzle->testing_extends(['bar' => 'bar']);
+        $this->assertEquals('bar', $result['args']['bar']);
+        $this->assertEquals('foo', $result['args']['foo']);
+    }
 }

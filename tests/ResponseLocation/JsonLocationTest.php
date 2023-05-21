@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Client;
@@ -18,7 +19,6 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonLocationTest extends TestCase
 {
-
     /**
      * @group ResponseLocation
      */
@@ -26,9 +26,9 @@ class JsonLocationTest extends TestCase
     {
         $location = new JsonLocation();
         $parameter = new Parameter([
-            'name'    => 'val',
-            'sentAs'  => 'vim',
-            'filters' => ['strtoupper']
+            'name' => 'val',
+            'sentAs' => 'vim',
+            'filters' => ['strtoupper'],
         ]);
         $response = new Response(200, [], '{"vim":"bar"}');
         $result = new Result();
@@ -36,8 +36,10 @@ class JsonLocationTest extends TestCase
         $result = $location->visit($result, $response, $parameter);
         $this->assertEquals('BAR', $result['val']);
     }
+
     /**
      * @group ResponseLocation
+     *
      * @param $name
      * @param $expected
      */
@@ -55,8 +57,8 @@ class JsonLocationTest extends TestCase
                 'getCars' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'Cars'
-                ]
+                    'responseModel' => 'Cars',
+                ],
             ],
             'models' => [
                 'Cars' => [
@@ -68,11 +70,11 @@ class JsonLocationTest extends TestCase
                             'sentAs' => 'car_models',
                             'items' => [
                                 'type' => 'object',
-                            ]
-                        ]
+                            ],
+                        ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $guzzle = new GuzzleClient($guzzle, $description);
@@ -124,9 +126,8 @@ class JsonLocationTest extends TestCase
 
     /**
      * @dataProvider jsonProvider
+     *
      * @group ResponseLocation
-     * @param $name
-     * @param $expected
      */
     public function testVisitsTopLevelArrays($name, $expected)
     {
@@ -145,8 +146,8 @@ class JsonLocationTest extends TestCase
                 'foo' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'j'
-                ]
+                    'responseModel' => 'j',
+                ],
             ],
             'models' => [
                 'j' => [
@@ -157,11 +158,11 @@ class JsonLocationTest extends TestCase
                         'type' => 'object',
                         'additionalProperties' => [
                             'type' => 'string',
-                            'filters' => ['strtoupper']
-                        ]
-                    ]
-                ]
-            ]
+                            'filters' => ['strtoupper'],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $guzzle = new GuzzleClient($guzzle, $description);
         /** @var ResultInterface $result */
@@ -178,8 +179,8 @@ class JsonLocationTest extends TestCase
             'scalar' => 'foo',
             'nested' => [
                 'bar',
-                'baz'
-            ]
+                'baz',
+            ],
         ];
         $body = \GuzzleHttp\json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
@@ -192,8 +193,8 @@ class JsonLocationTest extends TestCase
                 'foo' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'j'
-                ]
+                    'responseModel' => 'j',
+                ],
             ],
             'models' => [
                 'j' => [
@@ -203,11 +204,11 @@ class JsonLocationTest extends TestCase
                         'scalar' => ['type' => 'string'],
                         'nested' => [
                             'type' => 'array',
-                            'items' => ['type' => 'string']
-                        ]
-                    ]
-                ]
-            ]
+                            'items' => ['type' => 'string'],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         $guzzle = new GuzzleClient($httpClient, $description);
         /** @var ResultInterface $result */
@@ -216,8 +217,8 @@ class JsonLocationTest extends TestCase
             'scalar' => 'foo',
             'nested' => [
                 'bar',
-                'baz'
-            ]
+                'baz',
+            ],
         ];
         $this->assertEquals($expected, $result->toArray());
     }
@@ -231,8 +232,8 @@ class JsonLocationTest extends TestCase
                         'foo' => [
                             'uri' => 'http://httpbin.org',
                             'httpMethod' => 'GET',
-                            'responseModel' => 'j'
-                        ]
+                            'responseModel' => 'j',
+                        ],
                     ],
                     'models' => [
                         'j' => [
@@ -248,21 +249,21 @@ class JsonLocationTest extends TestCase
                                             'type' => 'object',
                                             'properties' => [
                                                 'abc' => [
-                                                    'type' => 'number'
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                                    'type' => 'number',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                             'additionalProperties' => [
                                 'location' => 'json',
                                 'type' => 'string',
-                                'filters' => ['strtoupper']
-                            ]
-                        ]
-                    ]
-                ]
+                                'filters' => ['strtoupper'],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 [
@@ -270,8 +271,8 @@ class JsonLocationTest extends TestCase
                         'foo' => [
                             'uri' => 'http://httpbin.org',
                             'httpMethod' => 'GET',
-                            'responseModel' => 'j'
-                        ]
+                            'responseModel' => 'j',
+                        ],
                     ],
                     'models' => [
                         'j' => [
@@ -287,26 +288,27 @@ class JsonLocationTest extends TestCase
                                             'type' => 'object',
                                             'properties' => [
                                                 'abc' => [
-                                                    'type' => 'number'
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                                    'type' => 'number',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                             'additionalProperties' => [
                                 'type' => 'string',
-                                'filters' => ['strtoupper']
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'filters' => ['strtoupper'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
      * @dataProvider nestedProvider
+     *
      * @group ResponseLocation
      */
     public function testVisitsNestedProperties($desc)
@@ -316,10 +318,10 @@ class JsonLocationTest extends TestCase
                 'foo' => 'abc',
                 'bar' => 123,
                 'bam' => [
-                    'abc' => 456
-                ]
+                    'abc' => 456,
+                ],
             ],
-            'baz' => 'boo'
+            'baz' => 'boo',
         ];
         $body = \GuzzleHttp\json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
@@ -336,10 +338,10 @@ class JsonLocationTest extends TestCase
                 'foo' => 'abc',
                 'bar' => 123,
                 'bam' => [
-                    'abc' => 456
-                ]
+                    'abc' => 456,
+                ],
             ],
-            'baz' => 'BOO'
+            'baz' => 'BOO',
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -350,11 +352,10 @@ class JsonLocationTest extends TestCase
      */
     public function testVisitsNullResponseProperties()
     {
-
         $json = [
             'data' => [
-                'link' => null
-            ]
+                'link' => null,
+            ],
         ];
 
         $body = \GuzzleHttp\json_encode($json);
@@ -369,8 +370,8 @@ class JsonLocationTest extends TestCase
                     'foo' => [
                         'uri' => 'http://httpbin.org',
                         'httpMethod' => 'GET',
-                        'responseModel' => 'j'
-                    ]
+                        'responseModel' => 'j',
+                    ],
                 ],
                 'models' => [
                     'j' => [
@@ -379,20 +380,20 @@ class JsonLocationTest extends TestCase
                         'properties' => [
                             'scalar' => ['type' => 'string'],
                             'data' => [
-                                'type'          => 'object',
-                                'location'      => 'json',
-                                'properties'    => [
+                                'type' => 'object',
+                                'location' => 'json',
+                                'properties' => [
                                     'link' => [
-                                        'name'    => 'val',
+                                        'name' => 'val',
                                         'type' => 'string',
-                                        'location' => 'json'
+                                        'location' => 'json',
                                     ],
                                 ],
-                                'additionalProperties' => false
-                            ]
-                        ]
-                    ]
-                ]
+                                'additionalProperties' => false,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         );
         $guzzle = new GuzzleClient($httpClient, $description);
@@ -401,8 +402,8 @@ class JsonLocationTest extends TestCase
 
         $expected = [
             'data' => [
-                'link' => null
-            ]
+                'link' => null,
+            ],
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -428,7 +429,7 @@ class JsonLocationTest extends TestCase
                     'bar' => 678,
                     'baz' => true,
                 ],
-            ]
+            ],
         ];
 
         $body = \GuzzleHttp\json_encode($json);
@@ -442,8 +443,8 @@ class JsonLocationTest extends TestCase
                 'foo' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'j'
-                ]
+                    'responseModel' => 'j',
+                ],
             ],
             'models' => [
                 'j' => [
@@ -454,7 +455,7 @@ class JsonLocationTest extends TestCase
                             // array of arrays sibling elements must have location set to `json`
                             // otherwise JsonLocation ignores them
                             'location' => 'json',
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'nested' => [
                             // array of arrays type must be set to `array`
@@ -475,11 +476,11 @@ class JsonLocationTest extends TestCase
                                         'type' => 'boolean',
                                     ],
                                 ],
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $guzzle = new GuzzleClient($httpClient, $description);
@@ -500,7 +501,7 @@ class JsonLocationTest extends TestCase
                     'bar' => 678,
                     'baz' => true,
                 ],
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -524,8 +525,8 @@ class JsonLocationTest extends TestCase
                 'foo' => [
                     'uri' => 'http://httpbin.org',
                     'httpMethod' => 'GET',
-                    'responseModel' => 'j'
-                ]
+                    'responseModel' => 'j',
+                ],
             ],
             'models' => [
                 'j' => [
@@ -533,7 +534,7 @@ class JsonLocationTest extends TestCase
                     'location' => 'json',
                     'properties' => [
                         'scalar' => [
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'nested' => [
                             // array of objects type must be set to `array`
@@ -550,11 +551,11 @@ class JsonLocationTest extends TestCase
                                         'type' => 'boolean',
                                     ],
                                 ],
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $guzzle = new GuzzleClient($httpClient, $description);
@@ -575,7 +576,7 @@ class JsonLocationTest extends TestCase
                     'bar' => 678,
                     'baz' => true,
                 ],
-            ]
+            ],
         ];
         $this->assertEquals($expected, $result->toArray());
     }

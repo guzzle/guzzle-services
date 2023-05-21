@@ -1,11 +1,11 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\FormParamLocation;
-use GuzzleHttp\Command\Guzzle\RequestLocation\PostFieldLocation;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
@@ -44,8 +44,8 @@ class FormParamLocationTest extends TestCase
         $request = $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'formParam'
-            ]
+                'location' => 'formParam',
+            ],
         ]);
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('foo=bar&add=props', $request->getBody()->getContents());

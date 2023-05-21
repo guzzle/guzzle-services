@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
@@ -19,22 +20,22 @@ class DescriptionTest extends TestCase
     {
         $this->operations = [
             'test_command' => [
-                'name'        => 'test_command',
+                'name' => 'test_command',
                 'description' => 'documentationForCommand',
-                'httpMethod'  => 'DELETE',
-                'class'       => 'FooModel',
-                'parameters'  => [
-                    'bucket'  => ['required' => true],
-                    'key'     => ['required' => true]
-                ]
-            ]
+                'httpMethod' => 'DELETE',
+                'class' => 'FooModel',
+                'parameters' => [
+                    'bucket' => ['required' => true],
+                    'key' => ['required' => true],
+                ],
+            ],
         ];
     }
 
     public function testConstructor()
     {
         $service = new Description(['operations' => $this->operations]);
-        $this->assertEquals(1, count($service->getOperations()));
+        $this->assertCount(1, $service->getOperations());
         $this->assertFalse($service->hasOperation('foobar'));
         $this->assertTrue($service->hasOperation('test_command'));
     }
@@ -44,9 +45,9 @@ class DescriptionTest extends TestCase
         $d = new Description([
             'operations' => ['foo' => []],
             'models' => [
-                'Tag'    => ['type' => 'object'],
-                'Person' => ['type' => 'object']
-            ]
+                'Tag' => ['type' => 'object'],
+                'Person' => ['type' => 'object'],
+            ],
         ]);
         $this->assertTrue($d->hasModel('Tag'));
         $this->assertTrue($d->hasModel('Person'));
@@ -59,9 +60,9 @@ class DescriptionTest extends TestCase
     {
         $d = new Description([
             'operations' => [
-                'foo' => ['responseClass' => 'Tag']
+                'foo' => ['responseClass' => 'Tag'],
             ],
-            'models' => ['Tag' => ['type' => 'object']]
+            'models' => ['Tag' => ['type' => 'object']],
         ]);
         $op = $d->getOperation('foo');
         $this->assertNotNull($op->getResponseModel());
@@ -77,10 +78,10 @@ class DescriptionTest extends TestCase
     public function testHasAttributes()
     {
         $d = new Description([
-            'operations'  => [],
-            'name'        => 'Name',
+            'operations' => [],
+            'name' => 'Name',
             'description' => 'Description',
-            'apiVersion'  => '1.24'
+            'apiVersion' => '1.24',
         ]);
 
         $this->assertEquals('Name', $d->getName());
@@ -91,12 +92,12 @@ class DescriptionTest extends TestCase
     public function testPersistsCustomAttributes()
     {
         $data = [
-            'operations'  => ['foo' => ['class' => 'foo', 'parameters' => []]],
-            'name'        => 'Name',
+            'operations' => ['foo' => ['class' => 'foo', 'parameters' => []]],
+            'name' => 'Name',
             'description' => 'Test',
-            'apiVersion'  => '1.24',
-            'auth'        => 'foo',
-            'keyParam'    => 'bar'
+            'apiVersion' => '1.24',
+            'auth' => 'foo',
+            'keyParam' => 'bar',
         ];
         $d = new Description($data);
         $this->assertEquals('foo', $d->getData('auth'));
@@ -116,7 +117,7 @@ class DescriptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         new Description([
-            'operations' => ['foo' => new \stdClass()]
+            'operations' => ['foo' => new \stdClass()],
         ]);
     }
 
@@ -137,13 +138,13 @@ class DescriptionTest extends TestCase
         $desc = [
             'models' => [
                 'date' => ['type' => 'string'],
-                'user'=> [
+                'user' => [
                     'type' => 'object',
                     'properties' => [
-                        'dob' => ['$ref' => 'date']
-                    ]
-                ]
-            ]
+                        'dob' => ['$ref' => 'date'],
+                    ],
+                ],
+            ],
         ];
 
         $s = new Description($desc);
@@ -154,7 +155,7 @@ class DescriptionTest extends TestCase
     public function testHasOperations()
     {
         $desc = ['operations' => ['foo' => ['parameters' => ['foo' => [
-            'name' => 'foo'
+            'name' => 'foo',
         ]]]]];
         $s = new Description($desc);
         $this->assertInstanceOf(Operation::class, $s->getOperation('foo'));

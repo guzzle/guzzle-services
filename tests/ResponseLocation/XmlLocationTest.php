@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -20,9 +21,9 @@ class XmlLocationTest extends TestCase
     {
         $location = new XmlLocation();
         $parameter = new Parameter([
-            'name'    => 'val',
-            'sentAs'  => 'vim',
-            'filters' => ['strtoupper']
+            'name' => 'val',
+            'sentAs' => 'vim',
+            'filters' => ['strtoupper'],
         ]);
         $model = new Parameter();
         $response = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</vim></w>'));
@@ -56,9 +57,9 @@ class XmlLocationTest extends TestCase
     {
         $param = new Parameter([
             'location' => 'xml',
-            'name'     => 'foo',
-            'type'     => 'array',
-            'items'    => ['type' => 'string'],
+            'name' => 'foo',
+            'type' => 'array',
+            'items' => ['type' => 'string'],
         ]);
 
         $xml = '<xml><foo>bar</foo><foo>baz</foo></xml>';
@@ -70,11 +71,11 @@ class XmlLocationTest extends TestCase
     {
         $param = new Parameter([
             'location' => 'xml',
-            'name'     => 'Items',
-            'type'     => 'array',
-            'items'    => [
-                'type'       => 'object',
-                'name'       => 'Item',
+            'name' => 'Items',
+            'type' => 'array',
+            'items' => [
+                'type' => 'object',
+                'name' => 'Item',
                 'properties' => [
                     'Bar' => ['type' => 'string'],
                     'Baz' => ['type' => 'string'],
@@ -92,16 +93,17 @@ class XmlLocationTest extends TestCase
             [$param, '<Test><Items><Item><Bar>1</Bar></Item></Items></Test>', [
                 'Items' => [
                     ['Bar' => 1],
-                ]
+                ],
             ]],
             [$param, '<Test><Items /></Test>', [
                 'Items' => [],
-            ]]
+            ]],
         ];
     }
 
     /**
      * @dataProvider xmlDataProvider
+     *
      * @group ResponseLocation
      */
     public function testEnsuresWrappedArraysAreInCorrectLocations($param, $xml, $expected)
@@ -122,49 +124,49 @@ class XmlLocationTest extends TestCase
     public function testCanRenameValues()
     {
         $param = new Parameter([
-            'name'     => 'TerminatingInstances',
-            'type'     => 'array',
+            'name' => 'TerminatingInstances',
+            'type' => 'array',
             'location' => 'xml',
-            'sentAs'   => 'instancesSet',
-            'items'    => [
-                'name'       => 'item',
-                'type'       => 'object',
-                'sentAs'     => 'item',
+            'sentAs' => 'instancesSet',
+            'items' => [
+                'name' => 'item',
+                'type' => 'object',
+                'sentAs' => 'item',
                 'properties' => [
-                    'InstanceId'    => [
-                        'type'   => 'string',
+                    'InstanceId' => [
+                        'type' => 'string',
                         'sentAs' => 'instanceId',
                     ],
-                    'CurrentState'  => [
-                        'type'       => 'object',
-                        'sentAs'     => 'currentState',
+                    'CurrentState' => [
+                        'type' => 'object',
+                        'sentAs' => 'currentState',
                         'properties' => [
                             'Code' => [
-                                'type'   => 'numeric',
+                                'type' => 'numeric',
                                 'sentAs' => 'code',
                             ],
                             'Name' => [
-                                'type'   => 'string',
+                                'type' => 'string',
                                 'sentAs' => 'name',
                             ],
                         ],
                     ],
                     'PreviousState' => [
-                        'type'       => 'object',
-                        'sentAs'     => 'previousState',
+                        'type' => 'object',
+                        'sentAs' => 'previousState',
                         'properties' => [
                             'Code' => [
-                                'type'   => 'numeric',
+                                'type' => 'numeric',
                                 'sentAs' => 'code',
                             ],
                             'Name' => [
-                                'type'   => 'string',
+                                'type' => 'string',
                                 'sentAs' => 'name',
                             ],
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $xml = '
@@ -188,8 +190,8 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, $xml, [
             'TerminatingInstances' => [
                 [
-                    'InstanceId'    => 'i-3ea74257',
-                    'CurrentState'  => [
+                    'InstanceId' => 'i-3ea74257',
+                    'CurrentState' => [
                         'Code' => '32',
                         'Name' => 'shutting-down',
                     ],
@@ -208,58 +210,58 @@ class XmlLocationTest extends TestCase
     public function testCanRenameAttributes()
     {
         $param = new Parameter([
-            'name'     => 'RunningQueues',
-            'type'     => 'array',
+            'name' => 'RunningQueues',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
-                'type'       => 'object',
-                'sentAs'     => 'item',
+            'items' => [
+                'type' => 'object',
+                'sentAs' => 'item',
                 'properties' => [
-                    'QueueId'       => [
-                        'type'   => 'string',
+                    'QueueId' => [
+                        'type' => 'string',
                         'sentAs' => 'queue_id',
-                        'data'   => [
+                        'data' => [
                             'xmlAttribute' => true,
                         ],
                     ],
-                    'CurrentState'  => [
-                        'type'       => 'object',
+                    'CurrentState' => [
+                        'type' => 'object',
                         'properties' => [
                             'Code' => [
-                                'type'   => 'numeric',
+                                'type' => 'numeric',
                                 'sentAs' => 'code',
-                                'data'   => [
+                                'data' => [
                                     'xmlAttribute' => true,
                                 ],
                             ],
                             'Name' => [
                                 'sentAs' => 'name',
-                                'data'   => [
+                                'data' => [
                                     'xmlAttribute' => true,
                                 ],
                             ],
                         ],
                     ],
                     'PreviousState' => [
-                        'type'       => 'object',
+                        'type' => 'object',
                         'properties' => [
                             'Code' => [
-                                'type'   => 'numeric',
+                                'type' => 'numeric',
                                 'sentAs' => 'code',
-                                'data'   => [
+                                'data' => [
                                     'xmlAttribute' => true,
                                 ],
                             ],
                             'Name' => [
                                 'sentAs' => 'name',
-                                'data'   => [
+                                'data' => [
                                     'xmlAttribute' => true,
                                 ],
                             ],
                         ],
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $xml = '
@@ -275,8 +277,8 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, $xml, [
             'RunningQueues' => [
                 [
-                    'QueueId'       => 'q-3ea74257',
-                    'CurrentState'  => [
+                    'QueueId' => 'q-3ea74257',
+                    'CurrentState' => [
                         'Code' => '32',
                         'Name' => 'processing',
                     ],
@@ -295,15 +297,15 @@ class XmlLocationTest extends TestCase
     public function testAddsEmptyArraysWhenValueIsMissing()
     {
         $param = new Parameter([
-            'name'     => 'Foo',
-            'type'     => 'array',
+            'name' => 'Foo',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
-                'type'       => 'object',
+            'items' => [
+                'type' => 'object',
                 'properties' => [
                     'Baz' => ['type' => 'array'],
                     'Bar' => [
-                        'type'       => 'object',
+                        'type' => 'object',
                         'properties' => [
                             'Baz' => ['type' => 'array'],
                         ],
@@ -318,22 +320,23 @@ class XmlLocationTest extends TestCase
             'Foo' => [
                 [
                     'Bar' => [],
-                ]
+                ],
             ],
         ]);
     }
 
     /**
      * @group issue-399, ResponseLocation
-     * @link  https://github.com/guzzle/guzzle/issues/399
+     *
+     * @see  https://github.com/guzzle/guzzle/issues/399
      */
     public function testDiscardingUnknownProperties()
     {
         $param = new Parameter([
-            'name'                 => 'foo',
-            'type'                 => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'additionalProperties' => false,
-            'properties'           => [
+            'properties' => [
                 'bar' => [
                     'type' => 'string',
                     'name' => 'bar',
@@ -352,24 +355,25 @@ class XmlLocationTest extends TestCase
 
         $this->xmlTest($param, $xml, [
             'foo' => [
-                'bar' => 15
-            ]
+                'bar' => 15,
+            ],
         ]);
     }
 
     /**
      * @group issue-399, ResponseLocation
-     * @link  https://github.com/guzzle/guzzle/issues/399
+     *
+     * @see  https://github.com/guzzle/guzzle/issues/399
      */
     public function testDiscardingUnknownPropertiesWithAliasing()
     {
         $param = new Parameter([
-            'name'                 => 'foo',
-            'type'                 => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'additionalProperties' => false,
-            'properties'           => [
+            'properties' => [
                 'bar' => [
-                    'name'   => 'bar',
+                    'name' => 'bar',
                     'sentAs' => 'baz',
                 ],
             ],
@@ -397,15 +401,15 @@ class XmlLocationTest extends TestCase
     public function testProcessingOfNestedAdditionalProperties()
     {
         $param = new Parameter([
-            'name'                 => 'foo',
-            'type'                 => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'additionalProperties' => true,
-            'properties'           => [
+            'properties' => [
                 'bar' => [
-                    'name'   => 'bar',
+                    'name' => 'bar',
                     'sentAs' => 'baz',
                 ],
-                'nestedNoAdditional'  => [
+                'nestedNoAdditional' => [
                     'type' => 'object',
                     'additionalProperties' => false,
                     'properties' => [
@@ -421,7 +425,7 @@ class XmlLocationTest extends TestCase
                 'nestedWithAdditionalSchema' => [
                     'type' => 'object',
                     'additionalProperties' => [
-                        'type'  => 'array',
+                        'type' => 'array',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -467,7 +471,7 @@ class XmlLocationTest extends TestCase
                     'id' => '15',
                 ],
                 'nestedWithAdditional' => [
-                    'id'         => '15',
+                    'id' => '15',
                     'additional' => 'include me',
                 ],
                 'nestedWithAdditionalSchema' => [
@@ -484,8 +488,8 @@ class XmlLocationTest extends TestCase
     public function testConvertsMultipleAssociativeElementsToArray()
     {
         $param = new Parameter([
-            'name'                 => 'foo',
-            'type'                 => 'object',
+            'name' => 'foo',
+            'type' => 'object',
             'additionalProperties' => true,
         ]);
 
@@ -507,9 +511,9 @@ class XmlLocationTest extends TestCase
                 'bar' => 'hi',
                 'bam' => [
                     'test',
-                    ['@attributes' => ['attr' => 'hi']]
-                ]
-            ]
+                    ['@attributes' => ['attr' => 'hi']],
+                ],
+            ],
         ]);
     }
 
@@ -519,57 +523,57 @@ class XmlLocationTest extends TestCase
     public function testUnderstandsNamespaces()
     {
         $param = new Parameter([
-            'name'     => 'nstest',
-            'type'     => 'array',
+            'name' => 'nstest',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
-                'name'       => 'item',
-                'type'       => 'object',
-                'sentAs'     => 'item',
+            'items' => [
+                'name' => 'item',
+                'type' => 'object',
+                'sentAs' => 'item',
                 'properties' => [
-                    'id'           => [
+                    'id' => [
                         'type' => 'string',
                     ],
-                    'isbn:number'  => [
+                    'isbn:number' => [
                         'type' => 'string',
                     ],
-                    'meta'         => [
-                        'type'       => 'object',
-                        'sentAs'     => 'abstract:meta',
+                    'meta' => [
+                        'type' => 'object',
+                        'sentAs' => 'abstract:meta',
                         'properties' => [
                             'foo' => [
                                 'type' => 'numeric',
                             ],
                             'bar' => [
-                                'type'       => 'object',
-                                'properties' =>[
+                                'type' => 'object',
+                                'properties' => [
                                     'attribute' => [
                                         'type' => 'string',
                                         'data' => [
                                             'xmlAttribute' => true,
-                                            'xmlNs'        => 'abstract',
+                                            'xmlNs' => 'abstract',
                                         ],
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                    'gamma'        => [
-                        'type'                 => 'object',
-                        'data'                 => [
+                    'gamma' => [
+                        'type' => 'object',
+                        'data' => [
                             'xmlNs' => 'abstract',
                         ],
                         'additionalProperties' => true,
                     ],
-                    'nonExistent'  => [
-                        'type'                 => 'object',
-                        'data'                 => [
+                    'nonExistent' => [
+                        'type' => 'object',
+                        'data' => [
                             'xmlNs' => 'abstract',
                         ],
                         'additionalProperties' => true,
                     ],
                     'nonExistent2' => [
-                        'type'                 => 'object',
+                        'type' => 'object',
                         'additionalProperties' => true,
                     ],
                 ],
@@ -608,28 +612,28 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, $xml, [
             'nstest' => [
                 [
-                    'id'          => '101',
+                    'id' => '101',
                     'isbn:number' => 1568491379,
-                    'meta'        => [
+                    'meta' => [
                         'foo' => 10,
                         'bar' => [
                             'attribute' => 'foo',
                         ],
                     ],
-                    'gamma'       => [
+                    'gamma' => [
                         'foo' => 'bar',
                     ],
                 ],
                 [
-                    'id'          => '102',
+                    'id' => '102',
                     'isbn:number' => 1568491999,
-                    'meta'        => [
+                    'meta' => [
                         'foo' => 20,
                         'bar' => [
-                            'attribute' => 'bar'
+                            'attribute' => 'bar',
                         ],
                     ],
-                    'gamma'       => [
+                    'gamma' => [
                         'foo' => 'baz',
                     ],
                 ],
@@ -643,17 +647,17 @@ class XmlLocationTest extends TestCase
     public function testCanWalkUndefinedPropertiesWithNamespace()
     {
         $param = new Parameter([
-            'name'     => 'nstest',
-            'type'     => 'array',
+            'name' => 'nstest',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
+            'items' => [
                 'name' => 'item',
                 'type' => 'object',
                 'sentAs' => 'item',
                 'additionalProperties' => [
                     'type' => 'object',
                     'data' => [
-                        'xmlNs' => 'abstract'
+                        'xmlNs' => 'abstract',
                     ],
                 ],
                 'properties' => [
@@ -693,22 +697,22 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, $xml, [
             'nstest' => [
                 [
-                    'id'          => '101',
+                    'id' => '101',
                     'isbn:number' => 1568491379,
-                    'meta'        => [
+                    'meta' => [
                         'foo' => 10,
                         'bar' => 'baz',
                     ],
                 ],
                 [
-                    'id'          => '102',
+                    'id' => '102',
                     'isbn:number' => 1568491999,
-                    'meta'        => [
+                    'meta' => [
                         'foo' => 20,
                         'bar' => 'foo',
                     ],
                 ],
-            ]
+            ],
         ]);
     }
 
@@ -718,14 +722,14 @@ class XmlLocationTest extends TestCase
     public function testCanWalkSimpleArrayWithNamespace()
     {
         $param = new Parameter([
-            'name'     => 'nstest',
-            'type'     => 'array',
+            'name' => 'nstest',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
-                'type'   => 'string',
+            'items' => [
+                'type' => 'string',
                 'sentAs' => 'number',
-                'data'   => [
-                    'xmlNs' => 'isbn'
+                'data' => [
+                    'xmlNs' => 'isbn',
                 ],
             ],
         ]);
@@ -755,13 +759,13 @@ class XmlLocationTest extends TestCase
     public function testCanWalkSimpleArrayWithNamespace2()
     {
         $param = new Parameter([
-            'name'     => 'nstest',
-            'type'     => 'array',
+            'name' => 'nstest',
+            'type' => 'array',
             'location' => 'xml',
-            'items'    => [
-                'type'   => 'string',
+            'items' => [
+                'type' => 'string',
                 'sentAs' => 'isbn:number',
-            ]
+            ],
         ]);
 
         $xml = '

@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
@@ -43,8 +44,8 @@ class JsonLocationTest extends TestCase
         $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'json'
-            ]
+                'location' => 'json',
+            ],
         ]);
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('{"foo":"bar","baz":{"bam":[1]}}', $request->getBody()->getContents());
@@ -67,17 +68,17 @@ class JsonLocationTest extends TestCase
                     'type' => 'array',
                     'items' => [
                         'type' => 'string',
-                        'filters' => ['strtoupper']
-                    ]
-                ]
+                        'filters' => ['strtoupper'],
+                    ],
+                ],
             ],
             'additionalProperties' => [
                 'type' => 'array',
                 'items' => [
                     'type' => 'string',
-                    'filters' => ['strtolower']
-                ]
-            ]
+                    'filters' => ['strtolower'],
+                ],
+            ],
         ]);
         $command['foo'] = [
             'baz' => ['a', 'b'],

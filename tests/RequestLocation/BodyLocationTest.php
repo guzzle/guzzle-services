@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;

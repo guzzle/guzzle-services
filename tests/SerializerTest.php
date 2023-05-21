@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Command;
@@ -18,17 +19,17 @@ class SerializerTest extends TestCase
             'baseUri' => 'http://test.com',
             'operations' => [
                 'test' => [
-                    'httpMethod'         => 'GET',
-                    'uri'                => '/api/{key}/foo',
-                    'parameters'         => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/api/{key}/foo',
+                    'parameters' => [
                         'key' => [
-                            'required'  => true,
-                            'type'      => 'string',
-                            'location'  => 'uri'
+                            'required' => true,
+                            'type' => 'string',
+                            'location' => 'uri',
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
 
         $command = new Command('test', ['key' => 'bar']);

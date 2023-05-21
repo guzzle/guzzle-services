@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Client;
@@ -37,8 +38,8 @@ class XmlLocationTest extends TestCase
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
 
-        $this->assertEquals('<?xml version="1.0"?>' . "\n"
-            . '<Request><foo>bar</foo><bar>test</bar></Request>' . "\n", $xml);
+        $this->assertEquals('<?xml version="1.0"?>'."\n"
+            .'<Request><foo>bar</foo><bar>test</bar></Request>'."\n", $xml);
         $header = $request->getHeader('Content-Type');
         $this->assertEquals([0 => 'application/xml'], $header);
     }
@@ -52,12 +53,12 @@ class XmlLocationTest extends TestCase
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
         $operation = new Operation([
-            'data' => ['xmlAllowEmpty' => true]
+            'data' => ['xmlAllowEmpty' => true],
         ]);
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
-        $this->assertEquals('<?xml version="1.0"?>' . "\n"
-            . '<Request/>' . "\n", $xml);
+        $this->assertEquals('<?xml version="1.0"?>'."\n"
+            .'<Request/>'."\n", $xml);
 
         $header = $request->getHeader('Content-Type');
         $this->assertEquals([0 => 'application/xml'], $header);
@@ -76,14 +77,14 @@ class XmlLocationTest extends TestCase
         $location->visit($command, $request, $param);
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'xml'
-            ]
+                'location' => 'xml',
+            ],
         ]);
         $command['bam'] = 'boo';
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
-        $this->assertEquals('<?xml version="1.0"?>' . "\n"
-            . '<Request><foo>bar</foo><foo>bar</foo><bam>boo</bam></Request>' . "\n", $xml);
+        $this->assertEquals('<?xml version="1.0"?>'."\n"
+            .'<Request><foo>bar</foo><foo>bar</foo><bam>boo</bam></Request>'."\n", $xml);
         $header = $request->getHeader('Content-Type');
         $this->assertEquals([0 => 'test'], $header);
     }
@@ -95,7 +96,7 @@ class XmlLocationTest extends TestCase
     {
         $location = new XmlLocation();
         $operation = new Operation([
-            'data' => ['xmlEncoding' => 'UTF-8']
+            'data' => ['xmlEncoding' => 'UTF-8'],
         ]);
         $command = new Command('foo', ['foo' => 'bar']);
         $request = new Request('POST', 'http://httbin.org');
@@ -104,8 +105,8 @@ class XmlLocationTest extends TestCase
         $location->visit($command, $request, $param);
         $request = $location->after($command, $request, $operation);
         $xml = $request->getBody()->getContents();
-        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?>' . "\n"
-            . '<Request><foo>bar</foo></Request>' . "\n", $xml);
+        $this->assertEquals('<?xml version="1.0" encoding="UTF-8"?>'."\n"
+            .'<Request><foo>bar</foo></Request>'."\n", $xml);
     }
 
     public function xmlProvider()
@@ -115,26 +116,26 @@ class XmlLocationTest extends TestCase
                 [
                     'data' => [
                         'xmlRoot' => [
-                            'name'       => 'test',
-                            'namespaces' => 'http://foo.com'
-                        ]
+                            'name' => 'test',
+                            'namespaces' => 'http://foo.com',
+                        ],
                     ],
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'Baz' => [
                             'location' => 'xml',
-                            'type' => 'string'
-                        ]
-                    ]
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 [
                     'Foo' => 'test',
-                    'Baz' => 'bar'
+                    'Baz' => 'bar',
                 ],
-                '<test xmlns="http://foo.com"><Foo>test</Foo><Baz>bar</Baz></test>'
+                '<test xmlns="http://foo.com"><Foo>test</Foo><Baz>bar</Baz></test>',
             ],
             // Ensure that the content-type is not added
             [
@@ -142,34 +143,34 @@ class XmlLocationTest extends TestCase
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
-                            'type' => 'string'
-                        ]
-                    ]
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 [],
-                ''
+                '',
             ],
             // Test with adding attributes and no namespace
             [
                 [
                     'data' => [
                         'xmlRoot' => [
-                            'name' => 'test'
-                        ]
+                            'name' => 'test',
+                        ],
                     ],
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
                             'type' => 'string',
-                            'data' => ['xmlAttribute' => true]
-                        ]
-                    ]
+                            'data' => ['xmlAttribute' => true],
+                        ],
+                    ],
                 ],
                 [
                     'Foo' => 'test',
-                    'Baz' => 'bar'
+                    'Baz' => 'bar',
                 ],
-                '<test Foo="test"/>'
+                '<test Foo="test"/>',
             ],
             // Test adding with an array
             [
@@ -177,20 +178,20 @@ class XmlLocationTest extends TestCase
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'Baz' => [
                             'type' => 'array',
                             'location' => 'xml',
                             'items' => [
                                 'type' => 'numeric',
-                                'sentAs' => 'Bar'
-                            ]
-                        ]
-                    ]
+                                'sentAs' => 'Bar',
+                            ],
+                        ],
+                    ],
                 ],
                 ['Foo' => 'test', 'Baz' => [1, 2]],
-                '<Request><Foo>test</Foo><Baz><Bar>1</Bar><Bar>2</Bar></Baz></Request>'
+                '<Request><Foo>test</Foo><Baz><Bar>1</Bar><Bar>2</Bar></Baz></Request>',
             ],
             // Test adding an object
             [
@@ -198,50 +199,50 @@ class XmlLocationTest extends TestCase
                     'parameters' => [
                         'Foo' => ['location' => 'xml', 'type' => 'string'],
                         'Baz' => [
-                            'type'     => 'object',
+                            'type' => 'object',
                             'location' => 'xml',
                             'properties' => [
                                 'Bar' => ['type' => 'string'],
-                                'Bam' => []
-                            ]
-                        ]
-                    ]
+                                'Bam' => [],
+                            ],
+                        ],
+                    ],
                 ],
                 [
                     'Foo' => 'test',
                     'Baz' => [
                         'Bar' => 'abc',
-                        'Bam' => 'foo'
-                    ]
+                        'Bam' => 'foo',
+                    ],
                 ],
-                '<Request><Foo>test</Foo><Baz><Bar>abc</Bar><Bam>foo</Bam></Baz></Request>'
+                '<Request><Foo>test</Foo><Baz><Bar>abc</Bar><Bam>foo</Bam></Baz></Request>',
             ],
             // Add an array that contains an object
             [
                 [
                     'parameters' => [
                         'Baz' => [
-                            'type'     => 'array',
+                            'type' => 'array',
                             'location' => 'xml',
                             'items' => [
-                                'type'       => 'object',
-                                'sentAs'     => 'Bar',
-                                'properties' => ['A' => [], 'B' => []]
-                            ]
-                        ]
-                    ]
+                                'type' => 'object',
+                                'sentAs' => 'Bar',
+                                'properties' => ['A' => [], 'B' => []],
+                            ],
+                        ],
+                    ],
                 ],
                 ['Baz' => [
                     [
                         'A' => '1',
-                        'B' => '2'
+                        'B' => '2',
                     ],
                     [
                         'A' => '3',
-                        'B' => '4'
-                    ]
+                        'B' => '4',
+                    ],
                 ]],
-                '<Request><Baz><Bar><A>1</A><B>2</B></Bar><Bar><A>3</A><B>4</B></Bar></Baz></Request>'
+                '<Request><Baz><Bar><A>1</A><B>2</B></Bar><Bar><A>3</A><B>4</B></Bar></Baz></Request>',
             ],
             // Add an object of attributes
             [
@@ -249,31 +250,31 @@ class XmlLocationTest extends TestCase
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'Baz' => [
-                            'type'     => 'object',
+                            'type' => 'object',
                             'location' => 'xml',
                             'properties' => [
                                 'Bar' => [
                                     'type' => 'string',
                                     'data' => [
-                                        'xmlAttribute' => true
-                                    ]
+                                        'xmlAttribute' => true,
+                                    ],
                                 ],
-                                'Bam' => []
-                            ]
-                        ]
-                    ]
+                                'Bam' => [],
+                            ],
+                        ],
+                    ],
                 ],
                 [
                     'Foo' => 'test',
                     'Baz' => [
                         'Bar' => 'abc',
-                        'Bam' => 'foo'
-                    ]
+                        'Bam' => 'foo',
+                    ],
                 ],
-                '<Request><Foo>test</Foo><Baz Bar="abc"><Bam>foo</Bam></Baz></Request>'
+                '<Request><Foo>test</Foo><Baz Bar="abc"><Bam>foo</Bam></Baz></Request>',
             ],
             // Check order doesn't matter
             [
@@ -281,31 +282,31 @@ class XmlLocationTest extends TestCase
                     'parameters' => [
                         'Foo' => [
                             'location' => 'xml',
-                            'type' => 'string'
+                            'type' => 'string',
                         ],
                         'Baz' => [
-                            'type'     => 'object',
+                            'type' => 'object',
                             'location' => 'xml',
                             'properties' => [
                                 'Bar' => [
                                     'type' => 'string',
                                     'data' => [
-                                        'xmlAttribute' => true
-                                    ]
+                                        'xmlAttribute' => true,
+                                    ],
                                 ],
-                                'Bam' => []
-                            ]
-                        ]
-                    ]
+                                'Bam' => [],
+                            ],
+                        ],
+                    ],
                 ],
                 [
                     'Foo' => 'test',
                     'Baz' => [
                         'Bam' => 'foo',
-                        'Bar' => 'abc'
-                    ]
+                        'Bar' => 'abc',
+                    ],
                 ],
-                '<Request><Foo>test</Foo><Baz Bar="abc"><Bam>foo</Bam></Baz></Request>'
+                '<Request><Foo>test</Foo><Baz Bar="abc"><Bam>foo</Bam></Baz></Request>',
             ],
             // Add values with custom namespaces
             [
@@ -315,13 +316,13 @@ class XmlLocationTest extends TestCase
                             'location' => 'xml',
                             'type' => 'string',
                             'data' => [
-                                'xmlNamespace' => 'http://foo.com'
-                            ]
-                        ]
-                    ]
+                                'xmlNamespace' => 'http://foo.com',
+                            ],
+                        ],
+                    ],
                 ],
                 ['Foo' => 'test'],
-                '<Request><Foo xmlns="http://foo.com">test</Foo></Request>'
+                '<Request><Foo xmlns="http://foo.com">test</Foo></Request>',
             ],
             // Add attributes with custom namespace prefix
             [
@@ -336,17 +337,17 @@ class XmlLocationTest extends TestCase
                                     'sentAs' => 'xsi:baz',
                                     'data' => [
                                         'xmlNamespace' => 'http://foo.com',
-                                        'xmlAttribute' => true
-                                    ]
-                                ]
-                            ]
+                                        'xmlAttribute' => true,
+                                    ],
+                                ],
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 ['Wrap' => [
-                    'Foo' => 'test'
+                    'Foo' => 'test',
                 ]],
-                '<Request><Wrap xsi:baz="test" xmlns:xsi="http://foo.com"/></Request>'
+                '<Request><Wrap xsi:baz="test" xmlns:xsi="http://foo.com"/></Request>',
             ],
             // Add nodes with custom namespace prefix
             [
@@ -360,17 +361,17 @@ class XmlLocationTest extends TestCase
                                     'type' => 'string',
                                     'sentAs' => 'xsi:Foo',
                                     'data' => [
-                                        'xmlNamespace' => 'http://foobar.com'
-                                    ]
-                                ]
-                            ]
+                                        'xmlNamespace' => 'http://foobar.com',
+                                    ],
+                                ],
+                            ],
                         ],
-                    ]
+                    ],
                 ],
                 ['Wrap' => [
-                    'Foo' => 'test'
+                    'Foo' => 'test',
                 ]],
-                '<Request><Wrap><xsi:Foo xmlns:xsi="http://foobar.com">test</xsi:Foo></Wrap></Request>'
+                '<Request><Wrap><xsi:Foo xmlns:xsi="http://foobar.com">test</xsi:Foo></Wrap></Request>',
             ],
             [
                 [
@@ -379,109 +380,109 @@ class XmlLocationTest extends TestCase
                             'location' => 'xml',
                             'type' => 'string',
                             'data' => [
-                                'xmlNamespace' => 'http://foo.com'
-                            ]
-                        ]
-                    ]
+                                'xmlNamespace' => 'http://foo.com',
+                            ],
+                        ],
+                    ],
                 ],
                 ['Foo' => '<h1>This is a title</h1>'],
-                '<Request><Foo xmlns="http://foo.com"><![CDATA[<h1>This is a title</h1>]]></Foo></Request>'
+                '<Request><Foo xmlns="http://foo.com"><![CDATA[<h1>This is a title</h1>]]></Foo></Request>',
             ],
             // Flat array at top level
             [
                 [
                     'parameters' => [
                         'Bars' => [
-                            'type'     => 'array',
-                            'data'     => ['xmlFlattened' => true],
+                            'type' => 'array',
+                            'data' => ['xmlFlattened' => true],
                             'location' => 'xml',
                             'items' => [
-                                'type'       => 'object',
-                                'sentAs'     => 'Bar',
+                                'type' => 'object',
+                                'sentAs' => 'Bar',
                                 'properties' => [
                                     'A' => [],
-                                    'B' => []
-                                ]
-                            ]
+                                    'B' => [],
+                                ],
+                            ],
                         ],
                         'Boos' => [
-                            'type'     => 'array',
-                            'data'     => ['xmlFlattened' => true],
+                            'type' => 'array',
+                            'data' => ['xmlFlattened' => true],
                             'location' => 'xml',
-                            'items'  => [
+                            'items' => [
                                 'sentAs' => 'Boo',
-                                'type' => 'string'
-                            ]
-                        ]
-                    ]
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
                 ],
                 [
                     'Bars' => [
                         ['A' => '1', 'B' => '2'],
-                        ['A' => '3', 'B' => '4']
+                        ['A' => '3', 'B' => '4'],
                     ],
-                    'Boos' => ['test', '123']
+                    'Boos' => ['test', '123'],
                 ],
-                '<Request><Bar><A>1</A><B>2</B></Bar><Bar><A>3</A><B>4</B></Bar><Boo>test</Boo><Boo>123</Boo></Request>'
+                '<Request><Bar><A>1</A><B>2</B></Bar><Bar><A>3</A><B>4</B></Bar><Boo>test</Boo><Boo>123</Boo></Request>',
             ],
             // Nested flat arrays
             [
                 [
                     'parameters' => [
                         'Delete' => [
-                            'type'     => 'object',
+                            'type' => 'object',
                             'location' => 'xml',
                             'properties' => [
                                 'Items' => [
                                     'type' => 'array',
                                     'data' => ['xmlFlattened' => true],
                                     'items' => [
-                                        'type'       => 'object',
-                                        'sentAs'     => 'Item',
+                                        'type' => 'object',
+                                        'sentAs' => 'Item',
                                         'properties' => [
                                             'A' => [],
-                                            'B' => []
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                                            'B' => [],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 [
                     'Delete' => [
                         'Items' => [
                             ['A' => '1', 'B' => '2'],
-                            ['A' => '3', 'B' => '4']
-                        ]
-                    ]
+                            ['A' => '3', 'B' => '4'],
+                        ],
+                    ],
                 ],
-                '<Request><Delete><Item><A>1</A><B>2</B></Item><Item><A>3</A><B>4</B></Item></Delete></Request>'
+                '<Request><Delete><Item><A>1</A><B>2</B></Item><Item><A>3</A><B>4</B></Item></Delete></Request>',
             ],
             // Test adding root node attributes after nodes
             [
                 [
                     'data' => [
                         'xmlRoot' => [
-                            'name' => 'test'
-                        ]
+                            'name' => 'test',
+                        ],
                     ],
                     'parameters' => [
                         'Foo' => ['location' => 'xml', 'type' => 'string'],
                         'Baz' => ['location' => 'xml', 'type' => 'string', 'data' => ['xmlAttribute' => true]],
-                    ]
+                    ],
                 ],
                 ['Foo' => 'test', 'Baz' => 'bar'],
-                '<test Baz="bar"><Foo>test</Foo></test>'
+                '<test Baz="bar"><Foo>test</Foo></test>',
             ],
         ];
     }
 
     /**
-     * @param array  $operation
-     * @param array  $input
      * @param string $xml
+     *
      * @dataProvider xmlProvider
+     *
      * @group RequestLocation
      */
     public function testSerializesXml(array $operation, array $input, $xml)
@@ -497,8 +498,8 @@ class XmlLocationTest extends TestCase
             new Client(['handler' => $stack]),
             new Description([
                 'operations' => [
-                    'foo' => $operation
-                ]
+                    'foo' => $operation,
+                ],
             ])
         );
 
@@ -519,7 +520,7 @@ class XmlLocationTest extends TestCase
                 $this->assertEquals([0 => 'application/xml'], $request->getHeader('Content-Type'));
             }
 
-            $body = str_replace(["\n", "<?xml version=\"1.0\"?>"], '', (string) $request->getBody());
+            $body = str_replace(["\n", '<?xml version="1.0"?>'], '', (string) $request->getBody());
             $this->assertEquals($xml, $body);
         }
     }

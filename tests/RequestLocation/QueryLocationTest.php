@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\Command;
@@ -20,7 +21,7 @@ class QueryLocationTest extends TestCase
         return [
             [['foo' => 'bar'], 'foo=bar'],
             [['foo' => [1, 2]], 'foo[0]=1&foo[1]=2'],
-            [['foo' => ['bar' => 'baz', 'bim' => [4, 5]]], 'foo[bar]=baz&foo[bim][0]=4&foo[bim][1]=5']
+            [['foo' => ['bar' => 'baz', 'bim' => [4, 5]]], 'foo[bar]=baz&foo[bim][0]=4&foo[bim][1]=5'],
         ];
     }
 
@@ -67,8 +68,8 @@ class QueryLocationTest extends TestCase
         $command['add'] = 'props';
         $operation = new Operation([
             'additionalParameters' => [
-                'location' => 'query'
-            ]
+                'location' => 'query',
+            ],
         ]);
         $request = new Request('POST', 'http://httbin.org');
         $request = $location->after($command, $request, $operation);

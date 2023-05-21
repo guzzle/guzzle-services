@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -20,8 +21,8 @@ class BodyLocationTest extends TestCase
     {
         $location = new BodyLocation();
         $parameter = new Parameter([
-            'name'    => 'val',
-            'filters' => ['strtoupper']
+            'name' => 'val',
+            'filters' => ['strtoupper'],
         ]);
         $response = new Response(200, [], 'foo');
         $result = new Result();

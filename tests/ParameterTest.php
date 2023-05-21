@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
@@ -11,16 +12,16 @@ use PHPUnit\Framework\TestCase;
 class ParameterTest extends TestCase
 {
     protected $data = [
-        'name'            => 'foo',
-        'type'            => 'bar',
-        'required'        => true,
-        'default'         => '123',
-        'description'     => '456',
-        'minLength'       => 2,
-        'maxLength'       => 5,
-        'location'        => 'body',
-        'static'          => true,
-        'filters'         => ['trim', 'json_encode']
+        'name' => 'foo',
+        'type' => 'bar',
+        'required' => true,
+        'default' => '123',
+        'description' => '456',
+        'minLength' => 2,
+        'maxLength' => 5,
+        'location' => 'body',
+        'static' => true,
+        'filters' => ['trim', 'json_encode'],
     ];
 
     public function testCreatesParamFromArray()
@@ -98,7 +99,7 @@ class ParameterTest extends TestCase
 
     public function testRequiresServiceDescriptionForFormatting()
     {
-        $this->expectExceptionMessage("No service description");
+        $this->expectExceptionMessage('No service description');
         $this->expectException(\RuntimeException::class);
         $d = $this->data;
         $d['format'] = 'foo';
@@ -136,7 +137,7 @@ class ParameterTest extends TestCase
 
     public function testValidatesComplexFilters()
     {
-        $this->expectExceptionMessage("A [method] value must be specified for each complex filter");
+        $this->expectExceptionMessage('A [method] value must be specified for each complex filter');
         $this->expectException(\InvalidArgumentException::class);
         $p = new Parameter(['filters' => [['args' => 'foo']]]);
     }
@@ -152,11 +153,12 @@ class ParameterTest extends TestCase
                         $that->assertEquals('my_value!', $b);
                         $that->assertEquals('bar', $c);
                         $that->assertSame($param, $d);
-                        return 'abc' . $b;
+
+                        return 'abc'.$b;
                     },
-                    'args' => ['test', '@value', 'bar', '@api']
-                ]
-            ]
+                    'args' => ['test', '@value', 'bar', '@api'],
+                ],
+            ],
         ]);
 
         $this->assertEquals('abcmy_value!', $param->filter('my_value!'));
@@ -166,7 +168,7 @@ class ParameterTest extends TestCase
     {
         $p = new Parameter([
             'type' => 'object',
-            'additionalProperties' => ['type' => 'string']
+            'additionalProperties' => ['type' => 'string'],
         ]);
         $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $p->getAdditionalProperties());
         $this->assertNull($p->getAdditionalProperties()->getAdditionalProperties());
@@ -177,8 +179,8 @@ class ParameterTest extends TestCase
     public function testAddsItems()
     {
         $p = new Parameter([
-            'type'  => 'array',
-            'items' => ['type' => 'string']
+            'type' => 'array',
+            'items' => ['type' => 'string'],
         ]);
         $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $p->getItems());
         $out = $p->toArray();
@@ -210,12 +212,12 @@ class ParameterTest extends TestCase
     public function testSerializesItems()
     {
         $p = new Parameter([
-            'type'  => 'object',
-            'additionalProperties' => ['type' => 'string']
+            'type' => 'object',
+            'additionalProperties' => ['type' => 'string'],
         ]);
         $this->assertEquals([
-            'type'  => 'object',
-            'additionalProperties' => ['type' => 'string']
+            'type' => 'object',
+            'additionalProperties' => ['type' => 'string'],
         ], $p->toArray());
     }
 
@@ -224,13 +226,13 @@ class ParameterTest extends TestCase
         $description = new Description([
             'models' => [
                 'JarJar' => ['type' => 'string', 'default' => 'Mesa address tha senate!'],
-                'Anakin' => ['type' => 'array', 'items' => ['$ref' => 'JarJar']]
+                'Anakin' => ['type' => 'array', 'items' => ['$ref' => 'JarJar']],
             ],
         ]);
         $p = new Parameter(['$ref' => 'Anakin', 'description' => 'added'], ['description' => $description]);
         $this->assertEquals([
             'description' => 'added',
-            '$ref' => 'Anakin'
+            '$ref' => 'Anakin',
         ], $p->toArray());
     }
 
@@ -239,13 +241,13 @@ class ParameterTest extends TestCase
         $jarJar = ['type' => 'string', 'default' => 'Mesa address tha senate!', 'description' => 'a'];
         $anakin = ['type' => 'array', 'items' => ['extends' => 'JarJar', 'description' => 'b']];
         $description = new Description([
-            'models' => ['JarJar' => $jarJar, 'Anakin' => $anakin]
+            'models' => ['JarJar' => $jarJar, 'Anakin' => $anakin],
         ]);
         // Description attribute will be updated, and format added
         $p = new Parameter(['extends' => 'Anakin', 'format' => 'date'], ['description' => $description]);
         $this->assertEquals([
             'format' => 'date',
-            'extends' => 'Anakin'
+            'extends' => 'Anakin',
         ], $p->toArray());
     }
 
@@ -262,8 +264,8 @@ class ParameterTest extends TestCase
             'name' => 'Abc',
             'items' => [
                 'name' => 'Foo',
-                'type' => 'object'
-            ]
+                'type' => 'object',
+            ],
         ]);
         $result = $p->toArray();
         $this->assertEquals([
@@ -271,8 +273,8 @@ class ParameterTest extends TestCase
             'name' => 'Abc',
             'items' => [
                 'name' => 'Foo',
-                'type' => 'object'
-            ]
+                'type' => 'object',
+            ],
         ], $result);
     }
 
@@ -284,7 +286,7 @@ class ParameterTest extends TestCase
             [$d, 'date-time', '2012-10-13T16:15:46Z'],
             [$d, 'date', '2012-10-13'],
             [$d, 'timestamp', strtotime($d)],
-            [new \DateTime($d), 'timestamp', strtotime($d)]
+            [new \DateTime($d), 'timestamp', strtotime($d)],
         ];
     }
 
@@ -319,7 +321,7 @@ class ParameterTest extends TestCase
             'properties' => [
                 'foo' => ['type' => 'string'],
                 'bar' => ['type' => 'string'],
-            ]
+            ],
         ];
         $p = new Parameter($data);
         $this->assertInstanceOf('GuzzleHttp\\Command\\Guzzle\\Parameter', $p->getProperty('foo'));
@@ -337,7 +339,7 @@ class ParameterTest extends TestCase
 
     public function testThrowsWhenNotPassString()
     {
-        $this->expectExceptionMessage("Expected a string. Got: array");
+        $this->expectExceptionMessage('Expected a string. Got: array');
         $this->expectException(\InvalidArgumentException::class);
         $emptyParam = new Parameter();
         $this->assertFalse($emptyParam->has([]));
