@@ -34,12 +34,9 @@ class GuzzleClient extends ServiceClient
      * - response_locations: Associative array of location types mapping to
      *   ResponseLocationInterface objects.
      *
-     * @param ClientInterface      $client                      HTTP client to use.
-     * @param DescriptionInterface $description                 Guzzle service description
-     * @param callable             $commandToRequestTransformer
-     * @param callable             $responseToResultTransformer
-     * @param HandlerStack         $commandHandlerStack
-     * @param array                $config                      Configuration options
+     * @param ClientInterface      $client      HTTP client to use.
+     * @param DescriptionInterface $description Guzzle service description
+     * @param array                $config      Configuration options
      */
     public function __construct(
         ClientInterface $client,

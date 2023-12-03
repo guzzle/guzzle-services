@@ -78,7 +78,7 @@ class Parameter implements ToArrayInterface
     /** @var string */
     private $format;
 
-    private $propertiesCache = null;
+    private $propertiesCache;
 
     /** @var Description */
     private $serviceDescription;

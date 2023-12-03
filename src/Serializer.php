@@ -132,8 +132,6 @@ class Serializer
     /**
      * Create a request for an operation with a uri merged onto a base URI
      *
-     * @param \GuzzleHttp\Command\Guzzle\Operation $operation
-     *
      * @return \GuzzleHttp\Psr7\Request
      */
     private function createCommandWithUri(

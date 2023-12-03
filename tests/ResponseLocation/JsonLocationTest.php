@@ -39,9 +39,6 @@ class JsonLocationTest extends TestCase
 
     /**
      * @group ResponseLocation
-     *
-     * @param $name
-     * @param $expected
      */
     public function testVisitsWiredArray()
     {

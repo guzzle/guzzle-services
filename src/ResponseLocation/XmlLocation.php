@@ -48,8 +48,8 @@ class XmlLocation extends AbstractLocation
     ) {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
-        if ($additional instanceof Parameter &&
-            $additional->getLocation() == $this->locationName
+        if ($additional instanceof Parameter
+            && $additional->getLocation() == $this->locationName
         ) {
             $result = new Result(array_merge(
                 $result->toArray(),
