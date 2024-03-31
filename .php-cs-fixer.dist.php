@@ -5,6 +5,7 @@ $config = (new PhpCsFixer\Config())
     ->setRules([
         '@PHP71Migration:risky' => true,
         '@PHPUnit75Migration:risky' => true,
+        '@PSR12:risky' => true,
         '@Symfony' => true,
         'declare_strict_types' => false,
         'global_namespace_import' => false,
