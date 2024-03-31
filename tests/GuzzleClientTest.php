@@ -716,8 +716,8 @@ class GuzzleClientTest extends TestCase
 
     private function getServiceClient(
         array $responses,
-        MockHandler $mock = null,
-        callable $commandToRequestTransformer = null
+        ?MockHandler $mock = null,
+        ?callable $commandToRequestTransformer = null
     ) {
         $mock = $mock ?: new MockHandler();
 
@@ -954,31 +954,31 @@ class GuzzleClientTest extends TestCase
         $client = new HttpClient();
         $description = new Description([
             'baseUrl' => 'http://httpbin.org/',
-                'operations' => [
-                    'testing' => [
-                        'httpMethod' => 'GET',
-                        'uri' => '/get{?foo}',
-                        'responseModel' => 'getResponse',
-                        'parameters' => [
-                            'foo' => [
-                                'type' => 'string',
-                                'location' => 'uri',
-                            ],
-                            'bar' => [
-                                'type' => 'string',
-                                'location' => 'query',
-                            ],
+            'operations' => [
+                'testing' => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/get{?foo}',
+                    'responseModel' => 'getResponse',
+                    'parameters' => [
+                        'foo' => [
+                            'type' => 'string',
+                            'location' => 'uri',
+                        ],
+                        'bar' => [
+                            'type' => 'string',
+                            'location' => 'query',
                         ],
                     ],
                 ],
-                'models' => [
-                    'getResponse' => [
-                        'type' => 'object',
-                        'additionalProperties' => [
-                            'location' => 'json',
-                        ],
+            ],
+            'models' => [
+                'getResponse' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'json',
                     ],
                 ],
+            ],
         ]);
 
         $guzzle = new GuzzleClient($client, $description);
@@ -991,39 +991,39 @@ class GuzzleClientTest extends TestCase
     {
         $client = new HttpClient();
         $description = new Description([
-                'baseUrl' => 'http://httpbin.org/',
-                'operations' => [
-                    'testing' => [
-                        'httpMethod' => 'GET',
-                        'uri' => '/get',
-                        'responseModel' => 'getResponse',
-                        'parameters' => [
-                            'foo' => [
-                                'type' => 'string',
-                                'default' => 'foo',
-                                'location' => 'query',
-                            ],
-                        ],
-                    ],
-                    'testing_extends' => [
-                        'extends' => 'testing',
-                        'responseModel' => 'getResponse',
-                        'parameters' => [
-                            'bar' => [
-                                'type' => 'string',
-                                'location' => 'query',
-                            ],
+            'baseUrl' => 'http://httpbin.org/',
+            'operations' => [
+                'testing' => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/get',
+                    'responseModel' => 'getResponse',
+                    'parameters' => [
+                        'foo' => [
+                            'type' => 'string',
+                            'default' => 'foo',
+                            'location' => 'query',
                         ],
                     ],
                 ],
-                'models' => [
-                    'getResponse' => [
-                        'type' => 'object',
-                        'additionalProperties' => [
-                            'location' => 'json',
+                'testing_extends' => [
+                    'extends' => 'testing',
+                    'responseModel' => 'getResponse',
+                    'parameters' => [
+                        'bar' => [
+                            'type' => 'string',
+                            'location' => 'query',
                         ],
                     ],
                 ],
+            ],
+            'models' => [
+                'getResponse' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'json',
+                    ],
+                ],
+            ],
         ]);
         $guzzle = new GuzzleClient($client, $description);
         $result = $guzzle->testing_extends(['bar' => 'bar']);
