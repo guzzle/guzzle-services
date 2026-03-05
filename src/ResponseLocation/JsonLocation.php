@@ -102,7 +102,7 @@ class JsonLocation extends AbstractLocation
                     $this->recurse($param, $this->json)
                 ));
             }
-        } elseif (isset($this->json[$key])) {
+        } elseif ($key !== null && isset($this->json[$key])) {
             $result[$name] = $this->recurse($param, $this->json[$key]);
         }
 

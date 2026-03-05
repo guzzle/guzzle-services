@@ -177,8 +177,10 @@ class XmlLocation extends AbstractLocation
             foreach ($properties as $property) {
                 $name = $property->getName();
                 $sentAs = $property->getWireName();
-                $knownProps[$sentAs] = 1;
-                if (strpos($sentAs, ':')) {
+                if ($sentAs !== null) {
+                    $knownProps[$sentAs] = 1;
+                }
+                if ($sentAs !== null && strpos($sentAs, ':')) {
                     list($ns, $sentAs) = explode(':', $sentAs);
                 } else {
                     $ns = $property->getData('xmlNs');

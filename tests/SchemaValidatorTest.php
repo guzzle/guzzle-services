@@ -200,7 +200,9 @@ class SchemaValidatorTest extends TestCase
     {
         $p = new SchemaValidator();
         $r = new \ReflectionMethod($p, 'determineType');
-        $r->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $r->setAccessible(true);
+        }
         $this->assertEquals('any', $r->invoke($p, 'any', 'hello'));
         $this->assertEquals(false, $r->invoke($p, 'foo', 'foo'));
         $this->assertEquals('string', $r->invoke($p, 'string', 'hello'));

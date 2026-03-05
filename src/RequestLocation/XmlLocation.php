@@ -152,7 +152,7 @@ class XmlLocation extends AbstractLocation
         $name = $param->getWireName();
         $prefix = null;
         $namespace = $param->getData('xmlNamespace');
-        if (false !== strpos($name, ':')) {
+        if ($name !== null && false !== strpos($name, ':')) {
             list($prefix, $name) = explode(':', $name, 2);
         }
 
@@ -216,7 +216,7 @@ class XmlLocation extends AbstractLocation
         } else {
             $writer->startElement($name);
         }
-        if (strpbrk($value, '<>&')) {
+        if ($value !== null && strpbrk($value, '<>&')) {
             $writer->writeCData($value);
         } else {
             $writer->writeRaw($value);
