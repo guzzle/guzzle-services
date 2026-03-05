@@ -40,11 +40,10 @@ class SchemaValidator
 
         if (empty($this->errors)) {
             return true;
-        } else {
-            sort($this->errors);
-
-            return false;
         }
+        sort($this->errors);
+
+        return false;
     }
 
     /**

@@ -252,9 +252,9 @@ class Operation implements ToArrayInterface
             return $this->config['data'];
         } elseif (isset($this->config['data'][$name])) {
             return $this->config['data'][$name];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**

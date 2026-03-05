@@ -1,0 +1,157 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Deserializer.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Psr\\Http\\Message\\RequestInterface\|null is not subtype of native type Psr\\Http\\Message\\RequestInterface\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Deserializer.php
+
+		-
+			message: '#^Method GuzzleHttp\\Command\\Guzzle\\Operation\:\:getServiceDescription\(\) should return GuzzleHttp\\Command\\Guzzle\\Description but returns GuzzleHttp\\Command\\Guzzle\\DescriptionInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Operation.php
+
+		-
+			message: '#^Call to function is_object\(\) with \*NEVER\* will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Parameter.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Parameter.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: src/Parameter.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Parameter.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Parameter.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Parameter.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 3
+			path: src/Parameter.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/RequestLocation/AbstractLocation.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: src/RequestLocation/HeaderLocation.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 2
+			path: src/RequestLocation/XmlLocation.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/RequestLocation/XmlLocation.php
+
+		-
+			message: '#^Parameter \#1 \$name of method GuzzleHttp\\Command\\Guzzle\\Parameter\:\:setName\(\) expects string, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/RequestLocation/XmlLocation.php
+
+		-
+			message: '#^Property GuzzleHttp\\Command\\Guzzle\\RequestLocation\\XmlLocation\:\:\$writer \(XMLWriter\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/RequestLocation/XmlLocation.php
+
+		-
+			message: '#^Call to function is_array\(\) with non\-empty\-array\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/ResponseLocation/HeaderLocation.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
+			message: '#^Property GuzzleHttp\\Command\\Guzzle\\ResponseLocation\\XmlLocation\:\:\$xml \(SimpleXMLElement\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 2
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
+			message: '#^Variable \$result in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/SchemaFormatter.php
+
+		-
+			message: '#^Parameter \#1 \$array of function sort contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: src/SchemaValidator.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Serializer.php
+
+		-
+			message: '#^Variable \$additional in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: src/Serializer.php

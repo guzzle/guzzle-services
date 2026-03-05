@@ -183,7 +183,7 @@ class Parameter implements ToArrayInterface
 
         if (isset($options['description'])) {
             $this->serviceDescription = $options['description'];
-            if (!($this->serviceDescription instanceof DescriptionInterface)) {
+            if (!$this->serviceDescription instanceof DescriptionInterface) {
                 throw new \InvalidArgumentException('description must be a Description');
             }
             if (isset($data['$ref'])) {
@@ -524,7 +524,7 @@ class Parameter implements ToArrayInterface
             return null;
         }
 
-        if (!($this->properties[$name] instanceof self)) {
+        if (!$this->properties[$name] instanceof self) {
             $this->properties[$name]['name'] = $name;
             $this->properties[$name] = new static(
                 $this->properties[$name],
