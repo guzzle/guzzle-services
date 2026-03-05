@@ -55,7 +55,7 @@ class JsonLocation extends AbstractLocation
     ) {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
-        if (!($additional instanceof Parameter)) {
+        if (!$additional instanceof Parameter) {
             return $result;
         }
 
@@ -102,7 +102,7 @@ class JsonLocation extends AbstractLocation
                     $this->recurse($param, $this->json)
                 ));
             }
-        } elseif (isset($this->json[$key])) {
+        } elseif ($key !== null && isset($this->json[$key])) {
             $result[$name] = $this->recurse($param, $this->json[$key]);
         }
 

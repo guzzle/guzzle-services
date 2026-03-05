@@ -143,7 +143,7 @@ class Description implements DescriptionInterface
         }
 
         // Lazily create operations as they are retrieved
-        if (!($this->operations[$name] instanceof Operation)) {
+        if (!$this->operations[$name] instanceof Operation) {
             $this->operations[$name]['name'] = $name;
             $this->operations[$name] = new Operation($this->operations[$name], $this);
         }
@@ -167,7 +167,7 @@ class Description implements DescriptionInterface
         }
 
         // Lazily create models as they are retrieved
-        if (!($this->models[$id] instanceof Parameter)) {
+        if (!$this->models[$id] instanceof Parameter) {
             $this->models[$id] = new Parameter(
                 $this->models[$id],
                 ['description' => $this]
@@ -261,8 +261,8 @@ class Description implements DescriptionInterface
             return $this->extraData;
         } elseif (isset($this->extraData[$key])) {
             return $this->extraData[$key];
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
