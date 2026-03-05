@@ -12,7 +12,7 @@ class Parameter implements ToArrayInterface
 {
     private $originalData;
 
-    /** @var string */
+    /** @var string|null */
     private $name;
 
     /** @var string */
@@ -60,7 +60,7 @@ class Parameter implements ToArrayInterface
     /** @var string */
     private $location;
 
-    /** @var string */
+    /** @var string|null */
     private $sentAs;
 
     /** @var array */
@@ -303,7 +303,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the name of the parameter
      *
-     * @return string
+     * @return string|null
      */
     public function getName()
     {
@@ -324,7 +324,7 @@ class Parameter implements ToArrayInterface
      * Get the key of the parameter, where sentAs will supersede name if it is
      * set.
      *
-     * @return string
+     * @return string|null
      */
     public function getWireName()
     {

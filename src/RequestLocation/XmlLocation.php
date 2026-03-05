@@ -203,11 +203,11 @@ class XmlLocation extends AbstractLocation
     /**
      * Write an element with namespace if used
      *
-     * @param \XMLWriter $writer    XML writer resource
-     * @param string     $prefix    Namespace prefix if any
-     * @param string     $name      Element name
-     * @param string     $namespace The uri of the namespace
-     * @param string     $value     The element content
+     * @param \XMLWriter  $writer    XML writer resource
+     * @param string      $prefix    Namespace prefix if any
+     * @param string      $name      Element name
+     * @param string      $namespace The uri of the namespace
+     * @param string|null $value     The element content
      */
     protected function writeElement(\XMLWriter $writer, $prefix, $name, $namespace, $value)
     {
