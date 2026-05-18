@@ -251,6 +251,68 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
+    public function testResolvesNestedExtendsUsingResolvedParentData()
+    {
+        $description = new Description([
+            'models' => [
+                'Grandparent' => [
+                    'type' => 'string',
+                    'location' => 'query',
+                    'default' => 'grandparent',
+                ],
+                'Parent' => [
+                    'extends' => 'Grandparent',
+                    'required' => true,
+                    'default' => 'parent',
+                ],
+                'Child' => [
+                    'extends' => 'Parent',
+                    'sentAs' => 'child_name',
+                ],
+            ],
+        ]);
+
+        $p = new Parameter(['extends' => 'Child', 'description' => 'actual'], ['description' => $description]);
+
+        $this->assertEquals('string', $p->getType());
+        $this->assertEquals('query', $p->getLocation());
+        $this->assertTrue($p->isRequired());
+        $this->assertEquals('parent', $p->getDefault());
+        $this->assertEquals('child_name', $p->getSentAs());
+        $this->assertEquals([
+            'extends' => 'Child',
+            'description' => 'actual',
+        ], $p->toArray());
+    }
+
+    public function testResolvesRefToModelThatExtendsAnotherModel()
+    {
+        $description = new Description([
+            'models' => [
+                'Base' => [
+                    'type' => 'string',
+                    'location' => 'query',
+                ],
+                'Derived' => [
+                    'extends' => 'Base',
+                    'default' => 'value',
+                    'name' => 'model_name',
+                ],
+            ],
+        ]);
+
+        $p = new Parameter(['$ref' => 'Derived', 'name' => 'input_name'], ['description' => $description]);
+
+        $this->assertEquals('input_name', $p->getName());
+        $this->assertEquals('string', $p->getType());
+        $this->assertEquals('query', $p->getLocation());
+        $this->assertEquals('value', $p->getDefault());
+        $this->assertEquals([
+            '$ref' => 'Derived',
+            'name' => 'input_name',
+        ], $p->toArray());
+    }
+
     public function testHasKeyMethod()
     {
         $p = new Parameter(['name' => 'foo', 'sentAs' => 'bar']);

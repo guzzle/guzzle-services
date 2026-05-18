@@ -12,6 +12,9 @@ class Parameter implements ToArrayInterface
 {
     private $originalData;
 
+    /** @var array */
+    private $resolvedData;
+
     /** @var string|null */
     private $name;
 
@@ -189,7 +192,7 @@ class Parameter implements ToArrayInterface
             if (isset($data['$ref'])) {
                 if ($model = $this->serviceDescription->getModel($data['$ref'])) {
                     $name = isset($data['name']) ? $data['name'] : null;
-                    $data = $model->toArray() + $data;
+                    $data = $model->toResolvedArray() + $data;
                     if ($name) {
                         $data['name'] = $name;
                     }
@@ -199,10 +202,12 @@ class Parameter implements ToArrayInterface
                 // with the actual data union in the parent's data (e.g. actual
                 // supersedes parent)
                 if ($extends = $this->serviceDescription->getModel($data['extends'])) {
-                    $data += $extends->toArray();
+                    $data += $extends->toResolvedArray();
                 }
             }
         }
+
+        $this->resolvedData = $data;
 
         // Pull configuration data into the parameter
         foreach ($data as $key => $value) {
@@ -229,6 +234,16 @@ class Parameter implements ToArrayInterface
     public function toArray()
     {
         return $this->originalData;
+    }
+
+    /**
+     * Convert the object to its internally resolved array
+     *
+     * @return array
+     */
+    private function toResolvedArray()
+    {
+        return $this->resolvedData;
     }
 
     /**
