@@ -109,6 +109,12 @@ parameters:
 			path: src/ResponseLocation/XmlLocation.php
 
 		-
+			message: '#^Parameter \#1 \$namespaceOrPrefix of method SimpleXMLElement\:\:attributes\(\) expects string, null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ResponseLocation/XmlLocation.php
+
+		-
 			message: '#^Property GuzzleHttp\\Command\\Guzzle\\ResponseLocation\\XmlLocation\:\:\$xml \(SimpleXMLElement\) does not accept null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -127,7 +133,7 @@ parameters:
 			path: src/SchemaFormatter.php
 
 		-
-			message: '#^Parameter \#1 \$array of function sort contains unresolvable type\.$#'
+			message: '#^Parameter \#1 \$array_arg of function sort contains unresolvable type\.$#'
 			identifier: argument.unresolvableType
 			count: 1
 			path: src/SchemaValidator.php
