@@ -3,7 +3,7 @@
 ## 1.5.0 - UPCOMING
 
 * Add PHP 8.5 support
-* Require `guzzlehttp/guzzle` ^7.10, `guzzlehttp/promises` ^2.3, `guzzlehttp/psr7` ^2.8, and `guzzlehttp/command` ^1.4
+* Require `guzzlehttp/guzzle` ^7.10, `guzzlehttp/psr7` ^2.8, and `guzzlehttp/command` ^1.4
 * Fix recursive parameter model inheritance
 
 ## 1.4.3 - 2026-05-18
