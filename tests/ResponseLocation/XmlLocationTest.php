@@ -53,6 +53,63 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testRejectsMalformedXmlResponses()
+    {
+        $location = new XmlLocation();
+        $model = new Parameter();
+        $response = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</w>'));
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to parse XML response');
+
+        $location->before(new Result(), $response, $model);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testMalformedXmlClearsPreviousParsedResponse()
+    {
+        $location = new XmlLocation();
+        $model = new Parameter();
+        $validResponse = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</vim></w>'));
+        $malformedResponse = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</w>'));
+
+        $location->before(new Result(), $validResponse, $model);
+
+        try {
+            $location->before(new Result(), $malformedResponse, $model);
+            $this->fail('Expected malformed XML response to be rejected.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('Unable to parse XML response', $e->getMessage());
+        }
+
+        $parameter = new Parameter(['name' => 'val', 'sentAs' => 'vim']);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response has not been parsed');
+
+        $location->visit(new Result(), $validResponse, $parameter);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitRequiresParsedXmlResponse()
+    {
+        $location = new XmlLocation();
+        $parameter = new Parameter(['name' => 'val', 'sentAs' => 'vim']);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<w><vim>bar</vim></w>'));
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response has not been parsed');
+
+        $location->visit(new Result(), $response, $parameter);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testEnsuresFlatArraysAreFlat()
     {
         $param = new Parameter([

@@ -115,12 +115,6 @@ parameters:
 			path: src/ResponseLocation/XmlLocation.php
 
 		-
-			message: '#^Property GuzzleHttp\\Command\\Guzzle\\ResponseLocation\\XmlLocation\:\:\$xml \(SimpleXMLElement\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/ResponseLocation/XmlLocation.php
-
-		-
 			message: '#^Variable \$result in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
