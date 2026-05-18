@@ -60,9 +60,9 @@ class MultiPartLocation extends AbstractLocation
         $body = new Psr7\MultipartStream($data);
         $modify['body'] = Psr7\Utils::streamFor($body);
         $request = Psr7\Utils::modifyRequest($request, $modify);
-        if ($request->getBody() instanceof Psr7\MultipartStream) {
+        if ($request->getBody() instanceof Psr7\MultipartStream && !$request->hasHeader('Content-Type')) {
             // Use a multipart/form-data POST if a Content-Type is not set.
-            $request->withHeader('Content-Type', $this->contentType.$request->getBody()->getBoundary());
+            $request = $request->withHeader('Content-Type', $this->contentType.$request->getBody()->getBoundary());
         }
 
         return $request;
