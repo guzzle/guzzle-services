@@ -97,7 +97,7 @@ class DeserializerTest extends TestCase
                 'foo' => [
                     'uri' => '/{foo}',
                     'httpMethod' => 'GET',
-                    'responseClass' => 'Foo',
+                    'responseModel' => 'Foo',
                     'parameters' => [
                         'bar' => [
                             'type' => 'string',
@@ -138,7 +138,7 @@ class DeserializerTest extends TestCase
                 'foo' => [
                     'uri' => '/{foo}',
                     'httpMethod' => 'GET',
-                    'responseClass' => 'Foo',
+                    'responseModel' => 'Foo',
                     'parameters' => [
                         'bar' => [
                             'type' => 'string',
@@ -180,7 +180,7 @@ class DeserializerTest extends TestCase
                 'foo' => [
                     'uri' => '/{foo}',
                     'httpMethod' => 'GET',
-                    'responseClass' => 'Foo',
+                    'responseModel' => 'Foo',
                     'parameters' => [
                         'bar' => [
                             'type' => 'string',
@@ -222,7 +222,7 @@ class DeserializerTest extends TestCase
                 'foo' => [
                     'uri' => '/{foo}',
                     'httpMethod' => 'GET',
-                    'responseClass' => 'Foo',
+                    'responseModel' => 'Foo',
                     'parameters' => [
                         'bar' => [
                             'type' => 'string',
@@ -316,7 +316,7 @@ class DeserializerTest extends TestCase
                 'Login' => [
                     'uri' => '/{foo}',
                     'httpMethod' => 'POST',
-                    'responseClass' => 'LoginResponse',
+                    'responseModel' => 'LoginResponse',
                     'parameters' => [
                         'username' => [
                             'type' => 'string',

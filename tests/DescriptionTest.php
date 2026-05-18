@@ -56,7 +56,7 @@ class DescriptionTest extends TestCase
         $this->assertEquals(['Tag', 'Person'], array_keys($d->getModels()));
     }
 
-    public function testCanUseResponseClass()
+    public function testCanUseLegacyResponseClass()
     {
         $d = new Description([
             'operations' => [
@@ -65,7 +65,7 @@ class DescriptionTest extends TestCase
             'models' => ['Tag' => ['type' => 'object']],
         ]);
         $op = $d->getOperation('foo');
-        $this->assertNotNull($op->getResponseModel());
+        $this->assertSame('Tag', $op->getResponseModel());
     }
 
     public function testRetrievingMissingModelThrowsException()
@@ -121,7 +121,7 @@ class DescriptionTest extends TestCase
         ]);
     }
 
-    public function testHasbaseUrl()
+    public function testCanUseLegacyBaseUrl()
     {
         $description = new Description(['baseUrl' => 'http://foo.com']);
         $this->assertEquals('http://foo.com', $description->getBaseUri());
