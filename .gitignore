@@ -3,3 +3,5 @@
 .phpunit.result.cache
 composer.lock
 vendor/
+/phpstan.neon
+/phpunit.xml
