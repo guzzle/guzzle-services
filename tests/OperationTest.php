@@ -124,6 +124,38 @@ class OperationTest extends TestCase
         $this->assertEquals(['foo' => 'baz', 'bar' => 123], $o->getData());
     }
 
+    public function testDefaultsHttpMethodToGet()
+    {
+        $o = new Operation();
+
+        $this->assertEquals('GET', $o->getHttpMethod());
+        $this->assertEquals('GET', $o->toArray()['httpMethod']);
+    }
+
+    public function testCanProvideAlternateHttpMethod()
+    {
+        $o = new Operation(['httpMethod' => 'POST']);
+
+        $this->assertEquals('POST', $o->getHttpMethod());
+        $this->assertEquals('POST', $o->toArray()['httpMethod']);
+    }
+
+    public function testEnsuresHttpMethodIsNotEmptyString()
+    {
+        $this->expectExceptionMessage('httpMethod must be a non-empty string');
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Operation(['httpMethod' => '']);
+    }
+
+    public function testEnsuresHttpMethodIsString()
+    {
+        $this->expectExceptionMessage('httpMethod must be a non-empty string');
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Operation(['httpMethod' => false]);
+    }
+
     public function testEnsuresParametersAreArrays()
     {
         $this->expectExceptionMessage('Parameters must be arrays');
@@ -197,6 +229,7 @@ class OperationTest extends TestCase
                 ],
                 'B' => [
                     'extends' => 'A',
+                    'httpMethod' => 'POST',
                     'summary' => 'Bar',
                 ],
                 'C' => [
@@ -210,17 +243,20 @@ class OperationTest extends TestCase
         ]);
 
         $a = $d->getOperation('A');
+        $this->assertEquals('GET', $a->getHttpMethod());
         $this->assertEquals('foo', $a->getSummary());
         $this->assertTrue($a->hasParam('A'));
         $this->assertEquals('string', $a->getParam('B')->getType());
 
         $b = $d->getOperation('B');
         $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('POST', $b->getHttpMethod());
         $this->assertEquals('Bar', $b->getSummary());
         $this->assertEquals('string', $a->getParam('B')->getType());
 
         $c = $d->getOperation('C');
         $this->assertTrue($a->hasParam('A'));
+        $this->assertEquals('POST', $c->getHttpMethod());
         $this->assertEquals('Bar', $c->getSummary());
         $this->assertEquals('number', $c->getParam('B')->getType());
     }

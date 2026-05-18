@@ -55,7 +55,7 @@ class Operation implements ToArrayInterface
     {
         static $defaults = [
             'name' => '',
-            'httpMethod' => '',
+            'httpMethod' => 'GET',
             'uri' => '',
             'responseModel' => null,
             'notes' => '',
@@ -72,6 +72,12 @@ class Operation implements ToArrayInterface
 
         if (isset($config['extends'])) {
             $config = $this->resolveExtends($config['extends'], $config);
+        }
+
+        if (array_key_exists('httpMethod', $config)
+            && (!is_string($config['httpMethod']) || $config['httpMethod'] === '')
+        ) {
+            throw new \InvalidArgumentException('httpMethod must be a non-empty string');
         }
 
         $this->config = $config + $defaults;
@@ -146,7 +152,7 @@ class Operation implements ToArrayInterface
     /**
      * Get the HTTP method of the operation
      *
-     * @return string|null
+     * @return string
      */
     public function getHttpMethod()
     {

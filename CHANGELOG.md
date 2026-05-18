@@ -6,6 +6,7 @@
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Drop support for PHP 7.2 and 7.3
 * Require `guzzlehttp/command` ^2.0, `guzzlehttp/guzzle` ^8.0, `guzzlehttp/psr7` ^3.0, and `guzzlehttp/uri-template` ^2.0
+* Default operations without an `httpMethod` to `GET` and reject invalid `httpMethod` values
 
 ## 1.6.0 - UPCOMING
 

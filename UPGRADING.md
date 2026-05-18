@@ -59,6 +59,30 @@ $description = new Description([
 In 2.0, `baseUrl` and `responseClass` are retained only as extra description or
 operation data. They no longer configure request base URIs or response models.
 
+#### Operation HTTP Methods
+
+Operations without an `httpMethod` now default to `GET` in
+`GuzzleHttp\Command\Guzzle\Operation`, matching the request method already used
+by the serializer at runtime.
+
+This changes the public operation data returned by `getHttpMethod()` and
+`toArray()`:
+
+```php
+$operation = new Operation();
+
+// 1.x
+$operation->getHttpMethod(); // ''
+$operation->toArray()['httpMethod']; // ''
+
+// 2.0
+$operation->getHttpMethod(); // 'GET'
+$operation->toArray()['httpMethod']; // 'GET'
+```
+
+Explicit `httpMethod` values must now be non-empty strings. Passing an empty
+string or a non-string value throws `InvalidArgumentException`.
+
 #### Command Client Dependency
 
 `GuzzleHttp\Command\Guzzle\GuzzleClient` continues to build on
