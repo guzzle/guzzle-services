@@ -6,75 +6,48 @@
 
 - Handle malformed XML responses safely [\#202](https://github.com/guzzle/guzzle-services/pull/202) ([GrahamCampbell](https://github.com/GrahamCampbell))
 - Fix multipart Content-Type header [\#199](https://github.com/guzzle/guzzle-services/pull/199) ([GrahamCampbell](https://github.com/GrahamCampbell))
-- Use local test server in tests [\#198](https://github.com/guzzle/guzzle-services/pull/198) ([GrahamCampbell](https://github.com/GrahamCampbell))
-- Run static analysis on PHP 7.4 [\#197](https://github.com/guzzle/guzzle-services/pull/197) ([GrahamCampbell](https://github.com/GrahamCampbell))
-- Update static tooling [\#196](https://github.com/guzzle/guzzle-services/pull/196) ([GrahamCampbell](https://github.com/GrahamCampbell))
-- Update CI workflows and add PHPStan [\#195](https://github.com/guzzle/guzzle-services/pull/195) ([GrahamCampbell](https://github.com/GrahamCampbell))
 
 ## [1.4.2](https://github.com/guzzle/guzzle-services/tree/1.4.2) (2025-02-04)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.4.1...1.4.2)
-
 **Merged pull requests:**
 
-- Fixes for PHP 8.4 deprecation [\#192](https://github.com/guzzle/guzzle-services/pull/192) ([GrahamCampbell](https://github.com/GrahamCampbell))
+- Fix PHP 8.4 deprecations [\#192](https://github.com/guzzle/guzzle-services/pull/192) ([GrahamCampbell](https://github.com/GrahamCampbell))
 
 ## [1.4.1](https://github.com/guzzle/guzzle-services/tree/1.4.1) (2023-12-03)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.4.0...1.4.1)
 
 **Maintenance:**
 
 - Add PHP 8.3 support
-- Update `.gitattributes`
 
 ## [1.4.0](https://github.com/guzzle/guzzle-services/tree/1.4.0) (2023-05-21)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.3.2...1.4.0)
-
 **Merged pull requests:**
 
-- Test on PHP 8.2 [\#189](https://github.com/guzzle/guzzle-services/pull/189) ([GrahamCampbell](https://github.com/GrahamCampbell))
-- Compatible with PHP8.1 [\#186](https://github.com/guzzle/guzzle-services/pull/186) ([sy-records](https://github.com/sy-records))
-- Cleanup CI [\#191](https://github.com/guzzle/guzzle-services/pull/191) ([GrahamCampbell](https://github.com/GrahamCampbell))
+- Add PHP 8.1 support [\#186](https://github.com/guzzle/guzzle-services/pull/186) ([sy-records](https://github.com/sy-records))
 
 **Maintenance:**
 
-- Set `error_reporting=E_ALL` in CI
-- Bumped min versions
-- Bumped versions and use symfony code style
-- Fix for PHP 8.2 support
+- Add PHP 8.2 support
+- Bump dependency constraints
 
 ## [1.3.2](https://github.com/guzzle/guzzle-services/tree/1.3.2) (2022-03-03)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.3.1...1.3.2)
 
 **Merged pull requests:**
 
 - Fix `http_build_query` on PHP 8.1 [\#183](https://github.com/guzzle/guzzle-services/pull/183) ([tianyiw2013](https://github.com/tianyiw2013))
 
-**Maintenance:**
-
-- Update composer.json
-- Fixed typo
-
 ## [1.3.1](https://github.com/guzzle/guzzle-services/tree/1.3.1) (2021-10-07)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.3.0...1.3.1)
-
 **Maintenance:**
 
-- Support PHP 8.1
-- Update ci.yml
+- Add PHP 8.1 support
 - Revert minimum version bump for PHP 8.1 support
 
 ## [1.3.0](https://github.com/guzzle/guzzle-services/tree/1.3.0) (2021-08-14)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.2.0...1.3.0)
-
 **Fixed bugs:**
 
-- Added missing fallback to GET
+- Add missing fallback to GET
 
 **Merged pull requests:**
 
@@ -82,12 +55,10 @@
 
 **Maintenance:**
 
-- Restored PHP 7.2 support
+- Restore PHP 7.2 support
 - Allow url-template 1.x
 
 ## [1.2.0](https://github.com/guzzle/guzzle-services/tree/1.2.0) (2020-11-13)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.3...1.2.0)
 
 **Closed issues:**
 
@@ -98,8 +69,6 @@
 - Support Guzzle 7 [\#176](https://github.com/guzzle/guzzle-services/pull/176) ([ptlevi](https://github.com/ptlevi))
 
 ## [1.1.3](https://github.com/guzzle/guzzle-services/tree/1.1.3) (2017-10-06)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.2...1.1.3)
 
 **Closed issues:**
 
@@ -113,8 +82,6 @@
 
 ## [1.1.2](https://github.com/guzzle/guzzle-services/tree/1.1.2) (2017-05-19)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.1...1.1.2)
-
 **Closed issues:**
 
 - Default values ignored in 1.1 [\#146](https://github.com/guzzle/guzzle-services/issues/146)
@@ -122,8 +89,6 @@
 - Operations extends is broken in 1.1.1 [\#145](https://github.com/guzzle/guzzle-services/issues/145)
 
 ## [1.1.1](https://github.com/guzzle/guzzle-services/tree/1.1.1) (2017-05-15)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.1.0...1.1.1)
 
 **Closed issues:**
 
@@ -145,8 +110,6 @@
 
 ## [1.1.0](https://github.com/guzzle/guzzle-services/tree/1.1.0) (2017-01-31)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.0.1...1.1.0)
-
 **Closed issues:**
 
 - Grab a list of objects when they are not located at top level of a json response \(HATEOAS\) [\#90](https://github.com/guzzle/guzzle-services/issues/90)
@@ -164,8 +127,6 @@
 - Allow to fix validation for parameters with a format [\#130](https://github.com/guzzle/guzzle-services/pull/130) ([bakura10](https://github.com/bakura10))
 
 ## [1.0.1](https://github.com/guzzle/guzzle-services/tree/1.0.1) (2017-01-13)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/1.0.0...1.0.1)
 
 **Implemented enhancements:**
 
@@ -207,8 +168,6 @@
 
 ## [1.0.0](https://github.com/guzzle/guzzle-services/tree/1.0.0) (2016-11-24)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.6.0...1.0.0)
-
 **Closed issues:**
 
 - AbstractClient' not found [\#117](https://github.com/guzzle/guzzle-services/issues/117)
@@ -218,8 +177,6 @@
 - Make Guzzle Services compatible with Guzzle6 [\#109](https://github.com/guzzle/guzzle-services/pull/109) ([Konafets](https://github.com/Konafets))
 
 ## [0.6.0](https://github.com/guzzle/guzzle-services/tree/0.6.0) (2016-10-21)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.5.0...0.6.0)
 
 **Closed issues:**
 
@@ -289,8 +246,6 @@
 
 ## [0.5.0](https://github.com/guzzle/guzzle-services/tree/0.5.0) (2014-12-23)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.4.0...0.5.0)
-
 **Closed issues:**
 
 - Does it supports custom class instantiate to define an operation using a service description [\#62](https://github.com/guzzle/guzzle-services/issues/62)
@@ -318,8 +273,6 @@
 - Documentation: Add 'boolean-string' as a supported "format" value [\#63](https://github.com/guzzle/guzzle-services/pull/63) ([jwcobb](https://github.com/jwcobb))
 
 ## [0.4.0](https://github.com/guzzle/guzzle-services/tree/0.4.0) (2014-11-03)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.3.0...0.4.0)
 
 **Closed issues:**
 
@@ -387,8 +340,6 @@
 
 ## [0.3.0](https://github.com/guzzle/guzzle-services/tree/0.3.0) (2014-06-01)
 
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.2.0...0.3.0)
-
 **Closed issues:**
 
 - Testing Guzzle Services doesn't work [\#19](https://github.com/guzzle/guzzle-services/issues/19)
@@ -410,8 +361,6 @@
 - baseUrl can be a string or an uri template [\#16](https://github.com/guzzle/guzzle-services/pull/16) ([robinvdvleuten](https://github.com/robinvdvleuten))
 
 ## [0.2.0](https://github.com/guzzle/guzzle-services/tree/0.2.0) (2014-03-30)
-
-[Full Changelog](https://github.com/guzzle/guzzle-services/compare/0.1.0...0.2.0)
 
 **Closed issues:**
 
