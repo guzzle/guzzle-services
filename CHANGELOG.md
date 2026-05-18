@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.4.3 - 2026-05-18
 
 * Handle malformed XML responses safely
 * Fix multipart request `Content-Type` header
