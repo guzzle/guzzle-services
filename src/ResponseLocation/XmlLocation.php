@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class XmlLocation extends AbstractLocation
 {
-    /** @var \SimpleXMLElement XML document being visited */
+    /** @var \SimpleXMLElement|null XML document being visited */
     private $xml;
 
     /**
@@ -33,7 +33,23 @@ class XmlLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $model
     ) {
-        $this->xml = simplexml_load_string((string) $response->getBody());
+        $this->xml = null;
+
+        $previous = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+
+        try {
+            $xml = simplexml_load_string((string) $response->getBody());
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            throw new \RuntimeException('Unable to parse XML response');
+        }
+
+        $this->xml = $xml;
 
         return $result;
     }
@@ -53,7 +69,7 @@ class XmlLocation extends AbstractLocation
         ) {
             $result = new Result(array_merge(
                 $result->toArray(),
-                self::xmlToArray($this->xml)
+                self::xmlToArray($this->getXml())
             ));
         }
 
@@ -76,15 +92,30 @@ class XmlLocation extends AbstractLocation
             list($ns, $sentAs) = explode(':', $sentAs);
         }
 
+        $xml = $this->getXml();
+        $children = $xml->children($ns, true)->{$sentAs};
+
         // Process the primary property
-        if (count($this->xml->children($ns, true)->{$sentAs})) {
+        if (count($children)) {
             $result[$param->getName()] = $this->recursiveProcess(
                 $param,
-                $this->xml->children($ns, true)->{$sentAs}
+                $children
             );
         }
 
         return $result;
+    }
+
+    /**
+     * @return \SimpleXMLElement
+     */
+    private function getXml()
+    {
+        if (!$this->xml instanceof \SimpleXMLElement) {
+            throw new \RuntimeException('XML response has not been parsed');
+        }
+
+        return $this->xml;
     }
 
     /**
