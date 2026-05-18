@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.5.0 - UPCOMING
+## 1.5.0 - 2026-05-18
 
 * Add PHP 8.5 support
 * Require `guzzlehttp/guzzle` ^7.10, `guzzlehttp/psr7` ^2.8, and `guzzlehttp/command` ^1.4
