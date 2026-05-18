@@ -11,6 +11,7 @@ use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Server\Server;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -276,7 +277,7 @@ class GuzzleClientTest extends TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUri' => 'http://httpbin.org/',
+                'baseUri' => Server::$url,
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -325,6 +326,9 @@ class GuzzleClientTest extends TestCase
             ]
         );
 
+        Server::flush();
+        Server::enqueue([new Response(200)]);
+
         $guzzle = new GuzzleClient(
             $client,
             $description,
@@ -342,6 +346,12 @@ class GuzzleClientTest extends TestCase
         $response = $guzzle->execute($command);
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
+
+        $requests = Server::received();
+        $this->assertCount(1, $requests);
+        $query = [];
+        parse_str($requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame('BAZ', $query['baz']);
     }
 
     public function testValidateDescriptionFailsDueMissingRequiredParameter()
@@ -504,7 +514,7 @@ class GuzzleClientTest extends TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUri' => 'http://httpbin.org/',
+                'baseUri' => Server::$url,
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -553,6 +563,9 @@ class GuzzleClientTest extends TestCase
             ]
         );
 
+        Server::flush();
+        Server::enqueue([new Response(200)]);
+
         $guzzle = new GuzzleClient($client, $description);
 
         $command = $guzzle->getCommand('Foo', ['baz' => 42]);
@@ -561,6 +574,12 @@ class GuzzleClientTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
         $this->assertEquals(200, $result['statusCode']);
+
+        $requests = Server::received();
+        $this->assertCount(1, $requests);
+        $query = [];
+        parse_str($requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame('42', $query['baz']);
     }
 
     public function testMagicMethodExecutesCommands()
@@ -655,7 +674,7 @@ class GuzzleClientTest extends TestCase
         $description = new Description(
             [
                 'name' => 'Testing API ',
-                'baseUri' => 'http://httpbin.org/',
+                'baseUri' => Server::$url,
                 'operations' => [
                     'Foo' => [
                         'httpMethod' => 'GET',
@@ -704,6 +723,9 @@ class GuzzleClientTest extends TestCase
             ]
         );
 
+        Server::flush();
+        Server::enqueue([new Response(200)]);
+
         $guzzle = new GuzzleClient($client, $description, null, null);
         $command = $guzzle->getCommand('foo', ['baz' => 'BAZ']);
 
@@ -712,6 +734,12 @@ class GuzzleClientTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
         $this->assertEquals(200, $result['statusCode']);
+
+        $requests = Server::received();
+        $this->assertCount(1, $requests);
+        $query = [];
+        parse_str($requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame('BAZ', $query['baz']);
     }
 
     private function getServiceClient(
@@ -953,7 +981,7 @@ class GuzzleClientTest extends TestCase
     {
         $client = new HttpClient();
         $description = new Description([
-            'baseUrl' => 'http://httpbin.org/',
+            'baseUrl' => Server::$url,
             'operations' => [
                 'testing' => [
                     'httpMethod' => 'GET',
@@ -983,15 +1011,24 @@ class GuzzleClientTest extends TestCase
 
         $guzzle = new GuzzleClient($client, $description);
 
+        Server::flush();
+        Server::enqueue([new Response(200, [], '{"args":{"foo":"bar"}}')]);
+
         $result = $guzzle->testing(['foo' => 'bar']);
         $this->assertEquals('bar', $result['args']['foo']);
+
+        $requests = Server::received();
+        $this->assertCount(1, $requests);
+        $query = [];
+        parse_str($requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame('bar', $query['foo']);
     }
 
     public function testDescriptionWithExtends()
     {
         $client = new HttpClient();
         $description = new Description([
-            'baseUrl' => 'http://httpbin.org/',
+            'baseUrl' => Server::$url,
             'operations' => [
                 'testing' => [
                     'httpMethod' => 'GET',
@@ -1026,8 +1063,19 @@ class GuzzleClientTest extends TestCase
             ],
         ]);
         $guzzle = new GuzzleClient($client, $description);
+
+        Server::flush();
+        Server::enqueue([new Response(200, [], '{"args":{"foo":"foo","bar":"bar"}}')]);
+
         $result = $guzzle->testing_extends(['bar' => 'bar']);
         $this->assertEquals('bar', $result['args']['bar']);
         $this->assertEquals('foo', $result['args']['foo']);
+
+        $requests = Server::received();
+        $this->assertCount(1, $requests);
+        $query = [];
+        parse_str($requests[0]->getUri()->getQuery(), $query);
+        $this->assertSame('bar', $query['bar']);
+        $this->assertSame('foo', $query['foo']);
     }
 }

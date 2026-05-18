@@ -6,6 +6,8 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Result;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Server\Server;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,7 +22,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $description = new Description([
             'operations' => [
                 'foo' => [
-                    'uri' => 'http://httpbin.org',
+                    'uri' => Server::$url,
                     'httpMethod' => 'GET',
                     'responseModel' => 'j',
                     'parameters' => [
@@ -42,7 +44,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $description = new Description([
             'operations' => [
                 'foo' => [
-                    'uri' => 'http://httpbin.org',
+                    'uri' => Server::$url,
                     'httpMethod' => 'GET',
                     'responseModel' => 'j',
                     'parameters' => [],
@@ -55,6 +57,9 @@ class ValidatedDescriptionHandlerTest extends TestCase
             ],
         ]);
 
+        Server::flush();
+        Server::enqueue([new Response(200)]);
+
         $client = new GuzzleClient(new HttpClient(), $description);
         self::assertInstanceOf(Result::class, $client->foo([]));
     }
@@ -66,7 +71,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $description = new Description([
             'operations' => [
                 'foo' => [
-                    'uri' => 'http://httpbin.org',
+                    'uri' => Server::$url,
                     'httpMethod' => 'GET',
                     'responseModel' => 'j',
                     'additionalParameters' => [
@@ -90,7 +95,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $description = new Description([
             'operations' => [
                 'foo' => [
-                    'uri' => 'http://httpbin.org',
+                    'uri' => Server::$url,
                     'httpMethod' => 'GET',
                     'parameters' => [
                         'bar' => [
@@ -103,6 +108,9 @@ class ValidatedDescriptionHandlerTest extends TestCase
                 ],
             ],
         ]);
+
+        Server::flush();
+        Server::enqueue([new Response(200)]);
 
         $client = new GuzzleClient(new HttpClient(), $description);
         // Should not throw any exception
