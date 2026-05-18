@@ -981,7 +981,7 @@ class GuzzleClientTest extends TestCase
     {
         $client = new HttpClient();
         $description = new Description([
-            'baseUrl' => Server::$url,
+            'baseUri' => Server::$url,
             'operations' => [
                 'testing' => [
                     'httpMethod' => 'GET',
@@ -1028,7 +1028,7 @@ class GuzzleClientTest extends TestCase
     {
         $client = new HttpClient();
         $description = new Description([
-            'baseUrl' => Server::$url,
+            'baseUri' => Server::$url,
             'operations' => [
                 'testing' => [
                     'httpMethod' => 'GET',
