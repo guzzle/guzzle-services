@@ -3,7 +3,7 @@
     backupGlobals="true"
     beStrictAboutOutputDuringTests="true"
     beStrictAboutTestsThatDoNotTestAnything="true"
-    bootstrap="vendor/autoload.php"
+    bootstrap="tests/bootstrap.php"
     colors="true"
     convertDeprecationsToExceptions="true"
     convertErrorsToExceptions="true"
