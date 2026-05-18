@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.0 - UPCOMING
+
+* Remove the legacy `baseUrl` service description option; use `baseUri` instead
+* Remove the legacy `responseClass` operation option; use `responseModel` instead
+
 ## 1.6.0 - UPCOMING
 
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
