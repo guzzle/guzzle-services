@@ -64,7 +64,6 @@ class DescriptionTest extends TestCase
             ],
             'models' => ['Tag' => ['type' => 'object']],
         ]);
-
         $op = $d->getOperation('foo');
         $this->assertSame('Tag', $op->getResponseModel());
     }
