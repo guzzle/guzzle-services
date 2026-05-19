@@ -50,6 +50,15 @@ This project can be installed using Composer:
 
 ``composer require guzzlehttp/guzzle-services``
 
+## Version Guidance
+
+| Version | Status              | PHP Version  |
+|---------|---------------------|--------------|
+| 1.x     | Latest              | >=7.2.5,<8.6 |
+| 2.x     | Experimental        | >=7.4,<8.6   |
+
+See [UPGRADING.md](UPGRADING.md) for notes on upgrading to 2.0.
+
 For **Guzzle 5**, use ``composer require guzzlehttp/guzzle-services:0.6``.
 
 **Note:** If Composer is not installed [globally](https://getcomposer.org/doc/00-intro.md#globally) then you may need to run the preceding Composer commands using ``php composer.phar`` (where ``composer.phar`` is the path to your copy of Composer), instead of just ``composer``.

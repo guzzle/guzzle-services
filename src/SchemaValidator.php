@@ -17,8 +17,8 @@ class SchemaValidator
      */
     protected $castIntegerToStringType;
 
-    /** @var array Errors encountered while validating */
-    protected $errors;
+    /** @var string[] Errors encountered while validating */
+    protected array $errors = [];
 
     /**
      * @param bool $castIntegerToStringType Set to true to convert integers
@@ -41,7 +41,9 @@ class SchemaValidator
         if (empty($this->errors)) {
             return true;
         }
-        sort($this->errors);
+        $errors = $this->getErrors();
+        sort($errors);
+        $this->errors = $errors;
 
         return false;
     }
@@ -49,7 +51,7 @@ class SchemaValidator
     /**
      * Get the errors encountered while validating
      *
-     * @return array
+     * @return string[]
      */
     public function getErrors()
     {

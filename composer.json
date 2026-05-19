@@ -25,15 +25,16 @@
         }
     ],
     "require": {
-        "php": "^7.2.5 || ^8.0",
-        "guzzlehttp/command": "^1.4",
-        "guzzlehttp/guzzle": "^7.10",
-        "guzzlehttp/psr7": "^2.8",
-        "guzzlehttp/uri-template": "^1.0.5"
+        "php": "^7.4 || ^8.0",
+        "guzzlehttp/command": "^2.0@dev",
+        "guzzlehttp/guzzle": "^8.0@dev",
+        "guzzlehttp/psr7": "^3.0@dev",
+        "guzzlehttp/uri-template": "^2.0@dev"
     },
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8.2",
-        "guzzlehttp/test-server": "^0.3.2",
+        "guzzlehttp/promises": "^3.0@dev",
+        "guzzlehttp/test-server": "^1.0@dev",
         "phpunit/phpunit": "^8.5.52 || ^9.6.34"
     },
     "suggest": {
