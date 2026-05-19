@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.1 - Upcoming
+
+* Replace deprecated Guzzle JSON helper functions
+
 ## 1.5.0 - 2026-05-18
 
 * Add PHP 8.5 support

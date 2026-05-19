@@ -12,6 +12,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Server\Server;
+use GuzzleHttp\Utils;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -778,7 +779,7 @@ class GuzzleClientTest extends TestCase
     private function responseToResultTransformer()
     {
         return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command) {
-            $data = \GuzzleHttp\json_decode($response->getBody(), true);
+            $data = Utils::jsonDecode($response->getBody(), true);
             parse_str($request->getBody(), $data['_request']);
 
             return new Result($data);
