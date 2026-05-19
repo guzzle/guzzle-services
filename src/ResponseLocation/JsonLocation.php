@@ -5,6 +5,7 @@ namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
+use GuzzleHttp\Utils;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -35,7 +36,7 @@ class JsonLocation extends AbstractLocation
     ) {
         $body = (string) $response->getBody();
         $body = $body ?: '{}';
-        $this->json = \GuzzleHttp\json_decode($body, true);
+        $this->json = Utils::jsonDecode($body, true);
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
         if ($model->getType() === 'array' && ($name = $model->getName())) {
