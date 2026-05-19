@@ -268,8 +268,8 @@ class XmlLocation extends AbstractLocation
     /**
      * Convert an XML document to an array.
      *
-     * @param int  $nesting
-     * @param null $ns
+     * @param string|null $ns
+     * @param int         $nesting
      *
      * @return array
      */
@@ -282,7 +282,9 @@ class XmlLocation extends AbstractLocation
         $children = $xml->children($ns, true);
 
         foreach ($children as $name => $child) {
-            $attributes = (array) $child->attributes($ns, true);
+            $attributes = $ns === null
+                ? (array) $child->attributes()
+                : (array) $child->attributes($ns, true);
             if (!isset($result[$name])) {
                 $childArray = self::xmlToArray($child, $ns, $nesting + 1);
                 $result[$name] = $attributes
@@ -315,7 +317,9 @@ class XmlLocation extends AbstractLocation
         }
 
         // Process attributes
-        $attributes = (array) $xml->attributes($ns, true);
+        $attributes = $ns === null
+            ? (array) $xml->attributes()
+            : (array) $xml->attributes($ns, true);
         if ($attributes) {
             if ($text !== null) {
                 $result['value'] = $text;
