@@ -10,6 +10,10 @@
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
 
+## 1.5.1 - Upcoming
+
+* Replace deprecated Guzzle JSON helper functions
+
 ## 1.5.0 - 2026-05-18
 
 * Add PHP 8.5 support
