@@ -268,8 +268,8 @@ class XmlLocation extends AbstractLocation
     /**
      * Convert an XML document to an array.
      *
-     * @param int  $nesting
-     * @param null $ns
+     * @param string|null $ns
+     * @param int         $nesting
      *
      * @return array
      */

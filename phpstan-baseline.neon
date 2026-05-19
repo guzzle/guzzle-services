@@ -109,12 +109,6 @@ parameters:
 			path: src/ResponseLocation/XmlLocation.php
 
 		-
-			message: '#^Parameter \#1 \$namespaceOrPrefix of method SimpleXMLElement\:\:attributes\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/ResponseLocation/XmlLocation.php
-
-		-
 			message: '#^Variable \$result in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
