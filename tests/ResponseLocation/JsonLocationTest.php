@@ -11,6 +11,7 @@ use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -43,7 +44,7 @@ class JsonLocationTest extends TestCase
     public function testVisitsWiredArray()
     {
         $json = ['car_models' => ['ferrari', 'aston martin']];
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -132,7 +133,7 @@ class JsonLocationTest extends TestCase
             ['foo' => 'bar'],
             ['baz' => 'bam'],
         ];
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -179,7 +180,7 @@ class JsonLocationTest extends TestCase
                 'baz',
             ],
         ];
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -320,7 +321,7 @@ class JsonLocationTest extends TestCase
             ],
             'baz' => 'boo',
         ];
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -355,7 +356,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -429,7 +430,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -511,7 +512,7 @@ class JsonLocationTest extends TestCase
     {
         $json = json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}');
 
-        $body = \GuzzleHttp\json_encode($json);
+        $body = Utils::jsonEncode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
