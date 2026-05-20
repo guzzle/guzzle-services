@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -153,7 +155,7 @@ class Serializer
         }
 
         // Expand the URI template.
-        $uri = new Uri(UriTemplate::expand($operation->getUri(), $variables));
+        $uri = new Uri(UriTemplate::expand((string) $operation->getUri(), $variables));
 
         return new Request(
             $operation->getHttpMethod(),

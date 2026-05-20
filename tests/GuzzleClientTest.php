@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
@@ -164,7 +166,7 @@ class GuzzleClientTest extends TestCase
         ]);
         $this->assertEquals(
             "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n",
-            $mock->getLastRequest()->getBody()
+            (string) $mock->getLastRequest()->getBody()
         );
     }
 
@@ -779,8 +781,8 @@ class GuzzleClientTest extends TestCase
     private function responseToResultTransformer()
     {
         return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command) {
-            $data = Utils::jsonDecode($response->getBody(), true);
-            parse_str($request->getBody(), $data['_request']);
+            $data = Utils::jsonDecode((string) $response->getBody(), true);
+            parse_str((string) $request->getBody(), $data['_request']);
 
             return new Result($data);
         };

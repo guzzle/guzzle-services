@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\QuerySerializer;
 
 class Rfc3986Serializer implements QuerySerializerInterface

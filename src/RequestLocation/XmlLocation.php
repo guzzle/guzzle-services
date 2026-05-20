@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -131,7 +133,7 @@ class XmlLocation extends AbstractLocation
                 if (!is_numeric($prefix)) {
                     $nsLabel .= ':'.$prefix;
                 }
-                $writer->writeAttribute($nsLabel, $uri);
+                $writer->writeAttribute($nsLabel, $this->xmlString($uri));
             }
         }
 
@@ -193,6 +195,8 @@ class XmlLocation extends AbstractLocation
      */
     protected function writeAttribute($writer, $prefix, $name, $namespace, $value)
     {
+        $value = $this->xmlString($value);
+
         if ($namespace) {
             $writer->writeAttributeNS($prefix, $name, $namespace, $value);
         } else {
@@ -211,12 +215,14 @@ class XmlLocation extends AbstractLocation
      */
     protected function writeElement(\XMLWriter $writer, $prefix, $name, $namespace, $value)
     {
+        $value = $this->xmlString($value);
+
         if ($namespace) {
             $writer->startElementNS($prefix, $name, $namespace);
         } else {
             $writer->startElement($name);
         }
-        if ($value !== null && strpbrk($value, '<>&')) {
+        if ($value !== '' && strpbrk($value, '<>&')) {
             $writer->writeCData($value);
         } else {
             $writer->writeRaw($value);
@@ -306,5 +312,18 @@ class XmlLocation extends AbstractLocation
         }
 
         $this->addXml($this->writer, $param, $value);
+    }
+
+    private function xmlString($value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        if (is_scalar($value) || (is_object($value) && method_exists($value, '__toString'))) {
+            return (string) $value;
+        }
+
+        throw new \InvalidArgumentException('XML values must be scalar, null, or stringable.');
     }
 }

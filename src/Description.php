@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Psr7\Uri;
@@ -54,7 +56,7 @@ class Description implements DescriptionInterface
         }
 
         // Set the baseUri
-        $this->baseUri = isset($config['baseUri']) ? new Uri($config['baseUri']) : new Uri();
+        $this->baseUri = isset($config['baseUri']) ? new Uri((string) $config['baseUri']) : new Uri();
 
         // Ensure that the models and operations properties are always arrays
         $this->models = (array) $this->models;

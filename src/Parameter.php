@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
@@ -302,12 +304,9 @@ class Parameter implements ToArrayInterface
                             $data = $this;
                         }
                     }
-                    $value = call_user_func_array(
-                        $filter['method'],
-                        $filter['args']
-                    );
+                    $value = $this->invokeFilter($filter['method'], $filter['args']);
                 } else {
-                    $value = call_user_func($filter, $value);
+                    $value = $this->invokeFilter($filter, [$value]);
                 }
             }
         }
@@ -657,6 +656,18 @@ class Parameter implements ToArrayInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Invoke user filters through reflection to preserve weak scalar coercion.
+     *
+     * @param callable $filter
+     *
+     * @return mixed
+     */
+    private function invokeFilter($filter, array $args)
+    {
+        return (new \ReflectionFunction(\Closure::fromCallable($filter)))->invokeArgs($args);
     }
 
     /**

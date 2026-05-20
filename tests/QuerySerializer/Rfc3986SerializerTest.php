@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Tests\Command\Guzzle\QuerySerializer;
 
 use GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer;

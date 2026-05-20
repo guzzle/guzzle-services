@@ -7,7 +7,6 @@ $config = (new PhpCsFixer\Config())
         '@PHPUnit75Migration:risky' => true,
         '@PSR12:risky' => true,
         '@Symfony' => true,
-        'declare_strict_types' => false,
         'global_namespace_import' => false,
         'no_superfluous_phpdoc_tags' => [
             'allow_mixed' => true,

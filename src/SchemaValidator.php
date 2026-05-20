@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
@@ -77,7 +79,7 @@ class SchemaValidator
                 return 'object';
             } elseif ($t == 'array' && is_array($value)) {
                 return 'array';
-            } elseif ($t == 'integer' && is_integer($value)) {
+            } elseif ($t == 'integer' && is_int($value)) {
                 return 'integer';
             } elseif ($t == 'boolean' && is_bool($value)) {
                 return 'boolean';
@@ -237,9 +239,10 @@ class SchemaValidator
         if ($type && (!$type = $this->determineType($type, $value))) {
             if ($this->castIntegerToStringType
                 && $param->getType() == 'string'
-                && is_integer($value)
+                && is_int($value)
             ) {
                 $value = (string) $value;
+                $type = 'string';
             } else {
                 $this->errors[] = "{$path} must be of type ".implode(' or ', (array) $param->getType());
             }
@@ -247,6 +250,10 @@ class SchemaValidator
 
         // Perform type specific validation for strings, arrays, and integers
         if ($type == 'string') {
+            if (!is_string($value)) {
+                $value = (string) $value;
+            }
+
             // Strings can have enums which are a list of predefined values
             if (($enum = $param->getEnum()) && !in_array($value, $enum)) {
                 $this->errors[] = "{$path} must be one of ".implode(' or ', array_map(function ($s) {
