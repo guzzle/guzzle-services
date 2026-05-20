@@ -12,10 +12,9 @@ use GuzzleHttp\Command\ToArrayInterface;
 #[\AllowDynamicProperties]
 class Parameter implements ToArrayInterface
 {
-    private $originalData;
+    private array $originalData;
 
-    /** @var array */
-    private $resolvedData;
+    private array $resolvedData;
 
     /** @var string|null */
     private $name;
@@ -68,11 +67,9 @@ class Parameter implements ToArrayInterface
     /** @var string|null */
     private $sentAs;
 
-    /** @var array */
-    private $data;
+    private array $data = [];
 
-    /** @var array */
-    private $properties = [];
+    private array $properties = [];
 
     /** @var array|bool|Parameter */
     private $additionalProperties;
@@ -83,10 +80,9 @@ class Parameter implements ToArrayInterface
     /** @var string */
     private $format;
 
-    private $propertiesCache;
+    private ?array $propertiesCache = null;
 
-    /** @var Description */
-    private $serviceDescription;
+    private ?DescriptionInterface $serviceDescription = null;
 
     /**
      * Create a new Parameter using an associative array of data.
@@ -187,10 +183,10 @@ class Parameter implements ToArrayInterface
         $this->originalData = $data;
 
         if (isset($options['description'])) {
-            $this->serviceDescription = $options['description'];
-            if (!$this->serviceDescription instanceof DescriptionInterface) {
+            if (!$options['description'] instanceof DescriptionInterface) {
                 throw new \InvalidArgumentException('description must be a Description');
             }
+            $this->serviceDescription = $options['description'];
             if (isset($data['$ref'])) {
                 if ($model = $this->serviceDescription->getModel($data['$ref'])) {
                     $name = isset($data['name']) ? $data['name'] : null;
@@ -230,20 +226,16 @@ class Parameter implements ToArrayInterface
 
     /**
      * Convert the object to an array
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->originalData;
     }
 
     /**
      * Convert the object to its internally resolved array
-     *
-     * @return array
      */
-    private function toResolvedArray()
+    private function toResolvedArray(): array
     {
         return $this->resolvedData;
     }
@@ -316,10 +308,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get the name of the parameter
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -329,7 +319,7 @@ class Parameter implements ToArrayInterface
      *
      * @param string $name Name to set
      */
-    public function setName($name)
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
@@ -337,10 +327,8 @@ class Parameter implements ToArrayInterface
     /**
      * Get the key of the parameter, where sentAs will supersede name if it is
      * set.
-     *
-     * @return string|null
      */
-    public function getWireName()
+    public function getWireName(): ?string
     {
         return $this->sentAs ?: $this->name;
     }
@@ -357,10 +345,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get if the parameter is required
-     *
-     * @return bool
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
@@ -377,80 +363,64 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get the description of the parameter
-     *
-     * @return string|null
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
      * Get the minimum acceptable value for an integer
-     *
-     * @return int|null
      */
-    public function getMinimum()
+    public function getMinimum(): ?int
     {
         return $this->minimum;
     }
 
     /**
      * Get the maximum acceptable value for an integer
-     *
-     * @return int|null
      */
-    public function getMaximum()
+    public function getMaximum(): ?int
     {
         return $this->maximum;
     }
 
     /**
      * Get the minimum allowed length of a string value
-     *
-     * @return int
      */
-    public function getMinLength()
+    public function getMinLength(): ?int
     {
         return $this->minLength;
     }
 
     /**
      * Get the maximum allowed length of a string value
-     *
-     * @return int|null
      */
-    public function getMaxLength()
+    public function getMaxLength(): ?int
     {
         return $this->maxLength;
     }
 
     /**
      * Get the maximum allowed number of items in an array value
-     *
-     * @return int|null
      */
-    public function getMaxItems()
+    public function getMaxItems(): ?int
     {
         return $this->maxItems;
     }
 
     /**
      * Get the minimum allowed number of items in an array value
-     *
-     * @return int
      */
-    public function getMinItems()
+    public function getMinItems(): ?int
     {
         return $this->minItems;
     }
 
     /**
      * Get the location of the parameter
-     *
-     * @return string|null
      */
-    public function getLocation()
+    public function getLocation(): ?string
     {
         return $this->location;
     }
@@ -458,10 +428,8 @@ class Parameter implements ToArrayInterface
     /**
      * Get the sentAs attribute of the parameter that used with locations to
      * sentAs an attribute when it is being applied to a location.
-     *
-     * @return string|null
      */
-    public function getSentAs()
+    public function getSentAs(): ?string
     {
         return $this->sentAs;
     }
@@ -500,10 +468,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get an array of filters used by the parameter
-     *
-     * @return array
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters ?: [];
     }
@@ -513,7 +479,7 @@ class Parameter implements ToArrayInterface
      *
      * @return Parameter[]
      */
-    public function getProperties()
+    public function getProperties(): array
     {
         if (!$this->propertiesCache) {
             $this->propertiesCache = [];
@@ -529,10 +495,8 @@ class Parameter implements ToArrayInterface
      * Get a specific property from the parameter
      *
      * @param string $name Name of the property to retrieve
-     *
-     * @return Parameter|null
      */
-    public function getProperty($name)
+    public function getProperty(string $name): ?Parameter
     {
         if (!isset($this->properties[$name])) {
             return null;
@@ -568,10 +532,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get the item data of the parameter
-     *
-     * @return Parameter
      */
-    public function getItems()
+    public function getItems(): ?Parameter
     {
         if (is_array($this->items)) {
             $this->items = new static(
@@ -585,30 +547,24 @@ class Parameter implements ToArrayInterface
 
     /**
      * Get the enum of strings that are valid for the parameter
-     *
-     * @return array|null
      */
-    public function getEnum()
+    public function getEnum(): ?array
     {
         return $this->enum;
     }
 
     /**
      * Get the regex pattern that must match a value when the value is a string
-     *
-     * @return string
      */
-    public function getPattern()
+    public function getPattern(): ?string
     {
         return $this->pattern;
     }
 
     /**
      * Get the format attribute of the schema
-     *
-     * @return string
      */
-    public function getFormat()
+    public function getFormat(): ?string
     {
         return $this->format;
     }
@@ -617,10 +573,8 @@ class Parameter implements ToArrayInterface
      * Set the array of filters used by the parameter
      *
      * @param array $filters Array of functions to use as filters
-     *
-     * @return self
      */
-    private function setFilters(array $filters)
+    private function setFilters(array $filters): self
     {
         $this->filters = [];
         foreach ($filters as $filter) {
@@ -635,11 +589,9 @@ class Parameter implements ToArrayInterface
      *
      * @param string|array $filter Method to filter the value through
      *
-     * @return self
-     *
      * @throws \InvalidArgumentException
      */
-    private function addFilter($filter)
+    private function addFilter($filter): self
     {
         if (is_array($filter)) {
             if (!isset($filter['method'])) {
@@ -662,10 +614,8 @@ class Parameter implements ToArrayInterface
      * Check if a parameter has a specific variable and if it set.
      *
      * @param string $var
-     *
-     * @return bool
      */
-    public function has($var)
+    public function has($var): bool
     {
         if (!is_string($var)) {
             throw new \InvalidArgumentException('Expected a string. Got: '.(is_object($var) ? get_class($var) : gettype($var)));

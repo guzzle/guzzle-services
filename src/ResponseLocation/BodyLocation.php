@@ -15,22 +15,17 @@ class BodyLocation extends AbstractLocation
 {
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'body')
+    public function __construct(string $locationName = 'body')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         $result[$param->getName()] = $param->filter((string) $response->getBody());
 
         return $result;

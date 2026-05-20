@@ -27,13 +27,12 @@ class Description implements DescriptionInterface
     private $description;
 
     /** @var array Any extra API data */
-    private $extraData = [];
+    private array $extraData = [];
 
     /** @var Uri baseUri/basePath */
-    private $baseUri;
+    private Uri $baseUri;
 
-    /** @var SchemaFormatter */
-    private $formatter;
+    private SchemaFormatter $formatter;
 
     /**
      * @param array $config  Service description data
@@ -95,10 +94,8 @@ class Description implements DescriptionInterface
 
     /**
      * Get the basePath/baseUri of the description
-     *
-     * @return Uri
      */
-    public function getBaseUri()
+    public function getBaseUri(): Uri
     {
         return $this->baseUri;
     }
@@ -108,7 +105,7 @@ class Description implements DescriptionInterface
      *
      * @return Operation[] Returns an array of {@see Operation} objects
      */
-    public function getOperations()
+    public function getOperations(): array
     {
         return $this->operations;
     }
@@ -117,10 +114,8 @@ class Description implements DescriptionInterface
      * Check if the service has an operation by name
      *
      * @param string $name Name of the operation to check
-     *
-     * @return bool
      */
-    public function hasOperation($name)
+    public function hasOperation(string $name): bool
     {
         return isset($this->operations[$name]);
     }
@@ -130,11 +125,9 @@ class Description implements DescriptionInterface
      *
      * @param string $name Name of the command
      *
-     * @return Operation
-     *
      * @throws \InvalidArgumentException if the operation is not found
      */
-    public function getOperation($name)
+    public function getOperation(string $name): Operation
     {
         if (!$this->hasOperation($name)) {
             throw new \InvalidArgumentException("No operation found named $name");
@@ -154,11 +147,9 @@ class Description implements DescriptionInterface
      *
      * @param string $id ID/name of the model to retrieve
      *
-     * @return Parameter
-     *
      * @throws \InvalidArgumentException if the model is not found
      */
-    public function getModel($id)
+    public function getModel(string $id): Parameter
     {
         if (!$this->hasModel($id)) {
             throw new \InvalidArgumentException("No model found named $id");
@@ -177,10 +168,8 @@ class Description implements DescriptionInterface
 
     /**
      * Get all models of the service description.
-     *
-     * @return array
      */
-    public function getModels()
+    public function getModels(): array
     {
         $models = [];
         foreach ($this->models as $name => $model) {
@@ -194,40 +183,32 @@ class Description implements DescriptionInterface
      * Check if the service description has a model by name.
      *
      * @param string $id Name/ID of the model to check
-     *
-     * @return bool
      */
-    public function hasModel($id)
+    public function hasModel(string $id): bool
     {
         return isset($this->models[$id]);
     }
 
     /**
      * Get the API version of the service
-     *
-     * @return string
      */
-    public function getApiVersion()
+    public function getApiVersion(): ?string
     {
         return $this->apiVersion;
     }
 
     /**
      * Get the name of the API
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
      * Get a summary of the purpose of the API
-     *
-     * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -240,7 +221,7 @@ class Description implements DescriptionInterface
      *
      * @return mixed
      */
-    public function format($format, $input)
+    public function format(string $format, $input)
     {
         return $this->formatter->format($format, $input);
     }
@@ -253,7 +234,7 @@ class Description implements DescriptionInterface
      *
      * @return mixed|null
      */
-    public function getData($key = null)
+    public function getData(?string $key = null)
     {
         if ($key === null) {
             return $this->extraData;

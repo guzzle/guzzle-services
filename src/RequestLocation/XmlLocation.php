@@ -16,13 +16,13 @@ use Psr\Http\Message\RequestInterface;
 class XmlLocation extends AbstractLocation
 {
     /** @var \XMLWriter XML writer resource */
-    private $writer;
+    private ?\XMLWriter $writer = null;
 
     /** @var string Content-Type header added when XML is found */
-    private $contentType;
+    private string $contentType;
 
     /** @var Parameter[] Buffered elements to write */
-    private $buffered = [];
+    private array $buffered = [];
 
     /**
      * @param string $locationName Name of the location
@@ -30,20 +30,17 @@ class XmlLocation extends AbstractLocation
      *                             Content-Type header to a request if any XML content is added to the
      *                             body. Pass an empty string to disable the addition of the header.
      */
-    public function __construct($locationName = 'xml', $contentType = 'application/xml')
+    public function __construct(string $locationName = 'xml', string $contentType = 'application/xml')
     {
         parent::__construct($locationName);
         $this->contentType = $contentType;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         // Buffer and order the parameters to visit based on if they are
         // top-level attributes or child nodes.
         // @link https://github.com/guzzle/guzzle/pull/494
@@ -56,14 +53,11 @@ class XmlLocation extends AbstractLocation
         return $request;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         foreach ($this->buffered as $param) {
             $this->visitWithValue(
                 $command[$param->getName()],
@@ -112,18 +106,17 @@ class XmlLocation extends AbstractLocation
      * Create the root XML element to use with a request
      *
      * @param Operation $operation Operation object
-     *
-     * @return \XMLWriter
      */
-    protected function createRootElement(Operation $operation)
+    protected function createRootElement(Operation $operation): \XMLWriter
     {
         static $defaultRoot = ['name' => 'Request'];
         // If no root element was specified, then just wrap the XML in 'Request'
         $root = $operation->getData('xmlRoot') ?: $defaultRoot;
         // Allow the XML declaration to be customized with xmlEncoding
         $encoding = $operation->getData('xmlEncoding');
+        $encoding = $encoding === null ? null : (string) $encoding;
         $writer = $this->startDocument($encoding);
-        $writer->startElement($root['name']);
+        $writer->startElement((string) $root['name']);
 
         // Create the wrapping element with no namespaces if no namespaces were present
         if (!empty($root['namespaces'])) {
@@ -133,7 +126,7 @@ class XmlLocation extends AbstractLocation
                 if (!is_numeric($prefix)) {
                     $nsLabel .= ':'.$prefix;
                 }
-                $writer->writeAttribute($nsLabel, $this->xmlString($uri));
+                $writer->writeAttribute($nsLabel, (string) $uri);
             }
         }
 
@@ -147,14 +140,15 @@ class XmlLocation extends AbstractLocation
      * @param Parameter  $param  API Parameter
      * @param mixed      $value  Value to add
      */
-    protected function addXml(\XMLWriter $writer, Parameter $param, $value)
+    protected function addXml(\XMLWriter $writer, Parameter $param, $value): void
     {
         $value = $param->filter($value);
         $type = $param->getType();
-        $name = $param->getWireName();
+        $name = (string) $param->getWireName();
         $prefix = null;
         $namespace = $param->getData('xmlNamespace');
-        if ($name !== null && false !== strpos($name, ':')) {
+        $namespace = $namespace === null ? null : (string) $namespace;
+        if (false !== strpos($name, ':')) {
             list($prefix, $name) = explode(':', $name, 2);
         }
 
@@ -178,8 +172,10 @@ class XmlLocation extends AbstractLocation
             return;
         }
         if ($param->getData('xmlAttribute')) {
+            $value = $value === null ? null : (string) $value;
             $this->writeAttribute($writer, $prefix, $name, $namespace, $value);
         } else {
+            $value = $value === null ? null : (string) $value;
             $this->writeElement($writer, $prefix, $name, $namespace, $value);
         }
     }
@@ -193,9 +189,14 @@ class XmlLocation extends AbstractLocation
      * @param string     $namespace The uri of the namespace
      * @param string     $value     The attribute content
      */
-    protected function writeAttribute($writer, $prefix, $name, $namespace, $value)
-    {
-        $value = $this->xmlString($value);
+    protected function writeAttribute(
+        \XMLWriter $writer,
+        ?string $prefix,
+        string $name,
+        ?string $namespace,
+        ?string $value
+    ): void {
+        $value = $value === null ? '' : $value;
 
         if ($namespace) {
             $writer->writeAttributeNS($prefix, $name, $namespace, $value);
@@ -213,9 +214,14 @@ class XmlLocation extends AbstractLocation
      * @param string      $namespace The uri of the namespace
      * @param string|null $value     The element content
      */
-    protected function writeElement(\XMLWriter $writer, $prefix, $name, $namespace, $value)
-    {
-        $value = $this->xmlString($value);
+    protected function writeElement(
+        \XMLWriter $writer,
+        ?string $prefix,
+        string $name,
+        ?string $namespace,
+        ?string $value
+    ): void {
+        $value = $value === null ? '' : $value;
 
         if ($namespace) {
             $writer->startElementNS($prefix, $name, $namespace);
@@ -239,7 +245,7 @@ class XmlLocation extends AbstractLocation
      *
      * @throws \RuntimeException if the document cannot be started
      */
-    protected function startDocument($encoding)
+    protected function startDocument(?string $encoding): \XMLWriter
     {
         $this->writer = new \XMLWriter();
         if (!$this->writer->openMemory()) {
@@ -255,11 +261,9 @@ class XmlLocation extends AbstractLocation
     /**
      * End the document and return the output
      *
-     * @param \XMLWriter $writer
-     *
      * @return string the writer resource
      */
-    protected function finishDocument($writer)
+    protected function finishDocument(\XMLWriter $writer): string
     {
         $writer->endDocument();
 
@@ -269,7 +273,7 @@ class XmlLocation extends AbstractLocation
     /**
      * Add an array to the XML
      */
-    protected function addXmlArray(\XMLWriter $writer, Parameter $param, &$value)
+    protected function addXmlArray(\XMLWriter $writer, Parameter $param, array &$value): void
     {
         if ($items = $param->getItems()) {
             foreach ($value as $v) {
@@ -281,7 +285,7 @@ class XmlLocation extends AbstractLocation
     /**
      * Add an object to the XML
      */
-    protected function addXmlObject(\XMLWriter $writer, Parameter $param, &$value)
+    protected function addXmlObject(\XMLWriter $writer, Parameter $param, array &$value): void
     {
         $noAttributes = [];
 
@@ -306,24 +310,11 @@ class XmlLocation extends AbstractLocation
         $value,
         Parameter $param,
         Operation $operation
-    ) {
+    ): void {
         if (!$this->writer) {
             $this->createRootElement($operation);
         }
 
         $this->addXml($this->writer, $param, $value);
-    }
-
-    private function xmlString($value): string
-    {
-        if ($value === null) {
-            return '';
-        }
-
-        if (is_scalar($value) || (is_object($value) && method_exists($value, '__toString'))) {
-            return (string) $value;
-        }
-
-        throw new \InvalidArgumentException('XML values must be scalar, null, or stringable.');
     }
 }

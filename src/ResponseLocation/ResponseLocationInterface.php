@@ -29,7 +29,7 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    );
+    ): ResultInterface;
 
     /**
      * Called after visiting all parameters
@@ -44,7 +44,7 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    );
+    ): ResultInterface;
 
     /**
      * Called once for each parameter being visited that matches the location
@@ -60,5 +60,5 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    );
+    ): ResultInterface;
 }

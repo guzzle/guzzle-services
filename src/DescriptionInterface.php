@@ -10,85 +10,67 @@ interface DescriptionInterface
 {
     /**
      * Get the basePath/baseUri of the description
-     *
-     * @return Uri
      */
-    public function getBaseUri();
+    public function getBaseUri(): Uri;
 
     /**
      * Get the API operations of the service
      *
      * @return Operation[] Returns an array of {@see Operation} objects
      */
-    public function getOperations();
+    public function getOperations(): array;
 
     /**
      * Check if the service has an operation by name
      *
      * @param string $name Name of the operation to check
-     *
-     * @return bool
      */
-    public function hasOperation($name);
+    public function hasOperation(string $name): bool;
 
     /**
      * Get an API operation by name
      *
      * @param string $name Name of the command
      *
-     * @return Operation
-     *
      * @throws \InvalidArgumentException if the operation is not found
      */
-    public function getOperation($name);
+    public function getOperation(string $name): Operation;
 
     /**
      * Get a shared definition structure.
      *
      * @param string $id ID/name of the model to retrieve
      *
-     * @return Parameter
-     *
      * @throws \InvalidArgumentException if the model is not found
      */
-    public function getModel($id);
+    public function getModel(string $id): Parameter;
 
     /**
      * Get all models of the service description.
-     *
-     * @return array
      */
-    public function getModels();
+    public function getModels(): array;
 
     /**
      * Check if the service description has a model by name.
      *
      * @param string $id Name/ID of the model to check
-     *
-     * @return bool
      */
-    public function hasModel($id);
+    public function hasModel(string $id): bool;
 
     /**
      * Get the API version of the service
-     *
-     * @return string
      */
-    public function getApiVersion();
+    public function getApiVersion(): ?string;
 
     /**
      * Get the name of the API
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): ?string;
 
     /**
      * Get a summary of the purpose of the API
-     *
-     * @return string
      */
-    public function getDescription();
+    public function getDescription(): ?string;
 
     /**
      * Format a parameter using named formats.
@@ -98,7 +80,7 @@ interface DescriptionInterface
      *
      * @return mixed
      */
-    public function format($format, $input);
+    public function format(string $format, $input);
 
     /**
      * Get arbitrary data from the service description that is not part of the
@@ -108,5 +90,5 @@ interface DescriptionInterface
      *
      * @return mixed|null
      */
-    public function getData($key = null);
+    public function getData(?string $key = null);
 }

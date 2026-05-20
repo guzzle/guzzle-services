@@ -7,7 +7,6 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -17,10 +16,8 @@ class HeaderLocation extends AbstractLocation
 {
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'header')
+    public function __construct(string $locationName = 'header')
     {
         parent::__construct($locationName);
     }
@@ -32,20 +29,17 @@ class HeaderLocation extends AbstractLocation
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $value = $command[$param->getName()];
 
         return $request->withHeader($param->getWireName(), self::prepareHeaderValue($param->filter($value)));
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         /** @var Parameter $additional */
         $additional = $operation->getAdditionalParameters();
         if ($additional && ($additional->getLocation() === $this->locationName)) {

@@ -27,7 +27,7 @@ interface RequestLocationInterface
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    );
+    ): RequestInterface;
 
     /**
      * Called when all of the parameters of a command have been visited.
@@ -42,5 +42,5 @@ interface RequestLocationInterface
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    );
+    ): RequestInterface;
 }

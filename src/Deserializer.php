@@ -33,21 +33,18 @@ use Psr\Http\Message\ResponseInterface;
 class Deserializer
 {
     /** @var ResponseLocationInterface[] */
-    private $responseLocations;
+    private array $responseLocations;
 
-    /** @var DescriptionInterface */
-    private $description;
+    private DescriptionInterface $description;
 
-    /** @var bool */
-    private $process;
+    private bool $process;
 
     /**
-     * @param bool                        $process
      * @param ResponseLocationInterface[] $responseLocations Extra response locations
      */
     public function __construct(
         DescriptionInterface $description,
-        $process,
+        bool $process,
         array $responseLocations = []
     ) {
         static $defaultResponseLocations;
@@ -106,7 +103,7 @@ class Deserializer
      *
      * @return Result|ResultInterface|void
      */
-    protected function visit(Parameter $model, ResponseInterface $response)
+    protected function visit(Parameter $model, ResponseInterface $response): ?ResultInterface
     {
         $result = new Result();
         $context = ['visitors' => []];
@@ -130,18 +127,14 @@ class Deserializer
 
     /**
      * Handles the before() method of Response locations
-     *
-     * @param string $location
-     *
-     * @return ResultInterface
      */
     private function triggerBeforeVisitor(
-        $location,
+        string $location,
         Parameter $model,
         ResultInterface $result,
         ResponseInterface $response,
         array &$context
-    ) {
+    ): ResultInterface {
         if (!isset($this->responseLocations[$location])) {
             throw new \RuntimeException("Unknown location: $location");
         }
@@ -159,15 +152,13 @@ class Deserializer
 
     /**
      * Visits the outer object
-     *
-     * @return ResultInterface
      */
     private function visitOuterObject(
         Parameter $model,
         ResultInterface $result,
         ResponseInterface $response,
         array &$context
-    ) {
+    ): ResultInterface {
         $parentLocation = $model->getLocation();
 
         // If top-level additionalProperties is a schema, then visit it
@@ -175,6 +166,9 @@ class Deserializer
         if ($additional instanceof Parameter) {
             // Use the model location if none set on additionalProperties.
             $location = $additional->getLocation() ?: $parentLocation;
+            if ($location === null) {
+                throw new \RuntimeException('Unknown location: ');
+            }
             $result = $this->triggerBeforeVisitor($location, $model, $result, $response, $context);
         }
 
@@ -203,18 +197,16 @@ class Deserializer
 
     /**
      * Visits the outer array
-     *
-     * @return ResultInterface|void
      */
     private function visitOuterArray(
         Parameter $model,
         ResultInterface $result,
         ResponseInterface $response,
         array &$context
-    ) {
+    ): ?ResultInterface {
         // Use 'location' defined on the top of the model
         if (!($location = $model->getLocation())) {
-            return;
+            return null;
         }
 
         // Trigger the before method on each unique visitor location
@@ -240,7 +232,7 @@ class Deserializer
         RequestInterface $request,
         CommandInterface $command,
         Operation $operation
-    ) {
+    ): void {
         $errors = $operation->getErrorResponses();
 
         // We iterate through each errors in service description. If the descriptor contains both a phrase and

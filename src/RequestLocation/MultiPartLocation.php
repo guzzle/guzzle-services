@@ -15,30 +15,23 @@ use Psr\Http\Message\RequestInterface;
  */
 class MultiPartLocation extends AbstractLocation
 {
-    /** @var string */
-    protected $contentType = 'multipart/form-data; boundary=';
+    protected string $contentType = 'multipart/form-data; boundary=';
 
-    /** @var array */
-    protected $multipartData = [];
+    protected array $multipartData = [];
 
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'multipart')
+    public function __construct(string $locationName = 'multipart')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $this->multipartData[] = [
             'name' => $param->getWireName(),
             'contents' => $this->prepareValue($command[$param->getName()], $param),
@@ -47,14 +40,11 @@ class MultiPartLocation extends AbstractLocation
         return $request;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         $data = $this->multipartData;
         $this->multipartData = [];
         $modify = [];

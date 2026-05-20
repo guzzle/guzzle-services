@@ -15,22 +15,17 @@ class HeaderLocation extends AbstractLocation
 {
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'header')
+    public function __construct(string $locationName = 'header')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         // Retrieving a single header by name
         $name = $param->getName();
         if ($header = $response->getHeader($param->getWireName())) {

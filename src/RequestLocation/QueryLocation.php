@@ -17,31 +17,23 @@ use Psr\Http\Message\RequestInterface;
  */
 class QueryLocation extends AbstractLocation
 {
-    /**
-     * @var QuerySerializerInterface
-     */
-    private $querySerializer;
+    private QuerySerializerInterface $querySerializer;
 
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'query', ?QuerySerializerInterface $querySerializer = null)
+    public function __construct(string $locationName = 'query', ?QuerySerializerInterface $querySerializer = null)
     {
         parent::__construct($locationName);
 
         $this->querySerializer = $querySerializer ?: new Rfc3986Serializer();
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $uri = $request->getUri();
         $query = Psr7\Query::parse($uri->getQuery());
 
@@ -55,14 +47,11 @@ class QueryLocation extends AbstractLocation
         return $request->withUri($uri);
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         $additional = $operation->getAdditionalParameters();
         if ($additional && $additional->getLocation() == $this->locationName) {
             foreach ($command->toArray() as $key => $value) {

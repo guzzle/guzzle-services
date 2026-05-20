@@ -15,22 +15,17 @@ class ReasonPhraseLocation extends AbstractLocation
 {
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'reasonPhrase')
+    public function __construct(string $locationName = 'reasonPhrase')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         $result[$param->getName()] = $param->filter(
             $response->getReasonPhrase()
         );

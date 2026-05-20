@@ -7,7 +7,6 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -17,10 +16,8 @@ class BodyLocation extends AbstractLocation
 {
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'body')
+    public function __construct(string $locationName = 'body')
     {
         parent::__construct($locationName);
     }
@@ -32,7 +29,7 @@ class BodyLocation extends AbstractLocation
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $oldValue = $request->getBody()->getContents();
 
         $value = $command[$param->getName()];

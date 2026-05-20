@@ -13,47 +13,37 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractLocation implements ResponseLocationInterface
 {
-    /** @var string */
-    protected $locationName;
+    protected string $locationName;
 
     /**
      * Set the name of the location
      */
-    public function __construct($locationName)
+    public function __construct(string $locationName)
     {
         $this->locationName = $locationName;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function before(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         return $result;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function after(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         return $result;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         return $result;
     }
 }

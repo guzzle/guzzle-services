@@ -14,10 +14,8 @@ class SchemaValidator
     /**
      * Whether or not integers are converted to strings when an integer is
      * received for a string input
-     *
-     * @var bool
      */
-    protected $castIntegerToStringType;
+    protected bool $castIntegerToStringType;
 
     /** @var string[] Errors encountered while validating */
     protected array $errors = [];
@@ -27,15 +25,12 @@ class SchemaValidator
      *                                      into strings when a required type is a string and the input value is
      *                                      an integer. Defaults to true.
      */
-    public function __construct($castIntegerToStringType = true)
+    public function __construct(bool $castIntegerToStringType = true)
     {
         $this->castIntegerToStringType = $castIntegerToStringType;
     }
 
-    /**
-     * @return bool
-     */
-    public function validate(Parameter $param, &$value)
+    public function validate(Parameter $param, &$value): bool
     {
         $this->errors = [];
         $this->recursiveProcess($param, $value);
@@ -55,7 +50,7 @@ class SchemaValidator
      *
      * @return string[]
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors ?: [];
     }
@@ -111,9 +106,9 @@ class SchemaValidator
     protected function recursiveProcess(
         Parameter $param,
         &$value,
-        $path = '',
-        $depth = 0
-    ) {
+        string $path = '',
+        int $depth = 0
+    ): bool {
         // Update the value by adding default or static values
         $value = $param->getValue($value);
 

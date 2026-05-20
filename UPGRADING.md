@@ -139,6 +139,16 @@ scalars or stringable objects to PHP internal functions such as `json_decode()`,
 `parse_str()`, `preg_match()`, `strlen()`, or `XMLWriter` methods, cast values
 explicitly before calling those functions.
 
+#### Native Signatures
+
+Guzzle Services 2.0 adds native parameter, property, and return types to public
+interfaces, request and response locations, serializers, deserializers,
+validators, and formatters. Custom implementations and subclasses must update
+method signatures to remain compatible.
+
+Service description values should use the documented PHP types, such as strings
+for names and URIs, booleans for flags, and integers for min/max constraints.
+
 #### Command Client Dependency
 
 `GuzzleHttp\Command\Guzzle\GuzzleClient` continues to build on

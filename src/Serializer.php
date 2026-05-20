@@ -25,10 +25,9 @@ use Psr\Http\Message\RequestInterface;
 class Serializer
 {
     /** @var RequestLocationInterface[] */
-    private $locations;
+    private array $locations;
 
-    /** @var DescriptionInterface */
-    private $description;
+    private DescriptionInterface $description;
 
     /**
      * @param RequestLocationInterface[] $requestLocations Extra request locations
@@ -54,10 +53,7 @@ class Serializer
         $this->description = $description;
     }
 
-    /**
-     * @return RequestInterface
-     */
-    public function __invoke(CommandInterface $command)
+    public function __invoke(CommandInterface $command): RequestInterface
     {
         $request = $this->createRequest($command);
 
@@ -69,14 +65,12 @@ class Serializer
      *
      * @param RequestInterface $request Request being created
      *
-     * @return RequestInterface
-     *
      * @throws \RuntimeException If a location cannot be handled
      */
     protected function prepareRequest(
         CommandInterface $command,
         RequestInterface $request
-    ) {
+    ): RequestInterface {
         $visitedLocations = [];
         $operation = $this->description->getOperation($command->getName());
 
@@ -112,11 +106,9 @@ class Serializer
     /**
      * Create a request for the command and operation
      *
-     * @return RequestInterface
-     *
      * @throws \RuntimeException
      */
-    protected function createRequest(CommandInterface $command)
+    protected function createRequest(CommandInterface $command): RequestInterface
     {
         $operation = $this->description->getOperation($command->getName());
 
@@ -139,7 +131,7 @@ class Serializer
     private function createCommandWithUri(
         Operation $operation,
         CommandInterface $command
-    ) {
+    ): RequestInterface {
         // Get the path values and use the client config settings
         $variables = [];
         foreach ($operation->getParams() as $name => $arg) {

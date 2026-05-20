@@ -6,15 +6,9 @@ namespace GuzzleHttp\Command\Guzzle\QuerySerializer;
 
 class Rfc3986Serializer implements QuerySerializerInterface
 {
-    /**
-     * @var bool
-     */
-    private $removeNumericIndices;
+    private bool $removeNumericIndices;
 
-    /**
-     * @param bool $removeNumericIndices
-     */
-    public function __construct($removeNumericIndices = false)
+    public function __construct(bool $removeNumericIndices = false)
     {
         $this->removeNumericIndices = $removeNumericIndices;
     }
@@ -22,7 +16,7 @@ class Rfc3986Serializer implements QuerySerializerInterface
     /**
      * {@inheritDoc}
      */
-    public function aggregate(array $queryParams)
+    public function aggregate(array $queryParams): string
     {
         $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
 
