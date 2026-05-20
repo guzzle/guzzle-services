@@ -124,7 +124,7 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, '<xml><foo>bar</foo></xml>', ['foo' => ['bar']]);
     }
 
-    public function xmlDataProvider()
+    public static function xmlDataProvider()
     {
         $param = new Parameter([
             'location' => 'xml',

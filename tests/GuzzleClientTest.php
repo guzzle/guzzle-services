@@ -643,7 +643,7 @@ class GuzzleClientTest extends TestCase
                 $client,
                 $description,
             ])
-            ->setMethods(['execute'])
+            ->onlyMethods(['execute'])
             ->getMock();
 
         $guzzle->expects($this->once())

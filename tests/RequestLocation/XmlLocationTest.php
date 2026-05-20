@@ -109,7 +109,7 @@ class XmlLocationTest extends TestCase
             .'<Request><foo>bar</foo></Request>'."\n", $xml);
     }
 
-    public function xmlProvider()
+    public static function xmlProvider()
     {
         return [
             [

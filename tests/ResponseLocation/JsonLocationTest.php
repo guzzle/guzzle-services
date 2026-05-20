@@ -114,7 +114,7 @@ class JsonLocationTest extends TestCase
         $this->assertEquals([], $result->toArray());
     }
 
-    public function jsonProvider()
+    public static function jsonProvider()
     {
         return [
             [null, [['foo' => 'BAR'], ['baz' => 'BAM']]],
@@ -221,7 +221,7 @@ class JsonLocationTest extends TestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function nestedProvider()
+    public static function nestedProvider()
     {
         return [
             [

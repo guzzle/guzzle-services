@@ -86,9 +86,7 @@ class SchemaValidatorTest extends TestCase
 
     public function testConvertsObjectsToArraysWhenToArrayInterface()
     {
-        $o = $this->getMockBuilder(ToArrayInterface::class)
-            ->setMethods(['toArray'])
-            ->getMockForAbstractClass();
+        $o = $this->createMock(ToArrayInterface::class);
         $o->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue(['foo' => 'bar']));
