@@ -3,7 +3,7 @@
 ## 1.5.1 - Upcoming
 
 * Replace deprecated Guzzle JSON helper functions
-* Serialize scalar header location values before passing them to PSR-7
+* Serialize scalar header location values and reject invalid header location values before passing them to PSR-7
 
 ## 1.5.0 - 2026-05-18
 

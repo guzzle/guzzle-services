@@ -79,6 +79,38 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
+    public function testVisitsLocationRejectsInvalidHeaderValue()
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => null]);
+        $request = new Request('POST', 'http://httbin.org');
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+
+        $location->visit($command, $request, $param);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testVisitsLocationRejectsInvalidArrayHeaderValue()
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => ['bar', null]]);
+        $request = new Request('POST', 'http://httbin.org');
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+
+        $location->visit($command, $request, $param);
+    }
+
+    /**
+     * @group RequestLocation
+     */
     public function testAddsAdditionalProperties()
     {
         $location = new HeaderLocation('header');
@@ -116,5 +148,26 @@ class HeaderLocationTest extends TestCase
         $header = $request->getHeader('add');
         $this->assertIsArray($header);
         $this->assertEquals([0 => '123'], $header);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testAdditionalPropertiesRejectInvalidHeaderValue()
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => 'bar']);
+        $command['add'] = null;
+        $operation = new Operation([
+            'additionalParameters' => [
+                'location' => 'header',
+            ],
+        ]);
+        $request = new Request('POST', 'http://httbin.org');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+
+        $location->after($command, $request, $operation);
     }
 }

@@ -70,12 +70,21 @@ class HeaderLocation extends AbstractLocation
 
         if (is_array($value)) {
             foreach ($value as $key => $item) {
-                if (is_scalar($item)) {
-                    $value[$key] = (string) $item;
+                if (!is_scalar($item)) {
+                    throw self::invalidHeaderValue();
                 }
+
+                $value[$key] = (string) $item;
             }
+
+            return $value;
         }
 
-        return $value;
+        throw self::invalidHeaderValue();
+    }
+
+    private static function invalidHeaderValue(): \InvalidArgumentException
+    {
+        return new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
     }
 }
