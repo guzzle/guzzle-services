@@ -60,7 +60,7 @@ class HeaderLocation extends AbstractLocation
     /**
      * @param mixed $value
      *
-     * @return mixed
+     * @return string|string[]
      */
     private static function prepareHeaderValue($value)
     {
@@ -71,7 +71,7 @@ class HeaderLocation extends AbstractLocation
         if (is_array($value)) {
             foreach ($value as $key => $item) {
                 if (!is_scalar($item)) {
-                    throw self::invalidHeaderValue();
+                    throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
                 }
 
                 $value[$key] = (string) $item;
@@ -80,11 +80,6 @@ class HeaderLocation extends AbstractLocation
             return $value;
         }
 
-        throw self::invalidHeaderValue();
-    }
-
-    private static function invalidHeaderValue(): \InvalidArgumentException
-    {
-        return new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
+        throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
     }
 }
