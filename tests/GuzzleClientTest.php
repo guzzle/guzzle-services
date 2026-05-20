@@ -345,8 +345,9 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'BAZ']);
-        /** @var ResponseInterface $response */
-        $response = $guzzle->execute($command);
+        /** @var ResultInterface $result */
+        $result = $guzzle->execute($command);
+        $response = $result['response'];
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -648,11 +649,13 @@ class GuzzleClientTest extends TestCase
             ->onlyMethods(['execute'])
             ->getMock();
 
+        $result = new Result(['foo' => 'bar']);
+
         $guzzle->expects($this->once())
             ->method('execute')
-            ->will($this->returnValue('foo'));
+            ->will($this->returnValue($result));
 
-        $this->assertEquals('foo', $guzzle->foo([]));
+        $this->assertSame($result, $guzzle->foo([]));
     }
 
     public function testThrowsWhenOperationNotFoundInDescription()

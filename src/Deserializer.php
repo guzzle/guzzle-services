@@ -66,16 +66,12 @@ class Deserializer
 
     /**
      * Deserialize the response into the specified result representation
-     *
-     * @param RequestInterface|null $request
-     *
-     * @return Result|ResultInterface|void|ResponseInterface
      */
-    public function __invoke(ResponseInterface $response, RequestInterface $request, CommandInterface $command)
+    public function __invoke(ResponseInterface $response, RequestInterface $request, CommandInterface $command): ResultInterface
     {
-        // If the user don't want to process the result, just return the plain response here
+        // If processing is disabled, expose the raw response without parsing it.
         if ($this->process === false) {
-            return $response;
+            return new Result(['response' => $response]);
         }
 
         $name = $command->getName();
@@ -100,10 +96,8 @@ class Deserializer
 
     /**
      * Handles visit() and after() methods of the Response locations
-     *
-     * @return Result|ResultInterface|void
      */
-    protected function visit(Parameter $model, ResponseInterface $response): ?ResultInterface
+    protected function visit(Parameter $model, ResponseInterface $response): ResultInterface
     {
         $result = new Result();
         $context = ['visitors' => []];
@@ -203,10 +197,10 @@ class Deserializer
         ResultInterface $result,
         ResponseInterface $response,
         array &$context
-    ): ?ResultInterface {
+    ): ResultInterface {
         // Use 'location' defined on the top of the model
         if (!($location = $model->getLocation())) {
-            return null;
+            return $result;
         }
 
         // Trigger the before method on each unique visitor location

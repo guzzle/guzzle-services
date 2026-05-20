@@ -146,6 +146,10 @@ interfaces, request and response locations, serializers, deserializers,
 validators, and formatters. Custom implementations and subclasses must update
 method signatures to remain compatible.
 
+`GuzzleClient` command execution now returns `ResultInterface` values. When the
+`process` client option is `false`, the raw PSR-7 response is available as the
+`response` key of the returned result instead of being returned directly.
+
 Service description values should use the documented PHP types, such as strings
 for names and URIs, booleans for flags, and integers for min/max constraints.
 

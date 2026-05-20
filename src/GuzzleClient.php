@@ -30,6 +30,7 @@ class GuzzleClient extends ServiceClient
      *   Changing this setting after the client has been created will have no
      *   effect.
      * - process: Specify if HTTP responses are parsed (defaults to true).
+     *   When false, the raw response is returned in the command result.
      *   Changing this setting after the client has been created will have no
      *   effect.
      * - response_locations: Associative array of location types mapping to
@@ -155,7 +156,7 @@ class GuzzleClient extends ServiceClient
         if (!isset($config['process']) || $config['process'] === true) {
             // TODO: This belongs to the Deserializer and should be handled there.
             // Question: What is the result when the Deserializer is bypassed?
-            // Possible answer: The raw response.
+            // Possible answer: The raw response in the command result.
         }
     }
 }

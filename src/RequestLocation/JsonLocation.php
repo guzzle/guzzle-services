@@ -45,9 +45,6 @@ class JsonLocation extends AbstractLocation
         return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($this->jsonData)));
     }
 
-    /**
-     * @return MessageInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
