@@ -76,7 +76,7 @@ class Serializer
 
         // Visit each actual parameter
         foreach ($operation->getParams() as $name => $param) {
-            /* @var Parameter $param */
+            /* @var Parameter */
             $location = $param->getLocation();
             // Skip parameters that have not been set or are URI location
             if ($location == 'uri' || !$command->hasParam($name)) {
@@ -90,8 +90,8 @@ class Serializer
         }
 
         // Ensure that the after() method is invoked for additionalParameters
-        /** @var Parameter $additional */
-        if ($additional = $operation->getAdditionalParameters()) {
+        $additional = $operation->getAdditionalParameters();
+        if ($additional) {
             $visitedLocations[$additional->getLocation()] = true;
         }
 
@@ -135,7 +135,7 @@ class Serializer
         // Get the path values and use the client config settings
         $variables = [];
         foreach ($operation->getParams() as $name => $arg) {
-            /* @var Parameter $arg */
+            /* @var Parameter */
             if ($arg->getLocation() == 'uri') {
                 if (isset($command[$name])) {
                     $variables[$name] = $arg->filter($command[$name]);

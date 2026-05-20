@@ -111,7 +111,7 @@ class Deserializer
         }
 
         // Call the after() method of each found visitor
-        /** @var ResponseLocationInterface $visitor */
+        /** @var ResponseLocationInterface */
         foreach ($context['visitors'] as $visitor) {
             $result = $visitor->after($result, $response, $model);
         }

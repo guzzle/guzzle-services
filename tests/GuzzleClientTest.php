@@ -345,7 +345,7 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'BAZ']);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $response = $result['response'];
         $this->assertInstanceOf(Response::class, $response);
@@ -428,7 +428,7 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo');
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -505,7 +505,7 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'Hello']);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -573,7 +573,7 @@ class GuzzleClientTest extends TestCase
         $guzzle = new GuzzleClient($client, $description);
 
         $command = $guzzle->getCommand('Foo', ['baz' => 42]);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -735,7 +735,7 @@ class GuzzleClientTest extends TestCase
         $guzzle = new GuzzleClient($client, $description, null, null);
         $command = $guzzle->getCommand('foo', ['baz' => 'BAZ']);
 
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();

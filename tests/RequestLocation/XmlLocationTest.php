@@ -512,7 +512,7 @@ class XmlLocationTest extends TestCase
         $this->assertCount(1, $container);
 
         foreach ($container as $transaction) {
-            /** @var Request $request */
+            /** @var Request */
             $request = $transaction['request'];
             if (empty($input)) {
                 if ($request->hasHeader('Content-Type')) {

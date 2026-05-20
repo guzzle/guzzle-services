@@ -43,12 +43,6 @@ parameters:
 			path: src/Parameter.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: src/RequestLocation/HeaderLocation.php
-
-		-
 			message: '#^Call to function is_array\(\) with non\-empty\-array\<string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -71,9 +65,3 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: src/SchemaFormatter.php
-
-		-
-			message: '#^Variable \$additional in PHPDoc tag @var does not exist\.$#'
-			identifier: varTag.variableNotFound
-			count: 1
-			path: src/Serializer.php
