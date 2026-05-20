@@ -34,7 +34,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationSerializesArrayHeaderValues()
+    public function testVisitsLocationAcceptsArrayHeaderValues()
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => ['bar', 'baz']]);
@@ -57,7 +57,23 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
+
+        $location->visit($command, $request, $param);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testVisitsLocationRejectsScalarHeaderValue()
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => 123]);
+        $request = new Request('POST', 'http://httbin.org');
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
 
         $location->visit($command, $request, $param);
     }
@@ -68,12 +84,12 @@ class HeaderLocationTest extends TestCase
     public function testVisitsLocationRejectsInvalidArrayHeaderValue()
     {
         $location = new HeaderLocation('header');
-        $command = new Command('foo', ['foo' => ['bar', null]]);
+        $command = new Command('foo', ['foo' => ['bar', 123]]);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
 
         $location->visit($command, $request, $param);
     }
@@ -106,7 +122,7 @@ class HeaderLocationTest extends TestCase
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 'bar']);
-        $command['add'] = null;
+        $command['add'] = 123;
         $operation = new Operation([
             'additionalParameters' => [
                 'location' => 'header',
@@ -115,7 +131,7 @@ class HeaderLocationTest extends TestCase
         $request = new Request('POST', 'http://httbin.org');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be scalar or an array of scalars.');
+        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
 
         $location->after($command, $request, $operation);
     }

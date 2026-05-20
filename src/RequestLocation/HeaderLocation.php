@@ -68,40 +68,16 @@ class HeaderLocation extends AbstractLocation
             return $value;
         }
 
-        if (is_scalar($value)) {
-            trigger_deprecation(
-                'guzzlehttp/guzzle-services',
-                '1.6',
-                'Passing %s as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                get_debug_type($value)
-            );
-
-            return (string) $value;
-        }
-
         if (is_array($value)) {
-            foreach ($value as $key => $item) {
-                if (is_string($item)) {
-                    continue;
+            foreach ($value as $item) {
+                if (!is_string($item)) {
+                    throw new \InvalidArgumentException('Header location values must be strings or arrays of strings.');
                 }
-
-                if (!is_scalar($item)) {
-                    throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
-                }
-
-                trigger_deprecation(
-                    'guzzlehttp/guzzle-services',
-                    '1.6',
-                    'Passing %s inside a header location value array is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                    get_debug_type($item)
-                );
-
-                $value[$key] = (string) $item;
             }
 
             return $value;
         }
 
-        throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
+        throw new \InvalidArgumentException('Header location values must be strings or arrays of strings.');
     }
 }
