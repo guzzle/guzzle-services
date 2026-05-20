@@ -69,7 +69,7 @@ class HeaderLocation extends AbstractLocation
         }
 
         if (is_scalar($value)) {
-            trigger_deprecation(
+            \trigger_deprecation(
                 'guzzlehttp/guzzle-services',
                 '1.6',
                 'Passing %s as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
@@ -89,7 +89,7 @@ class HeaderLocation extends AbstractLocation
                     throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
                 }
 
-                trigger_deprecation(
+                \trigger_deprecation(
                     'guzzlehttp/guzzle-services',
                     '1.6',
                     'Passing %s inside a header location value array is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',

@@ -56,10 +56,10 @@ class Description implements DescriptionInterface
         // Set the baseUri
         // Account for the old style of using baseUrl
         if (isset($config['baseUrl'])) {
-            trigger_deprecation(
+            \trigger_deprecation(
                 'guzzlehttp/guzzle-services',
                 '1.6',
-                'The "baseUrl" service description option is deprecated, use "baseUri" instead.'
+                'The "baseUrl" service description option is deprecated; use "baseUri" instead.'
             );
 
             $config['baseUri'] = $config['baseUrl'];
