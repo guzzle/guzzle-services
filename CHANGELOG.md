@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.5.1 - Upcoming
+## 1.5.1 - 2026-05-20
 
 * Replace deprecated Guzzle JSON helper functions
 * Serialize and validate header location values
