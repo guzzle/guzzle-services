@@ -35,7 +35,7 @@
         "bamarni/composer-bin-plugin": "^1.8.2",
         "guzzlehttp/promises": "^3.0@dev",
         "guzzlehttp/test-server": "^1.0@dev",
-        "phpunit/phpunit": "^8.5.52 || ^9.6.34"
+        "phpunit/phpunit": "^9.6.34"
     },
     "suggest": {
         "gimler/guzzle-description-loader": "^0.0.4"
