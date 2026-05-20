@@ -3,6 +3,7 @@
 ## 1.5.1 - Upcoming
 
 * Replace deprecated Guzzle JSON helper functions
+* Serialize and validate header location values
 
 ## 1.5.0 - 2026-05-18
 
