@@ -61,10 +61,6 @@ See [UPGRADING.md](UPGRADING.md) for upgrade notes.
 
 **Note:** If Composer is not installed [globally](https://getcomposer.org/doc/00-intro.md#globally) then you may need to run the preceding Composer commands using ``php composer.phar`` (where ``composer.phar`` is the path to your copy of Composer), instead of just ``composer``.
 
-## Plugins
-
-* Load Service description from file [https://github.com/gimler/guzzle-description-loader]
-
 ## Cookbook
 
 ### Changing the way query params are serialized
