@@ -5,10 +5,11 @@ Guzzle Services Upgrade Guide
 ------------
 
 Guzzle Services 2.0 is a major release that removes deprecated service
-description aliases, raises the minimum PHP version, and updates the Guzzle
-dependency stack. Applications that use current 1.x service description keys
-should usually need small changes. Applications that still use legacy aliases or
-depend on older Guzzle dependencies need closer review.
+description aliases, enables strict types, raises the minimum PHP version, and
+updates the Guzzle dependency stack. Applications that use current 1.x service
+description keys should usually need small changes. Applications that still use
+legacy aliases, depend on older Guzzle dependencies, or provide custom filters
+and extension points need closer review.
 
 #### PHP Version and Dependencies
 
@@ -96,6 +97,47 @@ Header location values must now be strings or arrays of strings. Guzzle Services
 
 Normalize header values before constructing commands if your application passes
 integers, floats, booleans, or other non-string values into header locations.
+
+#### Strict Types and Extension Points
+
+Guzzle Services source and test files now declare strict types. This mostly
+affects calls made by Guzzle Services into extension points, especially custom
+parameter filters. Custom code does not become strict unless it also declares
+strict types, but scalar arguments passed from strict Guzzle Services files are
+no longer weakly coerced for typed filter callables.
+
+For example, this filter accepted integer command values in 1.x because the
+value was weakly coerced to a string before the filter was called:
+
+```php
+final class Filters
+{
+    public static function normalizeId(string $value): string
+    {
+        return trim($value);
+    }
+}
+```
+
+In 2.0, the same filter throws `TypeError` if the command value is an integer.
+Normalize values before creating the command, or make the filter accept the
+actual values it may receive and normalize explicitly:
+
+```php
+final class Filters
+{
+    public static function normalizeId($value): string
+    {
+        return trim((string) $value);
+    }
+}
+```
+
+Review custom request locations, response locations, serializers, deserializers,
+schema validators, and formatters for the same pattern. If custom code passes
+scalars or stringable objects to PHP internal functions such as `json_decode()`,
+`parse_str()`, `preg_match()`, `strlen()`, or `XMLWriter` methods, cast values
+explicitly before calling those functions.
 
 #### Command Client Dependency
 

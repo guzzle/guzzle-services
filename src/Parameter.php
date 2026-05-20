@@ -304,9 +304,9 @@ class Parameter implements ToArrayInterface
                             $data = $this;
                         }
                     }
-                    $value = $this->invokeFilter($filter['method'], $filter['args']);
+                    $value = ($filter['method'])(...$filter['args']);
                 } else {
-                    $value = $this->invokeFilter($filter, [$value]);
+                    $value = $filter($value);
                 }
             }
         }
@@ -656,18 +656,6 @@ class Parameter implements ToArrayInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Invoke user filters through reflection to preserve weak scalar coercion.
-     *
-     * @param callable $filter
-     *
-     * @return mixed
-     */
-    private function invokeFilter($filter, array $args)
-    {
-        return (new \ReflectionFunction(\Closure::fromCallable($filter)))->invokeArgs($args);
     }
 
     /**
