@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ClientInterface;
@@ -13,11 +15,10 @@ use GuzzleHttp\HandlerStack;
  */
 class GuzzleClient extends ServiceClient
 {
-    /** @var array */
-    private $config;
+    private array $config;
 
     /** @var DescriptionInterface Guzzle service description */
-    private $description;
+    private DescriptionInterface $description;
 
     /**
      * The client constructor accepts an associative array of configuration
@@ -29,6 +30,7 @@ class GuzzleClient extends ServiceClient
      *   Changing this setting after the client has been created will have no
      *   effect.
      * - process: Specify if HTTP responses are parsed (defaults to true).
+     *   When false, the raw response is returned in the command result.
      *   Changing this setting after the client has been created will have no
      *   effect.
      * - response_locations: Associative array of location types mapping to
@@ -60,11 +62,9 @@ class GuzzleClient extends ServiceClient
      *
      * @param string $name
      *
-     * @return CommandInterface
-     *
      * @throws \InvalidArgumentException
      */
-    public function getCommand($name, array $args = [])
+    public function getCommand($name, array $args = []): CommandInterface
     {
         if (!$this->description->hasOperation($name)) {
             $name = ucfirst($name);
@@ -83,10 +83,8 @@ class GuzzleClient extends ServiceClient
 
     /**
      * Return the description
-     *
-     * @return DescriptionInterface
      */
-    public function getDescription()
+    public function getDescription(): DescriptionInterface
     {
         return $this->description;
     }
@@ -94,11 +92,9 @@ class GuzzleClient extends ServiceClient
     /**
      * Returns the passed Serializer when set, a new instance otherwise
      *
-     * @param callable|null $commandToRequestTransformer
-     *
      * @return Serializer
      */
-    private function getSerializer($commandToRequestTransformer)
+    private function getSerializer(?callable $commandToRequestTransformer): callable
     {
         return $commandToRequestTransformer !== null
             ? $commandToRequestTransformer
@@ -108,11 +104,9 @@ class GuzzleClient extends ServiceClient
     /**
      * Returns the passed Deserializer when set, a new instance otherwise
      *
-     * @param callable|null $responseToResultTransformer
-     *
      * @return Deserializer
      */
-    private function getDeserializer($responseToResultTransformer)
+    private function getDeserializer(?callable $responseToResultTransformer): callable
     {
         $process = (!isset($this->config['process']) || $this->config['process'] === true);
 
@@ -135,7 +129,7 @@ class GuzzleClient extends ServiceClient
             : (isset($this->config[$option]) ? $this->config[$option] : []);
     }
 
-    public function setConfig($option, $value)
+    public function setConfig($option, $value): void
     {
         $this->config[$option] = $value;
     }
@@ -145,7 +139,7 @@ class GuzzleClient extends ServiceClient
      *
      * @param array $config Constructor config as an array
      */
-    protected function processConfig(array $config)
+    protected function processConfig(array $config): void
     {
         // set defaults as an array if not provided
         if (!isset($config['defaults'])) {
@@ -162,7 +156,7 @@ class GuzzleClient extends ServiceClient
         if (!isset($config['process']) || $config['process'] === true) {
             // TODO: This belongs to the Deserializer and should be handled there.
             // Question: What is the result when the Deserializer is bypassed?
-            // Possible answer: The raw response.
+            // Possible answer: The raw response in the command result.
         }
     }
 }

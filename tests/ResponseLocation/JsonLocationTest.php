@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Tests\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Client;
@@ -163,7 +165,7 @@ class JsonLocationTest extends TestCase
             ],
         ]);
         $guzzle = new GuzzleClient($guzzle, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
         $this->assertEquals($expected, $result->toArray());
     }
@@ -209,7 +211,7 @@ class JsonLocationTest extends TestCase
             ],
         ]);
         $guzzle = new GuzzleClient($httpClient, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
         $expected = [
             'scalar' => 'foo',
@@ -329,7 +331,7 @@ class JsonLocationTest extends TestCase
 
         $description = new Description($desc);
         $guzzle = new GuzzleClient($httpClient, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
         $expected = [
             'nested' => [
@@ -395,7 +397,7 @@ class JsonLocationTest extends TestCase
             ]
         );
         $guzzle = new GuzzleClient($httpClient, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
 
         $expected = [
@@ -482,7 +484,7 @@ class JsonLocationTest extends TestCase
         ]);
 
         $guzzle = new GuzzleClient($httpClient, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
         $expected = [
             'scalar' => 'foo',
@@ -557,7 +559,7 @@ class JsonLocationTest extends TestCase
         ]);
 
         $guzzle = new GuzzleClient($httpClient, $description);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->foo();
         $expected = [
             'scalar' => 'foo',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -13,26 +15,21 @@ use Psr\Http\Message\ResponseInterface;
 class XmlLocation extends AbstractLocation
 {
     /** @var \SimpleXMLElement|null XML document being visited */
-    private $xml;
+    private ?\SimpleXMLElement $xml = null;
 
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'xml')
+    public function __construct(string $locationName = 'xml')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function before(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         $this->xml = null;
 
         $previous = libxml_use_internal_errors(true);
@@ -61,7 +58,7 @@ class XmlLocation extends AbstractLocation
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
         if ($additional instanceof Parameter
@@ -78,14 +75,11 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function visit(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         $sentAs = $param->getWireName();
         $ns = null;
         if (null !== $sentAs && strstr($sentAs, ':')) {
@@ -106,10 +100,7 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
-    /**
-     * @return \SimpleXMLElement
-     */
-    private function getXml()
+    private function getXml(): \SimpleXMLElement
     {
         if (!$this->xml instanceof \SimpleXMLElement) {
             throw new \RuntimeException('XML response has not been parsed');
@@ -155,10 +146,7 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
-    /**
-     * @return array
-     */
-    private function processArray(Parameter $param, \SimpleXMLElement $node)
+    private function processArray(Parameter $param, \SimpleXMLElement $node): array
     {
         // Cast to an array if the value was a string, but should be an array
         $items = $param->getItems();
@@ -196,10 +184,8 @@ class XmlLocation extends AbstractLocation
      *
      * @param Parameter         $param API parameter being parsed
      * @param \SimpleXMLElement $node  Value to process
-     *
-     * @return array
      */
-    private function processObject(Parameter $param, \SimpleXMLElement $node)
+    private function processObject(Parameter $param, \SimpleXMLElement $node): array
     {
         $result = $knownProps = $knownAttributes = [];
 
@@ -268,15 +254,12 @@ class XmlLocation extends AbstractLocation
     /**
      * Convert an XML document to an array.
      *
-     * @param string|null $ns
-     * @param int         $nesting
-     *
      * @return array
      */
     private static function xmlToArray(
         \SimpleXMLElement $xml,
-        $ns = null,
-        $nesting = 0
+        ?string $ns = null,
+        int $nesting = 0
     ) {
         $result = [];
         $children = $xml->children($ns, true);

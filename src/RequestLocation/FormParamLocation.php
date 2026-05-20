@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -13,30 +15,23 @@ use Psr\Http\Message\RequestInterface;
  */
 class FormParamLocation extends AbstractLocation
 {
-    /** @var string */
-    protected $contentType = 'application/x-www-form-urlencoded; charset=utf-8';
+    protected string $contentType = 'application/x-www-form-urlencoded; charset=utf-8';
 
-    /** @var array */
-    protected $formParamsData = [];
+    protected array $formParamsData = [];
 
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'formParam')
+    public function __construct(string $locationName = 'formParam')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $this->formParamsData['form_params'][$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
             $param
@@ -45,14 +40,11 @@ class FormParamLocation extends AbstractLocation
         return $request;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         $data = $this->formParamsData;
         $this->formParamsData = [];
         $modify = [];

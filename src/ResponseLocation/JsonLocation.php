@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -14,26 +16,21 @@ use Psr\Http\Message\ResponseInterface;
 class JsonLocation extends AbstractLocation
 {
     /** @var array The JSON document being visited */
-    private $json = [];
+    private array $json = [];
 
     /**
      * Set the name of the location
-     *
-     * @param string $locationName
      */
-    public function __construct($locationName = 'json')
+    public function __construct(string $locationName = 'json')
     {
         parent::__construct($locationName);
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function before(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         $body = (string) $response->getBody();
         $body = $body ?: '{}';
         $this->json = Utils::jsonDecode($body, true);
@@ -46,14 +43,11 @@ class JsonLocation extends AbstractLocation
         return $result;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function after(
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    ) {
+    ): ResultInterface {
         // Handle additional, undefined properties
         $additional = $model->getAdditionalProperties();
         if (!$additional instanceof Parameter) {
@@ -85,7 +79,7 @@ class JsonLocation extends AbstractLocation
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    ) {
+    ): ResultInterface {
         $name = $param->getName();
         $key = $param->getWireName();
 

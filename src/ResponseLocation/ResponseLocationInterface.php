@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
@@ -27,7 +29,7 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    );
+    ): ResultInterface;
 
     /**
      * Called after visiting all parameters
@@ -42,7 +44,7 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $model
-    );
+    ): ResultInterface;
 
     /**
      * Called once for each parameter being visited that matches the location
@@ -58,5 +60,5 @@ interface ResponseLocationInterface
         ResultInterface $result,
         ResponseInterface $response,
         Parameter $param
-    );
+    ): ResultInterface;
 }

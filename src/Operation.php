@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
@@ -10,16 +12,15 @@ use GuzzleHttp\Command\ToArrayInterface;
 class Operation implements ToArrayInterface
 {
     /** @var array Parameters */
-    private $parameters = [];
+    private array $parameters = [];
 
     /** @var Parameter Additional parameters schema */
-    private $additionalParameters;
+    private ?Parameter $additionalParameters = null;
 
-    /** @var DescriptionInterface */
-    private $description;
+    private DescriptionInterface $description;
 
     /** @var array Config data */
-    private $config;
+    private array $config;
 
     /**
      * Builds an Operation object using an array of configuration data.
@@ -85,20 +86,15 @@ class Operation implements ToArrayInterface
         $this->resolveParameters();
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->config;
     }
 
     /**
      * Get the service description that the operation belongs to
-     *
-     * @return Description
      */
-    public function getServiceDescription()
+    public function getServiceDescription(): DescriptionInterface
     {
         return $this->description;
     }
@@ -108,17 +104,15 @@ class Operation implements ToArrayInterface
      *
      * @return Parameter[]
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->parameters;
     }
 
     /**
      * Get additionalParameters of the operation
-     *
-     * @return Parameter|null
      */
-    public function getAdditionalParameters()
+    public function getAdditionalParameters(): ?Parameter
     {
         return $this->additionalParameters;
     }
@@ -127,10 +121,8 @@ class Operation implements ToArrayInterface
      * Check if the operation has a specific parameter by name
      *
      * @param string $name Name of the param
-     *
-     * @return bool
      */
-    public function hasParam($name)
+    public function hasParam(string $name): bool
     {
         return isset($this->parameters[$name]);
     }
@@ -139,10 +131,8 @@ class Operation implements ToArrayInterface
      * Get a single parameter of the operation
      *
      * @param string $name Parameter to retrieve by name
-     *
-     * @return Parameter|null
      */
-    public function getParam($name)
+    public function getParam(string $name): ?Parameter
     {
         return isset($this->parameters[$name])
             ? $this->parameters[$name]
@@ -151,90 +141,72 @@ class Operation implements ToArrayInterface
 
     /**
      * Get the HTTP method of the operation
-     *
-     * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
         return $this->config['httpMethod'];
     }
 
     /**
      * Get the name of the operation
-     *
-     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->config['name'];
     }
 
     /**
      * Get a short summary of what the operation does
-     *
-     * @return string|null
      */
-    public function getSummary()
+    public function getSummary(): ?string
     {
         return $this->config['summary'];
     }
 
     /**
      * Get a longer text field to explain the behavior of the operation
-     *
-     * @return string|null
      */
-    public function getNotes()
+    public function getNotes(): ?string
     {
         return $this->config['notes'];
     }
 
     /**
      * Get the documentation URL of the operation
-     *
-     * @return string|null
      */
-    public function getDocumentationUrl()
+    public function getDocumentationUrl(): ?string
     {
         return $this->config['documentationUrl'];
     }
 
     /**
      * Get the name of the model used for processing the response.
-     *
-     * @return string
      */
-    public function getResponseModel()
+    public function getResponseModel(): ?string
     {
         return $this->config['responseModel'];
     }
 
     /**
      * Get whether or not the operation is deprecated
-     *
-     * @return bool
      */
-    public function getDeprecated()
+    public function getDeprecated(): bool
     {
         return $this->config['deprecated'];
     }
 
     /**
      * Get the URI that will be merged into the generated request
-     *
-     * @return string
      */
-    public function getUri()
+    public function getUri(): ?string
     {
         return $this->config['uri'];
     }
 
     /**
      * Get the errors that could be encountered when executing the operation
-     *
-     * @return array
      */
-    public function getErrorResponses()
+    public function getErrorResponses(): array
     {
         return $this->config['errorResponses'];
     }
@@ -247,7 +219,7 @@ class Operation implements ToArrayInterface
      *
      * @return mixed|null
      */
-    public function getData($name = null)
+    public function getData(?string $name = null)
     {
         if ($name === null) {
             return $this->config['data'];
@@ -258,10 +230,7 @@ class Operation implements ToArrayInterface
         return null;
     }
 
-    /**
-     * @return array
-     */
-    private function resolveExtends($name, array $config)
+    private function resolveExtends(string $name, array $config): array
     {
         if (!$this->description->hasOperation($name)) {
             throw new \InvalidArgumentException('No operation named '.$name);
@@ -280,10 +249,8 @@ class Operation implements ToArrayInterface
 
     /**
      * Process the description and extract the parameter config
-     *
-     * @return void
      */
-    private function resolveParameters()
+    private function resolveParameters(): void
     {
         // Parameters need special handling when adding
         foreach ($this->config['parameters'] as $name => $param) {
@@ -305,8 +272,10 @@ class Operation implements ToArrayInterface
                     $this->config['additionalParameters'],
                     ['description' => $this->description]
                 );
-            } else {
+            } elseif ($this->config['additionalParameters'] instanceof Parameter) {
                 $this->additionalParameters = $this->config['additionalParameters'];
+            } else {
+                throw new \InvalidArgumentException('additionalParameters must be an array or Parameter');
             }
         }
     }

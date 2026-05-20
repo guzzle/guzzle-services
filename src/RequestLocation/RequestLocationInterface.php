@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -25,7 +27,7 @@ interface RequestLocationInterface
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    );
+    ): RequestInterface;
 
     /**
      * Called when all of the parameters of a command have been visited.
@@ -40,5 +42,5 @@ interface RequestLocationInterface
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    );
+    ): RequestInterface;
 }

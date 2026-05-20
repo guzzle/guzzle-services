@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -23,10 +25,9 @@ use Psr\Http\Message\RequestInterface;
 class Serializer
 {
     /** @var RequestLocationInterface[] */
-    private $locations;
+    private array $locations;
 
-    /** @var DescriptionInterface */
-    private $description;
+    private DescriptionInterface $description;
 
     /**
      * @param RequestLocationInterface[] $requestLocations Extra request locations
@@ -52,10 +53,7 @@ class Serializer
         $this->description = $description;
     }
 
-    /**
-     * @return RequestInterface
-     */
-    public function __invoke(CommandInterface $command)
+    public function __invoke(CommandInterface $command): RequestInterface
     {
         $request = $this->createRequest($command);
 
@@ -67,20 +65,18 @@ class Serializer
      *
      * @param RequestInterface $request Request being created
      *
-     * @return RequestInterface
-     *
      * @throws \RuntimeException If a location cannot be handled
      */
     protected function prepareRequest(
         CommandInterface $command,
         RequestInterface $request
-    ) {
+    ): RequestInterface {
         $visitedLocations = [];
         $operation = $this->description->getOperation($command->getName());
 
         // Visit each actual parameter
         foreach ($operation->getParams() as $name => $param) {
-            /* @var Parameter $param */
+            /* @var Parameter */
             $location = $param->getLocation();
             // Skip parameters that have not been set or are URI location
             if ($location == 'uri' || !$command->hasParam($name)) {
@@ -94,8 +90,8 @@ class Serializer
         }
 
         // Ensure that the after() method is invoked for additionalParameters
-        /** @var Parameter $additional */
-        if ($additional = $operation->getAdditionalParameters()) {
+        $additional = $operation->getAdditionalParameters();
+        if ($additional) {
             $visitedLocations[$additional->getLocation()] = true;
         }
 
@@ -110,11 +106,9 @@ class Serializer
     /**
      * Create a request for the command and operation
      *
-     * @return RequestInterface
-     *
      * @throws \RuntimeException
      */
-    protected function createRequest(CommandInterface $command)
+    protected function createRequest(CommandInterface $command): RequestInterface
     {
         $operation = $this->description->getOperation($command->getName());
 
@@ -137,11 +131,11 @@ class Serializer
     private function createCommandWithUri(
         Operation $operation,
         CommandInterface $command
-    ) {
+    ): RequestInterface {
         // Get the path values and use the client config settings
         $variables = [];
         foreach ($operation->getParams() as $name => $arg) {
-            /* @var Parameter $arg */
+            /* @var Parameter */
             if ($arg->getLocation() == 'uri') {
                 if (isset($command[$name])) {
                     $variables[$name] = $arg->filter($command[$name]);
@@ -153,7 +147,7 @@ class Serializer
         }
 
         // Expand the URI template.
-        $uri = new Uri(UriTemplate::expand($operation->getUri(), $variables));
+        $uri = new Uri(UriTemplate::expand((string) $operation->getUri(), $variables));
 
         return new Request(
             $operation->getHttpMethod(),

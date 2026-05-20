@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -9,36 +11,29 @@ use Psr\Http\Message\RequestInterface;
 
 abstract class AbstractLocation implements RequestLocationInterface
 {
-    /** @var string */
-    protected $locationName;
+    protected string $locationName;
 
     /**
      * Set the name of the location
      */
-    public function __construct($locationName)
+    public function __construct(string $locationName)
     {
         $this->locationName = $locationName;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         return $request;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         return $request;
     }
 
@@ -65,7 +60,7 @@ abstract class AbstractLocation implements RequestLocationInterface
      *
      * @return array Returns the mapped array
      */
-    protected function resolveRecursively(array $value, Parameter $param)
+    protected function resolveRecursively(array $value, Parameter $param): array
     {
         foreach ($value as $name => &$v) {
             switch ($param->getType()) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -7,7 +9,6 @@ use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Utils;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -16,30 +17,26 @@ use Psr\Http\Message\RequestInterface;
 class JsonLocation extends AbstractLocation
 {
     /** @var string Whether or not to add a Content-Type header when JSON is found */
-    private $jsonContentType;
+    private string $jsonContentType;
 
-    /** @var array */
-    private $jsonData;
+    private array $jsonData = [];
 
     /**
      * @param string $locationName Name of the location
      * @param string $contentType  Content-Type header to add to the request if
      *                             JSON is added to the body. Pass an empty string to omit.
      */
-    public function __construct($locationName = 'json', $contentType = 'application/json')
+    public function __construct(string $locationName = 'json', string $contentType = 'application/json')
     {
         parent::__construct($locationName);
         $this->jsonContentType = $contentType;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function visit(
         CommandInterface $command,
         RequestInterface $request,
         Parameter $param
-    ) {
+    ): RequestInterface {
         $this->jsonData[$param->getWireName()] = $this->prepareValue(
             $command[$param->getName()],
             $param
@@ -48,14 +45,11 @@ class JsonLocation extends AbstractLocation
         return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($this->jsonData)));
     }
 
-    /**
-     * @return MessageInterface
-     */
     public function after(
         CommandInterface $command,
         RequestInterface $request,
         Operation $operation
-    ) {
+    ): RequestInterface {
         $data = $this->jsonData;
         $this->jsonData = [];
 

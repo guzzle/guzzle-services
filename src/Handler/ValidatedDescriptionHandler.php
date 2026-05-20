@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle\Handler;
 
 use GuzzleHttp\Command\CommandInterface;
@@ -14,11 +16,9 @@ use GuzzleHttp\Command\Guzzle\SchemaValidator;
  */
 class ValidatedDescriptionHandler
 {
-    /** @var SchemaValidator */
-    private $validator;
+    private SchemaValidator $validator;
 
-    /** @var DescriptionInterface */
-    private $description;
+    private DescriptionInterface $description;
 
     /**
      * ValidatedDescriptionHandler constructor.
@@ -29,10 +29,7 @@ class ValidatedDescriptionHandler
         $this->validator = $schemaValidator ?: new SchemaValidator();
     }
 
-    /**
-     * @return \Closure
-     */
-    public function __invoke(callable $handler)
+    public function __invoke(callable $handler): \Closure
     {
         return function (CommandInterface $command) use ($handler) {
             $errors = [];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Command\Guzzle;
 
 /**
@@ -15,7 +17,7 @@ class SchemaFormatter
      *
      * @return mixed
      */
-    public function format($format, $value)
+    public function format(string $format, $value)
     {
         switch ($format) {
             case 'date-time':
@@ -41,11 +43,9 @@ class SchemaFormatter
      * @param int|string|\DateTime $dateTime Date time value
      * @param string               $format   Format of the result
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function dateFormatter($dateTime, $format)
+    protected function dateFormatter($dateTime, string $format): string
     {
         if (is_numeric($dateTime)) {
             return gmdate($format, (int) $dateTime);
@@ -73,10 +73,8 @@ class SchemaFormatter
      * UTC time.
      *
      * @param string|int|\DateTime $value Date time value
-     *
-     * @return string
      */
-    private function formatDateTime($value)
+    private function formatDateTime($value): string
     {
         return $this->dateFormatter($value, 'Y-m-d\TH:i:s\Z');
     }
@@ -85,10 +83,8 @@ class SchemaFormatter
      * Create an HTTP date (RFC 1123 / RFC 822) formatted UTC date-time string
      *
      * @param string|int|\DateTime $value Date time value
-     *
-     * @return string
      */
-    private function formatDateTimeHttp($value)
+    private function formatDateTimeHttp($value): string
     {
         return $this->dateFormatter($value, 'D, d M Y H:i:s \G\M\T');
     }
@@ -97,10 +93,8 @@ class SchemaFormatter
      * Create a YYYY-MM-DD formatted string
      *
      * @param string|int|\DateTime $value Date time value
-     *
-     * @return string
      */
-    private function formatDate($value)
+    private function formatDate($value): string
     {
         return $this->dateFormatter($value, 'Y-m-d');
     }
@@ -109,10 +103,8 @@ class SchemaFormatter
      * Create a hh:mm:ss formatted string
      *
      * @param string|int|\DateTime $value Date time value
-     *
-     * @return string
      */
-    private function formatTime($value)
+    private function formatTime($value): string
     {
         return $this->dateFormatter($value, 'H:i:s');
     }
@@ -122,10 +114,8 @@ class SchemaFormatter
      *
      * @param string|int|bool $value Value to convert to a boolean
      *                               'true' / 'false' value
-     *
-     * @return string
      */
-    private function formatBooleanAsString($value)
+    private function formatBooleanAsString($value): string
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
     }
@@ -134,10 +124,8 @@ class SchemaFormatter
      * Return a UNIX timestamp in the UTC timezone
      *
      * @param string|int|\DateTime $value Time value
-     *
-     * @return int
      */
-    private function formatTimestamp($value)
+    private function formatTimestamp($value): int
     {
         return (int) $this->dateFormatter($value, 'U');
     }

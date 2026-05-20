@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
@@ -164,7 +166,7 @@ class GuzzleClientTest extends TestCase
         ]);
         $this->assertEquals(
             "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n",
-            $mock->getLastRequest()->getBody()
+            (string) $mock->getLastRequest()->getBody()
         );
     }
 
@@ -343,8 +345,9 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'BAZ']);
-        /** @var ResponseInterface $response */
-        $response = $guzzle->execute($command);
+        /** @var ResultInterface */
+        $result = $guzzle->execute($command);
+        $response = $result['response'];
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -425,7 +428,7 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo');
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -502,7 +505,7 @@ class GuzzleClientTest extends TestCase
         );
 
         $command = $guzzle->getCommand('Foo', ['baz' => 'Hello']);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -570,7 +573,7 @@ class GuzzleClientTest extends TestCase
         $guzzle = new GuzzleClient($client, $description);
 
         $command = $guzzle->getCommand('Foo', ['baz' => 42]);
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -646,11 +649,13 @@ class GuzzleClientTest extends TestCase
             ->onlyMethods(['execute'])
             ->getMock();
 
+        $result = new Result(['foo' => 'bar']);
+
         $guzzle->expects($this->once())
             ->method('execute')
-            ->will($this->returnValue('foo'));
+            ->will($this->returnValue($result));
 
-        $this->assertEquals('foo', $guzzle->foo([]));
+        $this->assertSame($result, $guzzle->foo([]));
     }
 
     public function testThrowsWhenOperationNotFoundInDescription()
@@ -730,7 +735,7 @@ class GuzzleClientTest extends TestCase
         $guzzle = new GuzzleClient($client, $description, null, null);
         $command = $guzzle->getCommand('foo', ['baz' => 'BAZ']);
 
-        /** @var ResultInterface $result */
+        /** @var ResultInterface */
         $result = $guzzle->execute($command);
         $this->assertInstanceOf(Result::class, $result);
         $result = $result->toArray();
@@ -779,8 +784,8 @@ class GuzzleClientTest extends TestCase
     private function responseToResultTransformer()
     {
         return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command) {
-            $data = Utils::jsonDecode($response->getBody(), true);
-            parse_str($request->getBody(), $data['_request']);
+            $data = Utils::jsonDecode((string) $response->getBody(), true);
+            parse_str((string) $request->getBody(), $data['_request']);
 
             return new Result($data);
         };

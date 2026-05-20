@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Command;
@@ -34,7 +36,7 @@ class SerializerTest extends TestCase
 
         $command = new Command('test', ['key' => 'bar']);
         $serializer = new Serializer($description);
-        /** @var Request $request */
+        /** @var Request */
         $request = $serializer($command);
         $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }

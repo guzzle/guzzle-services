@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Guzzle\Tests\Service\Description;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
