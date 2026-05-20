@@ -1,17 +1,21 @@
 Guzzle Services Upgrade Guide
 =============================
 
-0.6 to 1.0
-----------
+1.0 from 0.6
+------------
 
-### Dependencies
+Guzzle Services 1.0 added support for Guzzle 6 and PSR-7. Applications that use
+only service descriptions should usually need small changes. Applications with
+custom request locations, response locations, or subscribers need closer review.
+
+#### Dependencies
 
 Guzzle Services 1.0 added support for Guzzle 6. It requires PHP 5.5 or higher,
 `guzzlehttp/guzzle` 6.2 or higher, and `guzzlehttp/command` 1.x.
 
 If your application still uses Guzzle 5, continue using Guzzle Services 0.6.
 
-### Service Description Base URI
+#### Service Description Base URI
 
 Use `baseUri` instead of `baseUrl` in service descriptions.
 
@@ -27,7 +31,7 @@ $description = new Description([
 ]);
 ```
 
-### Request Locations
+#### Request Locations
 
 The `postField` and `postFile` request locations were renamed to `formParam`
 and `multipart`.
@@ -62,7 +66,7 @@ and `multipart`.
 ]
 ```
 
-### Custom Locations and Subscribers
+#### Custom Locations and Subscribers
 
 Guzzle Services 1.0 serializes PSR-7 requests for Guzzle 6. Custom request or
 response location implementations should use PSR-7 message interfaces and return
