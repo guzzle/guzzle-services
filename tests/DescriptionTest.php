@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DescriptionTest extends TestCase
 {
-    protected $operations;
+    protected array $operations;
 
     public function setup(): void
     {
@@ -34,7 +34,7 @@ class DescriptionTest extends TestCase
         ];
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $service = new Description(['operations' => $this->operations]);
         $this->assertCount(1, $service->getOperations());
@@ -42,7 +42,7 @@ class DescriptionTest extends TestCase
         $this->assertTrue($service->hasOperation('test_command'));
     }
 
-    public function testContainsModels()
+    public function testContainsModels(): void
     {
         $d = new Description([
             'operations' => ['foo' => []],
@@ -58,7 +58,7 @@ class DescriptionTest extends TestCase
         $this->assertEquals(['Tag', 'Person'], array_keys($d->getModels()));
     }
 
-    public function testDoesNotUseLegacyResponseClass()
+    public function testDoesNotUseLegacyResponseClass(): void
     {
         $d = new Description([
             'operations' => [
@@ -71,14 +71,14 @@ class DescriptionTest extends TestCase
         $this->assertSame('Tag', $op->toArray()['responseClass']);
     }
 
-    public function testRetrievingMissingModelThrowsException()
+    public function testRetrievingMissingModelThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $d = new Description([]);
         $d->getModel('foo');
     }
 
-    public function testHasAttributes()
+    public function testHasAttributes(): void
     {
         $d = new Description([
             'operations' => [],
@@ -92,7 +92,7 @@ class DescriptionTest extends TestCase
         $this->assertEquals('1.24', $d->getApiVersion());
     }
 
-    public function testPersistsCustomAttributes()
+    public function testPersistsCustomAttributes(): void
     {
         $data = [
             'operations' => ['foo' => ['class' => 'foo', 'parameters' => []]],
@@ -109,14 +109,14 @@ class DescriptionTest extends TestCase
         $this->assertNull($d->getData('missing'));
     }
 
-    public function testThrowsExceptionForMissingOperation()
+    public function testThrowsExceptionForMissingOperation(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $s = new Description([]);
         $this->assertNull($s->getOperation('foo'));
     }
 
-    public function testValidatesOperationTypes()
+    public function testValidatesOperationTypes(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Description([
@@ -124,20 +124,20 @@ class DescriptionTest extends TestCase
         ]);
     }
 
-    public function testDoesNotUseLegacyBaseUrl()
+    public function testDoesNotUseLegacyBaseUrl(): void
     {
         $description = new Description(['baseUrl' => 'http://foo.com']);
         $this->assertEquals('', $description->getBaseUri());
         $this->assertSame('http://foo.com', $description->getData('baseUrl'));
     }
 
-    public function testHasbaseUri()
+    public function testHasbaseUri(): void
     {
         $description = new Description(['baseUri' => 'http://foo.com']);
         $this->assertEquals('http://foo.com', $description->getBaseUri());
     }
 
-    public function testModelsHaveNames()
+    public function testModelsHaveNames(): void
     {
         $desc = [
             'models' => [
@@ -156,7 +156,7 @@ class DescriptionTest extends TestCase
         $this->assertEquals('dob', $s->getModel('user')->getProperty('dob')->getName());
     }
 
-    public function testHasOperations()
+    public function testHasOperations(): void
     {
         $desc = ['operations' => ['foo' => ['parameters' => ['foo' => [
             'name' => 'foo',
@@ -166,13 +166,13 @@ class DescriptionTest extends TestCase
         $this->assertSame($s->getOperation('foo'), $s->getOperation('foo'));
     }
 
-    public function testHasFormatter()
+    public function testHasFormatter(): void
     {
         $s = new Description([]);
         $this->assertNotEmpty($s->format('date', 'now'));
     }
 
-    public function testCanUseCustomFormatter()
+    public function testCanUseCustomFormatter(): void
     {
         $formatter = $this->getMockBuilder(SchemaFormatter::class)
             ->onlyMethods(['format'])

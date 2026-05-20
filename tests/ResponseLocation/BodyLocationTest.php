@@ -19,7 +19,7 @@ class BodyLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new BodyLocation();
         $parameter = new Parameter([

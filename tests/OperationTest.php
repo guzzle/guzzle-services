@@ -6,6 +6,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Guzzle\Parameter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,12 +14,12 @@ use PHPUnit\Framework\TestCase;
  */
 class OperationTest extends TestCase
 {
-    public static function strtoupper($string)
+    public static function strtoupper(string $string): string
     {
         return strtoupper($string);
     }
 
-    public function testOperationIsDataObject()
+    public function testOperationIsDataObject(): void
     {
         $c = new Operation([
             'name' => 'test',
@@ -53,7 +54,7 @@ class OperationTest extends TestCase
         $this->assertEquals('abc', $c->getResponseModel());
         $this->assertTrue($c->getDeprecated());
 
-        $params = array_map(function ($c) {
+        $params = array_map(function (Parameter $c): array {
             return $c->toArray();
         }, $c->getParams());
 
@@ -83,14 +84,14 @@ class OperationTest extends TestCase
         $this->assertArrayNotHasKey('parent', $c->getParam('key_2')->toArray());
     }
 
-    public function testDeterminesIfHasParam()
+    public function testDeterminesIfHasParam(): void
     {
         $command = $this->getTestCommand();
         $this->assertTrue($command->hasParam('data'));
         $this->assertFalse($command->hasParam('baz'));
     }
 
-    protected function getTestCommand()
+    protected function getTestCommand(): Operation
     {
         return new Operation([
             'parameters' => [
@@ -99,25 +100,25 @@ class OperationTest extends TestCase
         ]);
     }
 
-    public function testAddsNameToParametersIfNeeded()
+    public function testAddsNameToParametersIfNeeded(): void
     {
         $command = new Operation(['parameters' => ['foo' => []]]);
         $this->assertEquals('foo', $command->getParam('foo')->getName());
     }
 
-    public function testContainsApiErrorInformation()
+    public function testContainsApiErrorInformation(): void
     {
         $command = $this->getOperation();
         $this->assertCount(1, $command->getErrorResponses());
     }
 
-    public function testHasNotes()
+    public function testHasNotes(): void
     {
         $o = new Operation(['notes' => 'foo']);
         $this->assertEquals('foo', $o->getNotes());
     }
 
-    public function testHasData()
+    public function testHasData(): void
     {
         $o = new Operation(['data' => ['foo' => 'baz', 'bar' => 123]]);
         $this->assertEquals('baz', $o->getData('foo'));
@@ -126,7 +127,7 @@ class OperationTest extends TestCase
         $this->assertEquals(['foo' => 'baz', 'bar' => 123], $o->getData());
     }
 
-    public function testDefaultsHttpMethodToGet()
+    public function testDefaultsHttpMethodToGet(): void
     {
         $o = new Operation();
 
@@ -134,7 +135,7 @@ class OperationTest extends TestCase
         $this->assertEquals('GET', $o->toArray()['httpMethod']);
     }
 
-    public function testCanProvideAlternateHttpMethod()
+    public function testCanProvideAlternateHttpMethod(): void
     {
         $o = new Operation(['httpMethod' => 'POST']);
 
@@ -142,7 +143,7 @@ class OperationTest extends TestCase
         $this->assertEquals('POST', $o->toArray()['httpMethod']);
     }
 
-    public function testEnsuresHttpMethodIsNotEmptyString()
+    public function testEnsuresHttpMethodIsNotEmptyString(): void
     {
         $this->expectExceptionMessage('httpMethod must be a non-empty string');
         $this->expectException(\InvalidArgumentException::class);
@@ -150,7 +151,7 @@ class OperationTest extends TestCase
         new Operation(['httpMethod' => '']);
     }
 
-    public function testEnsuresHttpMethodIsString()
+    public function testEnsuresHttpMethodIsString(): void
     {
         $this->expectExceptionMessage('httpMethod must be a non-empty string');
         $this->expectException(\InvalidArgumentException::class);
@@ -158,21 +159,21 @@ class OperationTest extends TestCase
         new Operation(['httpMethod' => false]);
     }
 
-    public function testEnsuresParametersAreArrays()
+    public function testEnsuresParametersAreArrays(): void
     {
         $this->expectExceptionMessage('Parameters must be arrays');
         $this->expectException(\InvalidArgumentException::class);
         new Operation(['parameters' => ['foo' => true]]);
     }
 
-    public function testHasDescription()
+    public function testHasDescription(): void
     {
         $s = new Description([]);
         $o = new Operation([], $s);
         $this->assertSame($s, $o->getServiceDescription());
     }
 
-    public function testHasAdditionalParameters()
+    public function testHasAdditionalParameters(): void
     {
         $o = new Operation([
             'additionalParameters' => [
@@ -185,10 +186,7 @@ class OperationTest extends TestCase
         $this->assertEquals('string', $o->getAdditionalParameters()->getType());
     }
 
-    /**
-     * @return Operation
-     */
-    protected function getOperation()
+    protected function getOperation(): Operation
     {
         return new Operation([
             'name' => 'OperationTest',
@@ -215,7 +213,7 @@ class OperationTest extends TestCase
         ]);
     }
 
-    public function testCanExtendFromOtherOperations()
+    public function testCanExtendFromOtherOperations(): void
     {
         $d = new Description([
             'operations' => [

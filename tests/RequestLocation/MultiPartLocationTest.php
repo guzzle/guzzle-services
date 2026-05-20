@@ -20,7 +20,7 @@ class MultiPartLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new MultiPartLocation();
         $command = new Command('foo', ['foo' => 'bar']);
@@ -41,7 +41,7 @@ class MultiPartLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationDoesNotOverwriteContentTypeHeader()
+    public function testVisitsLocationDoesNotOverwriteContentTypeHeader(): void
     {
         $location = new MultiPartLocation();
         $command = new Command('foo', ['foo' => 'bar']);

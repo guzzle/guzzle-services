@@ -20,7 +20,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 'bar']);
@@ -36,7 +36,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationAcceptsArrayHeaderValues()
+    public function testVisitsLocationAcceptsArrayHeaderValues(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => ['bar', 'baz']]);
@@ -51,7 +51,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationRejectsInvalidHeaderValue()
+    public function testVisitsLocationRejectsInvalidHeaderValue(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => null]);
@@ -67,7 +67,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationRejectsScalarHeaderValue()
+    public function testVisitsLocationRejectsScalarHeaderValue(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 123]);
@@ -83,7 +83,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocationRejectsInvalidArrayHeaderValue()
+    public function testVisitsLocationRejectsInvalidArrayHeaderValue(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => ['bar', 123]]);
@@ -99,7 +99,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAddsAdditionalProperties()
+    public function testAddsAdditionalProperties(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 'bar']);
@@ -120,7 +120,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAdditionalPropertiesRejectInvalidHeaderValue()
+    public function testAdditionalPropertiesRejectInvalidHeaderValue(): void
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 'bar']);

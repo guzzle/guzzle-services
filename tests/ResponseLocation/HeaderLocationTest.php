@@ -19,7 +19,7 @@ class HeaderLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new HeaderLocation();
         $parameter = new Parameter([

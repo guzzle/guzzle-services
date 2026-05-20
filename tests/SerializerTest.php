@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SerializerTest extends TestCase
 {
-    public function testAllowsUriTemplates()
+    public function testAllowsUriTemplates(): void
     {
         $description = new Description([
             'baseUri' => 'http://test.com',

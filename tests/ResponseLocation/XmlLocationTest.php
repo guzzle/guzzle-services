@@ -19,7 +19,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new XmlLocation();
         $parameter = new Parameter([
@@ -39,7 +39,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsAdditionalProperties()
+    public function testVisitsAdditionalProperties(): void
     {
         $location = new XmlLocation();
         $parameter = new Parameter();
@@ -55,7 +55,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testRejectsMalformedXmlResponses()
+    public function testRejectsMalformedXmlResponses(): void
     {
         $location = new XmlLocation();
         $model = new Parameter();
@@ -70,7 +70,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testMalformedXmlClearsPreviousParsedResponse()
+    public function testMalformedXmlClearsPreviousParsedResponse(): void
     {
         $location = new XmlLocation();
         $model = new Parameter();
@@ -97,7 +97,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitRequiresParsedXmlResponse()
+    public function testVisitRequiresParsedXmlResponse(): void
     {
         $location = new XmlLocation();
         $parameter = new Parameter(['name' => 'val', 'sentAs' => 'vim']);
@@ -112,7 +112,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testEnsuresFlatArraysAreFlat()
+    public function testEnsuresFlatArraysAreFlat(): void
     {
         $param = new Parameter([
             'location' => 'xml',
@@ -126,7 +126,7 @@ class XmlLocationTest extends TestCase
         $this->xmlTest($param, '<xml><foo>bar</foo></xml>', ['foo' => ['bar']]);
     }
 
-    public static function xmlDataProvider()
+    public static function xmlDataProvider(): array
     {
         $param = new Parameter([
             'location' => 'xml',
@@ -165,7 +165,7 @@ class XmlLocationTest extends TestCase
      *
      * @group ResponseLocation
      */
-    public function testEnsuresWrappedArraysAreInCorrectLocations($param, $xml, $expected)
+    public function testEnsuresWrappedArraysAreInCorrectLocations(Parameter $param, string $xml, array $expected): void
     {
         $location = new XmlLocation();
         $model = new Parameter();
@@ -180,7 +180,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testCanRenameValues()
+    public function testCanRenameValues(): void
     {
         $param = new Parameter([
             'name' => 'TerminatingInstances',
@@ -266,7 +266,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testCanRenameAttributes()
+    public function testCanRenameAttributes(): void
     {
         $param = new Parameter([
             'name' => 'RunningQueues',
@@ -353,7 +353,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testAddsEmptyArraysWhenValueIsMissing()
+    public function testAddsEmptyArraysWhenValueIsMissing(): void
     {
         $param = new Parameter([
             'name' => 'Foo',
@@ -389,7 +389,7 @@ class XmlLocationTest extends TestCase
      *
      * @see  https://github.com/guzzle/guzzle/issues/399
      */
-    public function testDiscardingUnknownProperties()
+    public function testDiscardingUnknownProperties(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -424,7 +424,7 @@ class XmlLocationTest extends TestCase
      *
      * @see  https://github.com/guzzle/guzzle/issues/399
      */
-    public function testDiscardingUnknownPropertiesWithAliasing()
+    public function testDiscardingUnknownPropertiesWithAliasing(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -457,7 +457,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testProcessingOfNestedAdditionalProperties()
+    public function testProcessingOfNestedAdditionalProperties(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -544,7 +544,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testConvertsMultipleAssociativeElementsToArray()
+    public function testConvertsMultipleAssociativeElementsToArray(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -579,7 +579,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testUnderstandsNamespaces()
+    public function testUnderstandsNamespaces(): void
     {
         $param = new Parameter([
             'name' => 'nstest',
@@ -703,7 +703,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testCanWalkUndefinedPropertiesWithNamespace()
+    public function testCanWalkUndefinedPropertiesWithNamespace(): void
     {
         $param = new Parameter([
             'name' => 'nstest',
@@ -778,7 +778,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testCanWalkSimpleArrayWithNamespace()
+    public function testCanWalkSimpleArrayWithNamespace(): void
     {
         $param = new Parameter([
             'name' => 'nstest',
@@ -815,7 +815,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testCanWalkSimpleArrayWithNamespace2()
+    public function testCanWalkSimpleArrayWithNamespace2(): void
     {
         $param = new Parameter([
             'name' => 'nstest',
@@ -846,7 +846,7 @@ class XmlLocationTest extends TestCase
         ]);
     }
 
-    private function xmlTest(Parameter $param, $xml, $expected)
+    private function xmlTest(Parameter $param, string $xml, array $expected): void
     {
         $location = new XmlLocation();
         $model = new Parameter();

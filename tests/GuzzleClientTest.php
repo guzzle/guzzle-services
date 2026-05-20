@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class GuzzleClientTest extends TestCase
 {
-    public function testExecuteCommandViaMagicMethod()
+    public function testExecuteCommandViaMagicMethod(): void
     {
         $client = $this->getServiceClient(
             [
@@ -47,7 +47,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('doThatThingOtherYouDo', $result2['_request']['action']);
     }
 
-    public function testExecuteWithQueryLocation()
+    public function testExecuteWithQueryLocation(): void
     {
         $mock = new MockHandler();
         $client = $this->getServiceClient(
@@ -70,7 +70,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('foo=Foo&bar=Bar&baz=Baz', $last->getUri()->getQuery());
     }
 
-    public function testExecuteWithBodyLocation()
+    public function testExecuteWithBodyLocation(): void
     {
         $mock = new MockHandler();
 
@@ -93,7 +93,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('foo=Foo&bar=Bar&baz=Baz', (string) $mock->getLastRequest()->getBody());
     }
 
-    public function testExecuteWithJsonLocation()
+    public function testExecuteWithJsonLocation(): void
     {
         $mock = new MockHandler();
 
@@ -116,7 +116,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('{"foo":"Foo","bar":"Bar","baz":"Baz"}', (string) $mock->getLastRequest()->getBody());
     }
 
-    public function testExecuteWithHeaderLocation()
+    public function testExecuteWithHeaderLocation(): void
     {
         $mock = new MockHandler();
 
@@ -141,7 +141,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals(['Baz'], $mock->getLastRequest()->getHeader('baz'));
     }
 
-    public function testExecuteWithXmlLocation()
+    public function testExecuteWithXmlLocation(): void
     {
         $mock = new MockHandler();
 
@@ -170,7 +170,7 @@ class GuzzleClientTest extends TestCase
         );
     }
 
-    public function testExecuteWithMultiPartLocation()
+    public function testExecuteWithMultiPartLocation(): void
     {
         $mock = new MockHandler();
 
@@ -211,7 +211,7 @@ class GuzzleClientTest extends TestCase
         $this->assertStringContainsString('<title>Title</title>', $multiPartRequestBody);
     }
 
-    public function testHasConfig()
+    public function testHasConfig(): void
     {
         $client = new HttpClient();
         $description = new Description([]);
@@ -232,7 +232,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('listen', $guzzle->getConfig('abc'));
     }
 
-    public function testAddsValidateHandlerWhenTrue()
+    public function testAddsValidateHandlerWhenTrue(): void
     {
         $client = new HttpClient();
         $description = new Description([]);
@@ -253,7 +253,7 @@ class GuzzleClientTest extends TestCase
         $this->assertCount(3, $handlers);
     }
 
-    public function testDisablesHandlersWhenFalse()
+    public function testDisablesHandlersWhenFalse(): void
     {
         $client = new HttpClient();
         $description = new Description([]);
@@ -274,7 +274,7 @@ class GuzzleClientTest extends TestCase
         $this->assertCount(1, $handlers);
     }
 
-    public function testValidateDescription()
+    public function testValidateDescription(): void
     {
         $client = new HttpClient();
         $description = new Description(
@@ -358,7 +358,7 @@ class GuzzleClientTest extends TestCase
         $this->assertSame('BAZ', $query['baz']);
     }
 
-    public function testValidateDescriptionFailsDueMissingRequiredParameter()
+    public function testValidateDescriptionFailsDueMissingRequiredParameter(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] is a required string: baz');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
@@ -435,7 +435,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals(200, $result['statusCode']);
     }
 
-    public function testValidateDescriptionFailsDueTypeMismatch()
+    public function testValidateDescriptionFailsDueTypeMismatch(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] must be of type integer');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
@@ -512,7 +512,7 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals(200, $result['statusCode']);
     }
 
-    public function testValidateDescriptionDoesNotFailWhenSendingIntegerButExpectingString()
+    public function testValidateDescriptionDoesNotFailWhenSendingIntegerButExpectingString(): void
     {
         $client = new HttpClient();
         $description = new Description(
@@ -586,7 +586,7 @@ class GuzzleClientTest extends TestCase
         $this->assertSame('42', $query['baz']);
     }
 
-    public function testMagicMethodExecutesCommands()
+    public function testMagicMethodExecutesCommands(): void
     {
         $client = new HttpClient();
         $description = new Description(
@@ -658,7 +658,7 @@ class GuzzleClientTest extends TestCase
         $this->assertSame($result, $guzzle->foo([]));
     }
 
-    public function testThrowsWhenOperationNotFoundInDescription()
+    public function testThrowsWhenOperationNotFoundInDescription(): void
     {
         $this->expectExceptionMessage('No operation found named Foo');
         $this->expectException(\InvalidArgumentException::class);
@@ -673,7 +673,7 @@ class GuzzleClientTest extends TestCase
         $guzzle->getCommand('foo');
     }
 
-    public function testReturnsProcessedResponse()
+    public function testReturnsProcessedResponse(): void
     {
         $client = new HttpClient();
 
@@ -751,8 +751,8 @@ class GuzzleClientTest extends TestCase
     private function getServiceClient(
         array $responses,
         ?MockHandler $mock = null,
-        ?callable $commandToRequestTransformer = null
-    ) {
+        ?callable $commandToRequestTransformer = null,
+    ): GuzzleClient {
         $mock = $mock ?: new MockHandler();
 
         foreach ($responses as $response) {
@@ -771,9 +771,9 @@ class GuzzleClientTest extends TestCase
         );
     }
 
-    private function commandToRequestTransformer()
+    private function commandToRequestTransformer(): callable
     {
-        return function (CommandInterface $command) {
+        return function (CommandInterface $command): Request {
             $data = $command->toArray();
             $data['action'] = $command->getName();
 
@@ -781,9 +781,9 @@ class GuzzleClientTest extends TestCase
         };
     }
 
-    private function responseToResultTransformer()
+    private function responseToResultTransformer(): callable
     {
-        return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command) {
+        return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command): Result {
             $data = Utils::jsonDecode((string) $response->getBody(), true);
             parse_str((string) $request->getBody(), $data['_request']);
 
@@ -791,7 +791,7 @@ class GuzzleClientTest extends TestCase
         };
     }
 
-    private function getDescription()
+    private function getDescription(): Description
     {
         return new Description(
             [
@@ -983,7 +983,7 @@ class GuzzleClientTest extends TestCase
         );
     }
 
-    public function testDocumentationExampleFromReadme()
+    public function testDocumentationExampleFromReadme(): void
     {
         $client = new HttpClient();
         $description = new Description([
@@ -1030,7 +1030,7 @@ class GuzzleClientTest extends TestCase
         $this->assertSame('bar', $query['foo']);
     }
 
-    public function testDescriptionWithExtends()
+    public function testDescriptionWithExtends(): void
     {
         $client = new HttpClient();
         $description = new Description([

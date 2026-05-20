@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 class QueryLocationTest extends TestCase
 {
-    public static function queryProvider()
+    public static function queryProvider(): array
     {
         return [
             [['foo' => 'bar'], 'foo=bar'],
@@ -30,7 +30,7 @@ class QueryLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new QueryLocation();
         $command = new Command('foo', ['foo' => 'bar']);
@@ -41,7 +41,7 @@ class QueryLocationTest extends TestCase
         $this->assertEquals('foo=bar', urldecode($request->getUri()->getQuery()));
     }
 
-    public function testVisitsMultipleLocations()
+    public function testVisitsMultipleLocations(): void
     {
         $request = new Request('POST', 'http://httbin.org');
 
@@ -63,7 +63,7 @@ class QueryLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAddsAdditionalProperties()
+    public function testAddsAdditionalProperties(): void
     {
         $location = new QueryLocation();
         $command = new Command('foo', ['foo' => 'bar']);

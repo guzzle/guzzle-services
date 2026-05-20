@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ValidatedDescriptionHandlerTest extends TestCase
 {
-    public function testValidates()
+    public function testValidates(): void
     {
         $this->expectExceptionMessage('Validation errors: [bar] is a required string');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
@@ -41,7 +41,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $client->foo([]);
     }
 
-    public function testSuccessfulValidationDoesNotThrow()
+    public function testSuccessfulValidationDoesNotThrow(): void
     {
         $description = new Description([
             'operations' => [
@@ -66,7 +66,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         self::assertInstanceOf(Result::class, $client->foo([]));
     }
 
-    public function testValidatesAdditionalParameters()
+    public function testValidatesAdditionalParameters(): void
     {
         $this->expectExceptionMessage('Validation errors: [bar] must be of type string');
         $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
@@ -92,7 +92,7 @@ class ValidatedDescriptionHandlerTest extends TestCase
         $client->foo(['bar' => new \stdClass()]);
     }
 
-    public function testFilterBeforeValidate()
+    public function testFilterBeforeValidate(): void
     {
         $description = new Description([
             'operations' => [

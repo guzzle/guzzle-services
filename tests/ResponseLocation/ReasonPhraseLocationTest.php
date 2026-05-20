@@ -19,7 +19,7 @@ class ReasonPhraseLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new ReasonPhraseLocation();
         $parameter = new Parameter([

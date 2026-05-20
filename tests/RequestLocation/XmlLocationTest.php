@@ -26,7 +26,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new XmlLocation();
         $command = new Command('foo', ['foo' => 'bar']);
@@ -49,7 +49,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testCreatesBodyForEmptyDocument()
+    public function testCreatesBodyForEmptyDocument(): void
     {
         $location = new XmlLocation();
         $command = new Command('foo', ['foo' => 'bar']);
@@ -69,7 +69,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAddsAdditionalParameters()
+    public function testAddsAdditionalParameters(): void
     {
         $location = new XmlLocation('xml', 'test');
         $command = new Command('foo', ['foo' => 'bar']);
@@ -94,7 +94,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAllowsXmlEncoding()
+    public function testAllowsXmlEncoding(): void
     {
         $location = new XmlLocation();
         $operation = new Operation([
@@ -111,7 +111,7 @@ class XmlLocationTest extends TestCase
             .'<Request><foo>bar</foo></Request>'."\n", $xml);
     }
 
-    public static function xmlProvider()
+    public static function xmlProvider(): array
     {
         return [
             [
@@ -481,13 +481,11 @@ class XmlLocationTest extends TestCase
     }
 
     /**
-     * @param string $xml
-     *
      * @dataProvider xmlProvider
      *
      * @group RequestLocation
      */
-    public function testSerializesXml(array $operation, array $input, $xml)
+    public function testSerializesXml(array $operation, array $input, string $xml): void
     {
         $container = [];
         $history = Middleware::history($container);

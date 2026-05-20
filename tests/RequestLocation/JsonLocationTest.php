@@ -20,7 +20,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new JsonLocation('json');
         $command = new Command('foo', ['foo' => 'bar']);
@@ -36,7 +36,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsAdditionalProperties()
+    public function testVisitsAdditionalProperties(): void
     {
         $location = new JsonLocation('json', 'foo');
         $command = new Command('foo', ['foo' => 'bar']);
@@ -57,7 +57,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsNestedLocation()
+    public function testVisitsNestedLocation(): void
     {
         $location = new JsonLocation('json');
         $command = new Command('foo', ['foo' => 'bar']);

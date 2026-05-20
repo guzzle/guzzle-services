@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SchemaFormatterTest extends TestCase
 {
-    public static function dateTimeProvider()
+    public static function dateTimeProvider(): array
     {
         $dateUtc = 'October 13, 2012 16:15:46 UTC';
         $dateOffset = 'October 13, 2012 10:15:46 -06:00';
@@ -40,19 +40,22 @@ class SchemaFormatterTest extends TestCase
 
     /**
      * @dataProvider dateTimeProvider
+     *
+     * @param mixed $value
+     * @param mixed $result
      */
-    public function testFilters($value, $format, $result)
+    public function testFilters($value, string $format, $result): void
     {
         $this->assertEquals($result, (new SchemaFormatter())->format($format, $value));
     }
 
-    public function testValidatesDateTimeInput()
+    public function testValidatesDateTimeInput(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         (new SchemaFormatter())->format('date-time', false);
     }
 
-    public function testEnsuresTimestampsAreIntegers()
+    public function testEnsuresTimestampsAreIntegers(): void
     {
         $t = time();
         $result = (new SchemaFormatter())->format('timestamp', $t);
