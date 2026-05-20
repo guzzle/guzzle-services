@@ -25,7 +25,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new JsonLocation();
         $parameter = new Parameter([
@@ -43,7 +43,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsWiredArray()
+    public function testVisitsWiredArray(): void
     {
         $json = ['car_models' => ['ferrari', 'aston martin']];
         $body = Utils::jsonEncode($json);
@@ -86,7 +86,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsAdditionalProperties()
+    public function testVisitsAdditionalProperties(): void
     {
         $location = new JsonLocation();
         $parameter = new Parameter();
@@ -103,7 +103,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsAdditionalPropertiesWithEmptyResponse()
+    public function testVisitsAdditionalPropertiesWithEmptyResponse(): void
     {
         $location = new JsonLocation();
         $parameter = new Parameter();
@@ -116,7 +116,7 @@ class JsonLocationTest extends TestCase
         $this->assertEquals([], $result->toArray());
     }
 
-    public static function jsonProvider()
+    public static function jsonProvider(): array
     {
         return [
             [null, [['foo' => 'BAR'], ['baz' => 'BAM']]],
@@ -129,7 +129,7 @@ class JsonLocationTest extends TestCase
      *
      * @group ResponseLocation
      */
-    public function testVisitsTopLevelArrays($name, $expected)
+    public function testVisitsTopLevelArrays(?string $name, array $expected): void
     {
         $json = [
             ['foo' => 'bar'],
@@ -173,7 +173,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsNestedArrays()
+    public function testVisitsNestedArrays(): void
     {
         $json = [
             'scalar' => 'foo',
@@ -223,7 +223,7 @@ class JsonLocationTest extends TestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public static function nestedProvider()
+    public static function nestedProvider(): array
     {
         return [
             [
@@ -311,7 +311,7 @@ class JsonLocationTest extends TestCase
      *
      * @group ResponseLocation
      */
-    public function testVisitsNestedProperties($desc)
+    public function testVisitsNestedProperties(array $desc): void
     {
         $json = [
             'nested' => [
@@ -350,7 +350,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsNullResponseProperties()
+    public function testVisitsNullResponseProperties(): void
     {
         $json = [
             'data' => [
@@ -412,7 +412,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsNestedArrayOfArrays()
+    public function testVisitsNestedArrayOfArrays(): void
     {
         $json = [
             'scalar' => 'foo',
@@ -510,7 +510,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsNestedArrayOfObjects()
+    public function testVisitsNestedArrayOfObjects(): void
     {
         $json = json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}');
 

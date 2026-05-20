@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class Rfc3986SerializerTest extends TestCase
 {
-    public static function queryProvider()
+    public static function queryProvider(): array
     {
         return [
             [['foo' => 'bar'], 'foo=bar'],
@@ -21,7 +21,7 @@ class Rfc3986SerializerTest extends TestCase
     /**
      * @dataProvider queryProvider
      */
-    public function testSerializeQueryParams(array $params, $expectedResult)
+    public function testSerializeQueryParams(array $params, string $expectedResult): void
     {
         $serializer = new Rfc3986Serializer();
         $result = $serializer->aggregate($params);
@@ -29,7 +29,7 @@ class Rfc3986SerializerTest extends TestCase
         $this->assertEquals($expectedResult, urldecode($result));
     }
 
-    public function testCanRemoveNumericIndices()
+    public function testCanRemoveNumericIndices(): void
     {
         $serializer = new Rfc3986Serializer(true);
         $result = $serializer->aggregate(['foo' => ['bar', 'baz'], 'bar' => ['bim' => [4, 5]]]);

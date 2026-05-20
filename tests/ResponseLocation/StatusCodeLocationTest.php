@@ -19,7 +19,7 @@ class StatusCodeLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new StatusCodeLocation();
         $parameter = new Parameter(['name' => 'val']);

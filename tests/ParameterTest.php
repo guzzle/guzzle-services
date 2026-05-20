@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ParameterTest extends TestCase
 {
-    protected $data = [
+    protected array $data = [
         'name' => 'foo',
         'type' => 'bar',
         'required' => true,
@@ -26,7 +26,7 @@ class ParameterTest extends TestCase
         'filters' => ['trim', 'json_encode'],
     ];
 
-    public function testCreatesParamFromArray()
+    public function testCreatesParamFromArray(): void
     {
         $p = new Parameter($this->data);
         $this->assertEquals('foo', $p->getName());
@@ -43,19 +43,19 @@ class ParameterTest extends TestCase
         $this->assertEquals('abc', $p->getName());
     }
 
-    public function testValidatesDescription()
+    public function testValidatesDescription(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new Parameter($this->data, ['description' => 'foo']);
     }
 
-    public function testCanConvertToArray()
+    public function testCanConvertToArray(): void
     {
         $p = new Parameter($this->data);
         $this->assertEquals($this->data, $p->toArray());
     }
 
-    public function testUsesStatic()
+    public function testUsesStatic(): void
     {
         $d = $this->data;
         $d['default'] = 'booboo';
@@ -64,7 +64,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('booboo', $p->getValue('bar'));
     }
 
-    public function testUsesDefault()
+    public function testUsesDefault(): void
     {
         $d = $this->data;
         $d['default'] = 'foo';
@@ -73,7 +73,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('foo', $p->getValue(null));
     }
 
-    public function testReturnsYourValue()
+    public function testReturnsYourValue(): void
     {
         $d = $this->data;
         $d['static'] = null;
@@ -81,7 +81,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('foo', $p->getValue('foo'));
     }
 
-    public function testZeroValueDoesNotCauseDefaultToBeReturned()
+    public function testZeroValueDoesNotCauseDefaultToBeReturned(): void
     {
         $d = $this->data;
         $d['default'] = '1';
@@ -90,7 +90,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('0', $p->getValue('0'));
     }
 
-    public function testFiltersValues()
+    public function testFiltersValues(): void
     {
         $d = $this->data;
         $d['static'] = null;
@@ -99,7 +99,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('FOO', $p->filter('foo'));
     }
 
-    public function testRequiresServiceDescriptionForFormatting()
+    public function testRequiresServiceDescriptionForFormatting(): void
     {
         $this->expectExceptionMessage('No service description');
         $this->expectException(\RuntimeException::class);
@@ -109,14 +109,14 @@ class ParameterTest extends TestCase
         $p->filter('bar');
     }
 
-    public function testConvertsBooleans()
+    public function testConvertsBooleans(): void
     {
         $p = new Parameter(['type' => 'boolean']);
         $this->assertEquals(true, $p->filter('true'));
         $this->assertEquals(false, $p->filter('false'));
     }
 
-    public function testUsesArrayByDefaultForFilters()
+    public function testUsesArrayByDefaultForFilters(): void
     {
         $d = $this->data;
         $d['filters'] = null;
@@ -124,33 +124,33 @@ class ParameterTest extends TestCase
         $this->assertEquals([], $p->getFilters());
     }
 
-    public function testAllowsSimpleLocationValue()
+    public function testAllowsSimpleLocationValue(): void
     {
         $p = new Parameter(['name' => 'myname', 'location' => 'foo', 'sentAs' => 'Hello']);
         $this->assertEquals('foo', $p->getLocation());
         $this->assertEquals('Hello', $p->getSentAs());
     }
 
-    public function testParsesTypeValues()
+    public function testParsesTypeValues(): void
     {
         $p = new Parameter(['type' => 'foo']);
         $this->assertEquals('foo', $p->getType());
     }
 
-    public function testValidatesComplexFilters()
+    public function testValidatesComplexFilters(): void
     {
         $this->expectExceptionMessage('A [method] value must be specified for each complex filter');
         $this->expectException(\InvalidArgumentException::class);
         $p = new Parameter(['filters' => [['args' => 'foo']]]);
     }
 
-    public function testAllowsComplexFilters()
+    public function testAllowsComplexFilters(): void
     {
         $that = $this;
         $param = new Parameter([
             'filters' => [
                 [
-                    'method' => function ($a, $b, $c, $d) use ($that, &$param) {
+                    'method' => function (string $a, string $b, string $c, Parameter $d) use ($that, &$param): string {
                         $that->assertEquals('test', $a);
                         $that->assertEquals('my_value!', $b);
                         $that->assertEquals('bar', $c);
@@ -166,7 +166,7 @@ class ParameterTest extends TestCase
         $this->assertEquals('abcmy_value!', $param->filter('my_value!'));
     }
 
-    public function testAddsAdditionalProperties()
+    public function testAddsAdditionalProperties(): void
     {
         $p = new Parameter([
             'type' => 'object',
@@ -178,7 +178,7 @@ class ParameterTest extends TestCase
         $this->assertTrue($p->getAdditionalProperties());
     }
 
-    public function testAddsItems()
+    public function testAddsItems(): void
     {
         $p = new Parameter([
             'type' => 'array',
@@ -190,7 +190,7 @@ class ParameterTest extends TestCase
         $this->assertIsArray($out['items']);
     }
 
-    public function testCanRetrieveKnownPropertiesUsingDataMethod()
+    public function testCanRetrieveKnownPropertiesUsingDataMethod(): void
     {
         $p = new Parameter(['data' => ['name' => 'test'], 'extra' => 'hi!']);
         $this->assertEquals('test', $p->getData('name'));
@@ -199,19 +199,19 @@ class ParameterTest extends TestCase
         $this->assertEquals('hi!', $p->getData('extra'));
     }
 
-    public function testHasPattern()
+    public function testHasPattern(): void
     {
         $p = new Parameter(['pattern' => '/[0-9]+/']);
         $this->assertEquals('/[0-9]+/', $p->getPattern());
     }
 
-    public function testHasEnum()
+    public function testHasEnum(): void
     {
         $p = new Parameter(['enum' => ['foo', 'bar']]);
         $this->assertEquals(['foo', 'bar'], $p->getEnum());
     }
 
-    public function testSerializesItems()
+    public function testSerializesItems(): void
     {
         $p = new Parameter([
             'type' => 'object',
@@ -223,7 +223,7 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
-    public function testResolvesRefKeysRecursively()
+    public function testResolvesRefKeysRecursively(): void
     {
         $description = new Description([
             'models' => [
@@ -238,7 +238,7 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
-    public function testResolvesExtendsRecursively()
+    public function testResolvesExtendsRecursively(): void
     {
         $jarJar = ['type' => 'string', 'default' => 'Mesa address tha senate!', 'description' => 'a'];
         $anakin = ['type' => 'array', 'items' => ['extends' => 'JarJar', 'description' => 'b']];
@@ -253,7 +253,7 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
-    public function testResolvesNestedExtendsUsingResolvedParentData()
+    public function testResolvesNestedExtendsUsingResolvedParentData(): void
     {
         $description = new Description([
             'models' => [
@@ -287,7 +287,7 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
-    public function testResolvesRefToModelThatExtendsAnotherModel()
+    public function testResolvesRefToModelThatExtendsAnotherModel(): void
     {
         $description = new Description([
             'models' => [
@@ -315,13 +315,13 @@ class ParameterTest extends TestCase
         ], $p->toArray());
     }
 
-    public function testHasKeyMethod()
+    public function testHasKeyMethod(): void
     {
         $p = new Parameter(['name' => 'foo', 'sentAs' => 'bar']);
         $this->assertEquals('bar', $p->getWireName());
     }
 
-    public function testIncludesNameInToArrayWhenItemsAttributeHasName()
+    public function testIncludesNameInToArrayWhenItemsAttributeHasName(): void
     {
         $p = new Parameter([
             'type' => 'array',
@@ -342,7 +342,7 @@ class ParameterTest extends TestCase
         ], $result);
     }
 
-    public static function dateTimeProvider()
+    public static function dateTimeProvider(): array
     {
         $d = 'October 13, 2012 16:15:46 UTC';
 
@@ -356,15 +356,18 @@ class ParameterTest extends TestCase
 
     /**
      * @dataProvider dateTimeProvider
+     *
+     * @param mixed $d
+     * @param mixed $result
      */
-    public function testAppliesFormat($d, $format, $result)
+    public function testAppliesFormat($d, string $format, $result): void
     {
         $p = new Parameter(['format' => $format], ['description' => new Description([])]);
         $this->assertEquals($format, $p->getFormat());
         $this->assertEquals($result, $p->filter($d));
     }
 
-    public function testHasMinAndMax()
+    public function testHasMinAndMax(): void
     {
         $p = new Parameter([
             'minimum' => 2,
@@ -378,7 +381,7 @@ class ParameterTest extends TestCase
         $this->assertEquals(5, $p->getMaxItems());
     }
 
-    public function testHasProperties()
+    public function testHasProperties(): void
     {
         $data = [
             'type' => 'object',
@@ -401,7 +404,7 @@ class ParameterTest extends TestCase
         $this->assertEquals($data, $p->toArray());
     }
 
-    public function testThrowsWhenNotPassString()
+    public function testThrowsWhenNotPassString(): void
     {
         $this->expectExceptionMessage('Expected a string. Got: array');
         $this->expectException(\InvalidArgumentException::class);
@@ -412,7 +415,7 @@ class ParameterTest extends TestCase
         $this->assertFalse($emptyParam->has(1));
     }
 
-    public function testHasReturnsFalseForWrongOrEmptyValues()
+    public function testHasReturnsFalseForWrongOrEmptyValues(): void
     {
         $emptyParam = new Parameter();
         $this->assertFalse($emptyParam->has(''));
@@ -420,7 +423,7 @@ class ParameterTest extends TestCase
         $this->assertFalse($emptyParam->has('noExisting'));
     }
 
-    public function testHasReturnsTrueForCorrectValues()
+    public function testHasReturnsTrueForCorrectValues(): void
     {
         $p = new Parameter([
             'minimum' => 2,

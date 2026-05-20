@@ -20,7 +20,7 @@ class FormParamLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testVisitsLocation()
+    public function testVisitsLocation(): void
     {
         $location = new FormParamLocation();
         $command = new Command('foo', ['foo' => 'bar']);
@@ -36,7 +36,7 @@ class FormParamLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testAddsAdditionalProperties()
+    public function testAddsAdditionalProperties(): void
     {
         $location = new FormParamLocation();
         $command = new Command('foo', ['foo' => 'bar']);

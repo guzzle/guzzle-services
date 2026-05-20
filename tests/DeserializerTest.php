@@ -18,7 +18,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException;
 use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\OtherCustomCommandException;
-use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,11 +26,11 @@ use PHPUnit\Framework\TestCase;
  */
 class DeserializerTest extends TestCase
 {
-    /** @var ServiceClientInterface|MockBuilder */
-    private $serviceClient;
+    /** @var ServiceClientInterface&MockObject */
+    private ServiceClientInterface $serviceClient;
 
-    /** @var CommandInterface|MockBuilder */
-    private $command;
+    /** @var CommandInterface&MockObject */
+    private CommandInterface $command;
 
     public function setUp(): void
     {
@@ -40,7 +40,7 @@ class DeserializerTest extends TestCase
         $this->command = $this->getMockBuilder(CommandInterface::class)->getMock();
     }
 
-    protected function prepareErrorResponses($commandName, array $errors = [])
+    protected function prepareErrorResponses(string $commandName, array $errors = []): void
     {
         $this->command->expects($this->once())->method('getName')->will($this->returnValue($commandName));
 
@@ -57,7 +57,7 @@ class DeserializerTest extends TestCase
             ->will($this->returnValue($description));
     }
 
-    public function testDoNothingIfNoException()
+    public function testDoNothingIfNoException(): void
     {
         $mock = new MockHandler([new Response(200)]);
         $description = new Description([
@@ -86,7 +86,7 @@ class DeserializerTest extends TestCase
         self::assertInstanceOf(Result::class, $client->foo(['bar' => 'baz']));
     }
 
-    public function testCreateExceptionWithCode()
+    public function testCreateExceptionWithCode(): void
     {
         $this->expectException(CustomCommandException::class);
         $response = new Response(404);
@@ -128,7 +128,7 @@ class DeserializerTest extends TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    public function testNotCreateExceptionIfDoesNotMatchCode()
+    public function testNotCreateExceptionIfDoesNotMatchCode(): void
     {
         $response = new Response(401);
         $mock = new MockHandler([$response]);
@@ -169,7 +169,7 @@ class DeserializerTest extends TestCase
         self::assertInstanceOf(Result::class, $client->foo(['bar' => 'baz']));
     }
 
-    public function testCreateExceptionWithExactMatchOfReasonPhrase()
+    public function testCreateExceptionWithExactMatchOfReasonPhrase(): void
     {
         $this->expectException(CustomCommandException::class);
         $response = new Response(404, [], null, '1.1', 'Bar');
@@ -211,7 +211,7 @@ class DeserializerTest extends TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    public function testFavourMostPreciseMatch()
+    public function testFavourMostPreciseMatch(): void
     {
         $this->expectException(OtherCustomCommandException::class);
         $response = new Response(404, [], null, '1.1', 'Bar');
@@ -254,7 +254,7 @@ class DeserializerTest extends TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    public function testDoesNotAddResultWhenExceptionIsPresent()
+    public function testDoesNotAddResultWhenExceptionIsPresent(): void
     {
         $this->expectExceptionMessage('404');
         $this->expectException(CommandException::class);
@@ -287,7 +287,7 @@ class DeserializerTest extends TestCase
         $client->foo(['bar' => 'baz']);
     }
 
-    public function testReturnsExpectedResult()
+    public function testReturnsExpectedResult(): void
     {
         $loginResponse = new Response(
             200,

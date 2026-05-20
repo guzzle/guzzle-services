@@ -14,15 +14,14 @@ use PHPUnit\Framework\TestCase;
  */
 class SchemaValidatorTest extends TestCase
 {
-    /** @var SchemaValidator */
-    protected $validator;
+    protected SchemaValidator $validator;
 
     public function setUp(): void
     {
         $this->validator = new SchemaValidator();
     }
 
-    public function testValidatesArrayListsAreNumericallyIndexed()
+    public function testValidatesArrayListsAreNumericallyIndexed(): void
     {
         $value = [[1]];
         $this->assertFalse($this->validator->validate($this->getComplexParam(), $value));
@@ -32,7 +31,7 @@ class SchemaValidatorTest extends TestCase
         );
     }
 
-    public function testValidatesArrayListsContainProperItems()
+    public function testValidatesArrayListsContainProperItems(): void
     {
         $value = [true];
         $this->assertFalse($this->validator->validate($this->getComplexParam(), $value));
@@ -42,14 +41,14 @@ class SchemaValidatorTest extends TestCase
         );
     }
 
-    public function testAddsDefaultValuesInLists()
+    public function testAddsDefaultValuesInLists(): void
     {
         $value = [[]];
         $this->assertTrue($this->validator->validate($this->getComplexParam(), $value));
         $this->assertEquals([['Bar' => true]], $value);
     }
 
-    public function testMergesDefaultValuesInLists()
+    public function testMergesDefaultValuesInLists(): void
     {
         $value = [
             ['Baz' => 'hello!'],
@@ -65,7 +64,7 @@ class SchemaValidatorTest extends TestCase
         ], $value);
     }
 
-    public function testCorrectlyConvertsParametersToArrayWhenArraysArePresent()
+    public function testCorrectlyConvertsParametersToArrayWhenArraysArePresent(): void
     {
         $param = $this->getComplexParam();
         $result = $param->toArray();
@@ -74,7 +73,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertInstanceOf('GuzzleHttp\Command\Guzzle\Parameter', $param->getItems());
     }
 
-    public function testEnforcesInstanceOfOnlyWhenObject()
+    public function testEnforcesInstanceOfOnlyWhenObject(): void
     {
         $p = new Parameter([
             'name' => 'foo',
@@ -86,7 +85,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($p, $s));
     }
 
-    public function testConvertsObjectsToArraysWhenToArrayInterface()
+    public function testConvertsObjectsToArraysWhenToArrayInterface(): void
     {
         $o = $this->createMock(ToArrayInterface::class);
         $o->expects($this->once())
@@ -102,7 +101,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($p, $o));
     }
 
-    public function testMergesValidationErrorsInPropertiesWithParent()
+    public function testMergesValidationErrorsInPropertiesWithParent(): void
     {
         $p = new Parameter([
             'name' => 'foo',
@@ -154,7 +153,7 @@ class SchemaValidatorTest extends TestCase
         ], $this->validator->getErrors());
     }
 
-    public function testHandlesNullValuesInArraysWithDefaults()
+    public function testHandlesNullValuesInArraysWithDefaults(): void
     {
         $p = new Parameter([
             'name' => 'foo',
@@ -175,7 +174,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['bar' => ['foo' => 'hi']], $value);
     }
 
-    public function testFailsWhenNullValuesInArraysWithNoDefaults()
+    public function testFailsWhenNullValuesInArraysWithNoDefaults(): void
     {
         $p = new Parameter([
             'name' => 'foo',
@@ -196,7 +195,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[foo][bar] is a required object'], $this->validator->getErrors());
     }
 
-    public function testChecksTypes()
+    public function testChecksTypes(): void
     {
         $p = new SchemaValidator();
         $r = new \ReflectionMethod($p, 'determineType');
@@ -223,7 +222,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(false, $r->invoke($p, 'array', 'foo'));
     }
 
-    public function testValidatesFalseAdditionalProperties()
+    public function testValidatesFalseAdditionalProperties(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -240,7 +239,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($param, $value));
     }
 
-    public function testAllowsUndefinedAdditionalProperties()
+    public function testAllowsUndefinedAdditionalProperties(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -253,7 +252,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($param, $value));
     }
 
-    public function testValidatesAdditionalProperties()
+    public function testValidatesAdditionalProperties(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -268,7 +267,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[foo][test] must be of type integer'], $this->validator->getErrors());
     }
 
-    public function testValidatesAdditionalPropertiesThatArrayArrays()
+    public function testValidatesAdditionalPropertiesThatArrayArrays(): void
     {
         $param = new Parameter([
             'name' => 'foo',
@@ -283,7 +282,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[foo][test][0] must be of type string'], $this->validator->getErrors());
     }
 
-    public function testIntegersCastToStringWhenTypeMismatch()
+    public function testIntegersCastToStringWhenTypeMismatch(): void
     {
         $param = new Parameter([
             'name' => 'test',
@@ -294,7 +293,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals('12', $value);
     }
 
-    public function testRequiredMessageIncludesType()
+    public function testRequiredMessageIncludesType(): void
     {
         $param = new Parameter([
             'name' => 'test',
@@ -309,7 +308,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[test] is a required string or boolean'], $this->validator->getErrors());
     }
 
-    protected function getComplexParam()
+    protected function getComplexParam(): Parameter
     {
         return new Parameter([
             'name' => 'Foo',
