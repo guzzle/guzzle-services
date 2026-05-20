@@ -57,48 +57,11 @@ This project can be installed using Composer:
 | 1.x     | Latest              | >=7.2.5,<8.6 |
 | 2.x     | Experimental        | >=7.4,<8.6   |
 
-See [UPGRADING.md](UPGRADING.md) for notes on upgrading to 2.0.
-
-For **Guzzle 5**, use ``composer require guzzlehttp/guzzle-services:0.6``.
-
 **Note:** If Composer is not installed [globally](https://getcomposer.org/doc/00-intro.md#globally) then you may need to run the preceding Composer commands using ``php composer.phar`` (where ``composer.phar`` is the path to your copy of Composer), instead of just ``composer``.
 
 ## Plugins
 
 * Load Service description from file [https://github.com/gimler/guzzle-description-loader]
-
-## Transition guide from Guzzle 5.0 to 6.0
- 
-### Change regarding PostField and PostFile
-
-The request locations `postField` and `postFile` were removed in favor of `formParam` and `multipart`. If your description looks like
- 
-```php
-[
-    'baseUri' => 'http://httpbin.org/',
-    'operations' => [
-        'testing' => [
-            'httpMethod' => 'GET',
-            'uri' => '/get{?foo}',
-            'responseModel' => 'getResponse',
-            'parameters' => [
-                'foo' => [
-                    'type' => 'string',
-                    'location' => 'postField'
-                ],
-                'bar' => [
-                    'type' => 'string',
-                    'location' => 'postFile'
-                ]
-            ]
-        ]
-    ],
-]
-```
-
-you need to change `postField` to `formParam` and `postFile` to `multipart`. 
-
-More documentation coming soon.
 
 ## Cookbook
 
