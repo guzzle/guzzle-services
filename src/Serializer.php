@@ -121,7 +121,7 @@ class Serializer
         // If command does not specify a template, assume the client's base URL.
         if (null === $operation->getUri()) {
             return new Request(
-                $operation->getHttpMethod() ?: 'GET',
+                $operation->getHttpMethod(),
                 $this->description->getBaseUri()
             );
         }
@@ -156,7 +156,7 @@ class Serializer
         $uri = new Uri(UriTemplate::expand($operation->getUri(), $variables));
 
         return new Request(
-            $operation->getHttpMethod() ?: 'GET',
+            $operation->getHttpMethod(),
             UriResolver::resolve($this->description->getBaseUri(), $uri)
         );
     }
