@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SchemaFormatterTest extends TestCase
 {
-    public function dateTimeProvider()
+    public static function dateTimeProvider()
     {
         $dateUtc = 'October 13, 2012 16:15:46 UTC';
         $dateOffset = 'October 13, 2012 10:15:46 -06:00';

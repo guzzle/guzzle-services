@@ -340,7 +340,7 @@ class ParameterTest extends TestCase
         ], $result);
     }
 
-    public function dateTimeProvider()
+    public static function dateTimeProvider()
     {
         $d = 'October 13, 2012 16:15:46 UTC';
 

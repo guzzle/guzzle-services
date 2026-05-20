@@ -173,7 +173,7 @@ class DescriptionTest extends TestCase
     public function testCanUseCustomFormatter()
     {
         $formatter = $this->getMockBuilder(SchemaFormatter::class)
-            ->setMethods(['format'])
+            ->onlyMethods(['format'])
             ->getMock();
         $formatter->expects($this->once())
             ->method('format');

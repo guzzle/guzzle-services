@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class Rfc3986SerializerTest extends TestCase
 {
-    public function queryProvider()
+    public static function queryProvider()
     {
         return [
             [['foo' => 'bar'], 'foo=bar'],

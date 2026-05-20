@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class QueryLocationTest extends TestCase
 {
-    public function queryProvider()
+    public static function queryProvider()
     {
         return [
             [['foo' => 'bar'], 'foo=bar'],
