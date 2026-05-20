@@ -2,15 +2,15 @@
 
 ## 2.0.0 - UPCOMING
 
-* Remove the legacy `baseUrl` service description option; use `baseUri` instead
-* Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Drop support for PHP 7.2 and 7.3
 * Require `guzzlehttp/command` ^2.0, `guzzlehttp/guzzle` ^8.0, `guzzlehttp/psr7` ^3.0, and `guzzlehttp/uri-template` ^2.0
+* Remove the legacy `baseUrl` service description option; use `baseUri` instead
+* Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Default operations without an `httpMethod` to `GET` and reject invalid `httpMethod` values
 * Require header location values to be strings or arrays of strings
-* Enable strict types across source and test files
-* Add native parameter, property, and return types to public interfaces and classes
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
+* Require custom implementations and subclasses of public service APIs to match native method signatures
+* Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 
 ## 1.6.0 - UPCOMING
 
