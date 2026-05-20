@@ -751,7 +751,7 @@ class GuzzleClientTest extends TestCase
     private function getServiceClient(
         array $responses,
         ?MockHandler $mock = null,
-        ?callable $commandToRequestTransformer = null,
+        ?callable $commandToRequestTransformer = null
     ): GuzzleClient {
         $mock = $mock ?: new MockHandler();
 
