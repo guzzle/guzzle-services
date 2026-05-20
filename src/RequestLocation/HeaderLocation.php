@@ -33,7 +33,7 @@ class HeaderLocation extends AbstractLocation
     ) {
         $value = $command[$param->getName()];
 
-        return $request->withHeader($param->getWireName(), $param->filter($value));
+        return $request->withHeader($param->getWireName(), self::prepareHeaderValue($param->filter($value)));
     }
 
     /**
@@ -49,11 +49,37 @@ class HeaderLocation extends AbstractLocation
         if ($additional && ($additional->getLocation() === $this->locationName)) {
             foreach ($command->toArray() as $key => $value) {
                 if (!$operation->hasParam($key)) {
-                    $request = $request->withHeader($key, $additional->filter($value));
+                    $request = $request->withHeader($key, self::prepareHeaderValue($additional->filter($value)));
                 }
             }
         }
 
         return $request;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string|string[]
+     */
+    private static function prepareHeaderValue($value)
+    {
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $key => $item) {
+                if (!is_scalar($item)) {
+                    throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
+                }
+
+                $value[$key] = (string) $item;
+            }
+
+            return $value;
+        }
+
+        throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
     }
 }
