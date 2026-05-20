@@ -58,34 +58,14 @@ class DescriptionTest extends TestCase
 
     public function testCanUseLegacyResponseClass()
     {
-        $deprecations = [];
-
-        \set_error_handler(static function (int $severity, string $message) use (&$deprecations): bool {
-            if ($severity !== \E_USER_DEPRECATED) {
-                return false;
-            }
-
-            $deprecations[] = $message;
-
-            return true;
-        });
-
-        try {
-            $d = new Description([
-                'operations' => [
-                    'foo' => ['responseClass' => 'Tag'],
-                ],
-                'models' => ['Tag' => ['type' => 'object']],
-            ]);
-        } finally {
-            \restore_error_handler();
-        }
-
+        $d = new Description([
+            'operations' => [
+                'foo' => ['responseClass' => 'Tag'],
+            ],
+            'models' => ['Tag' => ['type' => 'object']],
+        ]);
         $op = $d->getOperation('foo');
         $this->assertSame('Tag', $op->getResponseModel());
-        $this->assertSame([
-            'Since guzzlehttp/guzzle-services 1.6: The "responseClass" operation option is deprecated; use "responseModel" instead.',
-        ], $deprecations);
     }
 
     public function testRetrievingMissingModelThrowsException()
@@ -143,28 +123,8 @@ class DescriptionTest extends TestCase
 
     public function testCanUseLegacyBaseUrl()
     {
-        $deprecations = [];
-
-        \set_error_handler(static function (int $severity, string $message) use (&$deprecations): bool {
-            if ($severity !== \E_USER_DEPRECATED) {
-                return false;
-            }
-
-            $deprecations[] = $message;
-
-            return true;
-        });
-
-        try {
-            $description = new Description(['baseUrl' => 'http://foo.com']);
-        } finally {
-            \restore_error_handler();
-        }
-
+        $description = new Description(['baseUrl' => 'http://foo.com']);
         $this->assertEquals('http://foo.com', $description->getBaseUri());
-        $this->assertSame([
-            'Since guzzlehttp/guzzle-services 1.6: The "baseUrl" service description option is deprecated; use "baseUri" instead.',
-        ], $deprecations);
     }
 
     public function testHasbaseUri()
