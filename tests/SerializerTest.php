@@ -41,7 +41,7 @@ class SerializerTest extends TestCase
         $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
 
-    public function testAllowsAdditionalParametersWithoutLocation()
+    public function testAllowsAdditionalParametersWithoutLocation(): void
     {
         $description = new Description([
             'baseUri' => 'http://test.com',
