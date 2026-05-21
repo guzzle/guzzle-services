@@ -82,7 +82,7 @@ class SchemaValidator
                 return 'number';
             } elseif ($t == 'numeric' && is_numeric($value)) {
                 return 'numeric';
-            } elseif ($t == 'null' && !$value) {
+            } elseif ($t == 'null' && $value === null) {
                 return 'null';
             } elseif ($t == 'any') {
                 return 'any';

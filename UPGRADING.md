@@ -114,6 +114,23 @@ integers, floats, booleans, or other non-string values into header locations. Us
 an empty string for an explicitly empty header value, or omit the command value
 when no header should be sent.
 
+#### Null Schema Values
+
+Schema parameters with `type` set to `'null'` now match only actual `null`
+values. Guzzle Services 1.x treated all falsy values, including `false`, `0`,
+`''`, and `[]`, as matching `null`.
+
+If a service description accepts specific falsy values, list those value types
+explicitly:
+
+```php
+// 1.x accepted false, 0, '', and [] as null.
+['type' => 'null']
+
+// 2.0: list every value shape that is accepted.
+['type' => ['null', 'boolean']]
+```
+
 #### XML Response Depth Limit
 
 XML response deserialization now rejects XML responses that exceed 512 nested
