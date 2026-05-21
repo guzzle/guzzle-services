@@ -92,11 +92,14 @@ string or a non-string value throws `InvalidArgumentException`.
 
 #### Header Location Values
 
-Header location values must now be strings or arrays of strings. Guzzle Services
-1.x accepted scalar header values and cast them to strings.
+Header location values must now be strings or non-empty arrays of strings.
+Guzzle Services 1.x accepted scalar header values and cast them to strings, and
+accepted empty arrays as header values.
 
 Normalize header values before constructing commands if your application passes
-integers, floats, booleans, or other non-string values into header locations.
+integers, floats, booleans, or other non-string values into header locations. Use
+an empty string for an explicitly empty header value, or omit the command value
+when no header should be sent.
 
 #### Strict Types and Extension Points
 
