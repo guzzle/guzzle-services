@@ -80,6 +80,16 @@ class HeaderLocation extends AbstractLocation
         }
 
         if (is_array($value)) {
+            if ($value === []) {
+                \trigger_deprecation(
+                    'guzzlehttp/guzzle-services',
+                    '1.6',
+                    'Passing an empty array as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string or a non-empty array of strings.'
+                );
+
+                return $value;
+            }
+
             foreach ($value as $key => $item) {
                 if (is_string($item)) {
                     continue;

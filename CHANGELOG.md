@@ -4,7 +4,7 @@
 
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
-* Deprecate non-string header location values
+* Deprecate non-string and empty-array header location values
 
 ## 1.5.1 - 2026-05-20
 
