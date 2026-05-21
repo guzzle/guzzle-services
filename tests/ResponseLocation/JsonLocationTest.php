@@ -509,6 +509,159 @@ class JsonLocationTest extends TestCase
         ], $result->toArray());
     }
 
+    public static function multipleTypeProvider(): array
+    {
+        return [
+            [
+                ['null', 'string', 'array'],
+                ['value' => null],
+                ['value' => null],
+            ],
+            [
+                ['null', 'string', 'array'],
+                ['value' => 'foo'],
+                ['value' => 'foo'],
+            ],
+            [
+                ['null', 'string', 'array'],
+                ['value' => ['a', 'b', 'c']],
+                ['value' => ['a', 'b', 'c']],
+            ],
+            [
+                ['null', 'string', 'object', 'array'],
+                ['value' => ['a', 'b', 'c']],
+                ['value' => ['a', 'b', 'c']],
+            ],
+            [
+                ['null', 'string', 'array', 'object'],
+                ['value' => ['a', 'b', 'c']],
+                ['value' => ['a', 'b', 'c']],
+            ],
+            [
+                ['null', 'string', 'object', 'array'],
+                ['value' => ['worked' => true, 'failed' => false]],
+                ['value' => ['worked' => true, 'failed' => false]],
+            ],
+            [
+                ['null', 'string', 'array', 'object'],
+                ['value' => ['worked' => true, 'failed' => false]],
+                ['value' => ['worked' => true, 'failed' => false]],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider multipleTypeProvider
+     *
+     * @group ResponseLocation
+     */
+    public function testVisitsJsonPropertiesWithMultipleTypes(array $allowedTypes, array $json, array $expected): void
+    {
+        $body = Utils::jsonEncode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j',
+                ],
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'value' => [
+                            'type' => $allowedTypes,
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitsMetadataResponseValuesWithMultipleTypes(): void
+    {
+        $json = [
+            'data' => [
+                [
+                    'attribute_id' => 1,
+                    'value' => null,
+                ],
+                [
+                    'attribute_id' => 2,
+                    'value' => 'foo',
+                ],
+                [
+                    'attribute_id' => 3,
+                    'value' => ['a', 'b'],
+                ],
+            ],
+        ];
+
+        $body = Utils::jsonEncode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'AssetMetadataResponse',
+                ],
+            ],
+            'models' => [
+                'AssetMetadataResponse' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'data' => [
+                            'type' => 'array',
+                            'items' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'attribute_id' => [
+                                        'type' => 'integer',
+                                    ],
+                                    'value' => [
+                                        'type' => ['null', 'string', 'array'],
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+
+        $this->assertEquals($json, $result->toArray());
+    }
+
     /**
      * @group ResponseLocation
      */

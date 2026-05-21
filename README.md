@@ -97,6 +97,38 @@ $response = $result['response'];
 Operation-level `process` overrides the client-level `process` option. If an
 operation omits `process`, or sets it to `null`, it inherits the client setting.
 
+### Modeling JSON response fields with multiple types
+
+Some JSON APIs return the same field with different types depending on the data.
+For example, a response field might be `null`, a string, or an array of strings.
+Model this by setting `type` to an array of allowed types:
+
+```php
+$description = new Description([
+	'operations' => [
+		'getMetadata' => [
+			'httpMethod' => 'GET',
+			'uri' => '/metadata/{id}',
+			'responseModel' => 'metadataResponse',
+		]
+	],
+	'models' => [
+		'metadataResponse' => [
+			'type' => 'object',
+			'location' => 'json',
+			'properties' => [
+				'value' => [
+					'type' => ['null', 'string', 'array'],
+					'items' => [
+						'type' => 'string',
+					],
+				],
+			],
+		],
+	],
+]);
+```
+
 ### Changing the way query params are serialized
 
 By default, query params are serialized using strict RFC3986 rules, using `http_build_query` method. With this, array params are serialized this way:

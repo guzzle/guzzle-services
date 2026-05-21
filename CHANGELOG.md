@@ -10,6 +10,7 @@
 * Require header location values to be strings or non-empty arrays of strings
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Allow operations to override response processing with the `process` operation option
+* Support JSON response fields with multiple allowed `type` values
 * Require custom implementations and subclasses of public service APIs to match native method signatures
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default

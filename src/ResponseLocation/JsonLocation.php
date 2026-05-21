@@ -119,16 +119,14 @@ class JsonLocation extends AbstractLocation
         }
 
         $result = [];
-        $type = $param->getType();
+        $type = $this->getJsonContainerType($param, $value);
 
         if ($type == 'array') {
             $items = $param->getItems();
             foreach ($value as $val) {
                 $result[] = $this->recurse($items, $val);
             }
-        } elseif ($type == 'object' && !isset($value[0])) {
-            // On the above line, we ensure that the array is associative and
-            // not numerically indexed
+        } elseif ($type == 'object') {
             if ($properties = $param->getProperties()) {
                 foreach ($properties as $property) {
                     $key = $property->getWireName();
@@ -159,5 +157,36 @@ class JsonLocation extends AbstractLocation
         }
 
         return $param->filter($result);
+    }
+
+    private function getJsonContainerType(Parameter $param, array $value): ?string
+    {
+        $types = (array) $param->getType();
+        $allowsArray = in_array('array', $types, true);
+        $allowsObject = in_array('object', $types, true);
+
+        if ($allowsArray && !$allowsObject) {
+            return 'array';
+        }
+
+        if ($allowsObject && !$allowsArray) {
+            return $this->isJsonObject($value) ? 'object' : null;
+        }
+
+        if ($allowsArray) {
+            return $this->isJsonList($value) ? 'array' : 'object';
+        }
+
+        return null;
+    }
+
+    private function isJsonList(array $value): bool
+    {
+        return array_values($value) === $value;
+    }
+
+    private function isJsonObject(array $value): bool
+    {
+        return $value === [] || !$this->isJsonList($value);
     }
 }
