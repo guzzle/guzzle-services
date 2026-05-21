@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.2 - UPCOMING
+
+* Fix request serialization for validation-only `additionalParameters`
+
 ## 1.5.1 - 2026-05-20
 
 * Replace deprecated Guzzle JSON helper functions
