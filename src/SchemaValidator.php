@@ -138,6 +138,7 @@ class SchemaValidator
             // Convert the value to an array
             if (!$valueIsArray && $value instanceof ToArrayInterface) {
                 $value = $value->toArray();
+                $valueIsArray = true;
             }
 
             if ($valueIsArray) {
@@ -257,35 +258,35 @@ class SchemaValidator
             }
 
             $strLen = null;
-            if ($min = $param->getMinLength()) {
+            if (null !== ($min = $param->getMinLength())) {
                 $strLen = strlen($value);
                 if ($strLen < $min) {
                     $this->errors[] = "{$path} length must be greater than or equal to {$min}";
                 }
             }
-            if ($max = $param->getMaxLength()) {
-                if (($strLen ?: strlen($value)) > $max) {
+            if (null !== ($max = $param->getMaxLength())) {
+                if (($strLen !== null ? $strLen : strlen($value)) > $max) {
                     $this->errors[] = "{$path} length must be less than or equal to {$max}";
                 }
             }
         } elseif ($type == 'array') {
             $size = null;
-            if ($min = $param->getMinItems()) {
+            if (null !== ($min = $param->getMinItems())) {
                 $size = count($value);
                 if ($size < $min) {
                     $this->errors[] = "{$path} must contain {$min} or more elements";
                 }
             }
-            if ($max = $param->getMaxItems()) {
-                if (($size ?: count($value)) > $max) {
+            if (null !== ($max = $param->getMaxItems())) {
+                if (($size !== null ? $size : count($value)) > $max) {
                     $this->errors[] = "{$path} must contain {$max} or fewer elements";
                 }
             }
         } elseif ($type == 'integer' || $type == 'number' || $type == 'numeric') {
-            if (($min = $param->getMinimum()) && $value < $min) {
+            if (null !== ($min = $param->getMinimum()) && $value < $min) {
                 $this->errors[] = "{$path} must be greater than or equal to {$min}";
             }
-            if (($max = $param->getMaximum()) && $value > $max) {
+            if (null !== ($max = $param->getMaximum()) && $value > $max) {
                 $this->errors[] = "{$path} must be less than or equal to {$max}";
             }
         }

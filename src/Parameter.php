@@ -409,7 +409,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the minimum allowed length of a string value
      *
-     * @return int
+     * @return int|null
      */
     public function getMinLength()
     {
@@ -439,7 +439,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the minimum allowed number of items in an array value
      *
-     * @return int
+     * @return int|null
      */
     public function getMinItems()
     {
