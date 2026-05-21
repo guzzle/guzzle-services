@@ -101,6 +101,40 @@ integers, floats, booleans, or other non-string values into header locations. Us
 an empty string for an explicitly empty header value, or omit the command value
 when no header should be sent.
 
+#### XML Response Depth Limit
+
+XML response deserialization now rejects XML responses that exceed 512 nested
+elements during response traversal or additional-property conversion. This
+matches PHP's default `json_decode()` depth and protects applications from
+deeply nested XML responses consuming excessive stack, CPU, or memory during
+conversion.
+
+Applications that consume trusted services with legitimately deeper XML can
+register a custom XML response location with a higher traversal limit:
+
+```php
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
+
+$client = new GuzzleClient(
+    $httpClient,
+    $description,
+    null,
+    null,
+    null,
+    [
+        'response_locations' => [
+            'xml' => new XmlLocation('xml', 2048),
+        ],
+    ]
+);
+```
+
+Only raise this limit for responses from trusted services. This limit guards the
+recursive traversal and conversion stage after XML parsing; it is not a response
+body size limit and does not relax libxml's own XML parser limits. Responses
+that exceed libxml parser limits will still fail before response traversal.
+
 #### Strict Types and Extension Points
 
 Guzzle Services source and test files now declare strict types. This mostly

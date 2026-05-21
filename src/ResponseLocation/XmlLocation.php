@@ -14,15 +14,26 @@ use Psr\Http\Message\ResponseInterface;
  */
 class XmlLocation extends AbstractLocation
 {
+    public const DEFAULT_MAX_DEPTH = 512;
+
     /** @var \SimpleXMLElement|null XML document being visited */
     private ?\SimpleXMLElement $xml = null;
+
+    private int $maxDepth;
 
     /**
      * Set the name of the location
      */
-    public function __construct(string $locationName = 'xml')
-    {
+    public function __construct(
+        string $locationName = 'xml',
+        int $maxDepth = self::DEFAULT_MAX_DEPTH
+    ) {
+        if ($maxDepth < 1) {
+            throw new \InvalidArgumentException('XML max depth must be greater than 0');
+        }
+
         parent::__construct($locationName);
+        $this->maxDepth = $maxDepth;
     }
 
     public function before(
@@ -59,20 +70,22 @@ class XmlLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $model
     ): ResultInterface {
-        // Handle additional, undefined properties
-        $additional = $model->getAdditionalProperties();
-        if ($additional instanceof Parameter
-            && $additional->getLocation() == $this->locationName
-        ) {
-            $result = new Result(array_merge(
-                $result->toArray(),
-                self::xmlToArray($this->getXml())
-            ));
+        try {
+            // Handle additional, undefined properties
+            $additional = $model->getAdditionalProperties();
+            if ($additional instanceof Parameter
+                && $additional->getLocation() == $this->locationName
+            ) {
+                $result = new Result(array_merge(
+                    $result->toArray(),
+                    $this->xmlToArray($this->getXml())
+                ));
+            }
+
+            return $result;
+        } finally {
+            $this->xml = null;
         }
-
-        $this->xml = null;
-
-        return $result;
     }
 
     public function visit(
@@ -80,24 +93,31 @@ class XmlLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $param
     ): ResultInterface {
-        $sentAs = $param->getWireName();
-        $ns = null;
-        if (null !== $sentAs && strstr($sentAs, ':')) {
-            list($ns, $sentAs) = explode(':', $sentAs);
+        try {
+            $sentAs = $param->getWireName();
+            $ns = null;
+            if (null !== $sentAs && strstr($sentAs, ':')) {
+                list($ns, $sentAs) = explode(':', $sentAs);
+            }
+
+            $xml = $this->getXml();
+            $children = $xml->children($ns, true)->{$sentAs};
+
+            // Process the primary property
+            if (count($children)) {
+                $result[$param->getName()] = $this->recursiveProcess(
+                    $param,
+                    $children,
+                    1
+                );
+            }
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->xml = null;
+
+            throw $e;
         }
-
-        $xml = $this->getXml();
-        $children = $xml->children($ns, true)->{$sentAs};
-
-        // Process the primary property
-        if (count($children)) {
-            $result[$param->getName()] = $this->recursiveProcess(
-                $param,
-                $children
-            );
-        }
-
-        return $result;
     }
 
     private function getXml(): \SimpleXMLElement
@@ -107,6 +127,13 @@ class XmlLocation extends AbstractLocation
         }
 
         return $this->xml;
+    }
+
+    private function guardDepth(int $nesting): void
+    {
+        if ($nesting >= $this->maxDepth) {
+            throw new \RuntimeException("XML response exceeds maximum depth of {$this->maxDepth}");
+        }
     }
 
     /**
@@ -119,15 +146,18 @@ class XmlLocation extends AbstractLocation
      */
     private function recursiveProcess(
         Parameter $param,
-        \SimpleXMLElement $node
+        \SimpleXMLElement $node,
+        int $nesting
     ) {
+        $this->guardDepth($nesting);
+
         $result = [];
         $type = $param->getType();
 
         if ($type == 'object') {
-            $result = $this->processObject($param, $node);
+            $result = $this->processObject($param, $node, $nesting);
         } elseif ($type == 'array') {
-            $result = $this->processArray($param, $node);
+            $result = $this->processArray($param, $node, $nesting);
         } else {
             // We are probably handling a flat data node (i.e. string or
             // integer), so let's check if it's childless, which indicates a
@@ -146,7 +176,7 @@ class XmlLocation extends AbstractLocation
         return $result;
     }
 
-    private function processArray(Parameter $param, \SimpleXMLElement $node): array
+    private function processArray(Parameter $param, \SimpleXMLElement $node, int $nesting): array
     {
         // Cast to an array if the value was a string, but should be an array
         $items = $param->getItems();
@@ -165,14 +195,14 @@ class XmlLocation extends AbstractLocation
         if ($sentAs === null) {
             // A general collection of nodes
             foreach ($node as $child) {
-                $result[] = $this->recursiveProcess($items, $child);
+                $result[] = $this->recursiveProcess($items, $child, $nesting + 1);
             }
         } else {
             // A collection of named, repeating nodes
             // (i.e. <collection><foo></foo><foo></foo></collection>)
             $children = $node->children($ns, true)->{$sentAs};
             foreach ($children as $child) {
-                $result[] = $this->recursiveProcess($items, $child);
+                $result[] = $this->recursiveProcess($items, $child, $nesting + 1);
             }
         }
 
@@ -185,7 +215,7 @@ class XmlLocation extends AbstractLocation
      * @param Parameter         $param API parameter being parsed
      * @param \SimpleXMLElement $node  Value to process
      */
-    private function processObject(Parameter $param, \SimpleXMLElement $node): array
+    private function processObject(Parameter $param, \SimpleXMLElement $node, int $nesting): array
     {
         $result = $knownProps = $knownAttributes = [];
 
@@ -212,7 +242,8 @@ class XmlLocation extends AbstractLocation
                     $childNode = $node->children($ns, true)->{$sentAs};
                     $result[$name] = $this->recursiveProcess(
                         $property,
-                        $childNode
+                        $childNode,
+                        $nesting + 1
                     );
                 }
             }
@@ -227,14 +258,15 @@ class XmlLocation extends AbstractLocation
                 if (!isset($knownProps[$sentAs])) {
                     $result[$sentAs] = $this->recursiveProcess(
                         $additional,
-                        $childNode
+                        $childNode,
+                        $nesting + 1
                     );
                 }
             }
         } elseif ($additional === null || $additional === true) {
             // Blindly transform the XML into an array preserving as much data
             // as possible. Remove processed, aliased properties.
-            $array = array_diff_key(self::xmlToArray($node), $knownProps);
+            $array = array_diff_key($this->xmlToArray($node, null, $nesting), $knownProps);
             // Remove @attributes that were explicitly plucked from the
             // attributes list.
             if (isset($array['@attributes']) && $knownAttributes) {
@@ -256,11 +288,13 @@ class XmlLocation extends AbstractLocation
      *
      * @return array
      */
-    private static function xmlToArray(
+    private function xmlToArray(
         \SimpleXMLElement $xml,
         ?string $ns = null,
         int $nesting = 0
     ) {
+        $this->guardDepth($nesting);
+
         $result = [];
         $children = $xml->children($ns, true);
 
@@ -269,7 +303,7 @@ class XmlLocation extends AbstractLocation
                 ? (array) $child->attributes()
                 : (array) $child->attributes($ns, true);
             if (!isset($result[$name])) {
-                $childArray = self::xmlToArray($child, $ns, $nesting + 1);
+                $childArray = $this->xmlToArray($child, $ns, $nesting + 1);
                 $result[$name] = $attributes
                     ? array_merge($attributes, $childArray)
                     : $childArray;
@@ -285,7 +319,7 @@ class XmlLocation extends AbstractLocation
                 $result[$name] = [];
                 $result[$name][] = $firstResult;
             }
-            $childArray = self::xmlToArray($child, $ns, $nesting + 1);
+            $childArray = $this->xmlToArray($child, $ns, $nesting + 1);
             if ($attributes) {
                 $result[$name][] = array_merge($attributes, $childArray);
             } else {

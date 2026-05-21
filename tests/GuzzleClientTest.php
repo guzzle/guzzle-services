@@ -8,6 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
@@ -168,6 +169,47 @@ class GuzzleClientTest extends TestCase
             "<?xml version=\"1.0\"?>\n<Request><foo>Foo</foo><bar>Bar</bar><baz>Baz</baz></Request>\n",
             (string) $mock->getLastRequest()->getBody()
         );
+    }
+
+    public function testPassesConfiguredResponseLocationsToDeserializer(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], '<root><value>ok</value></root>'),
+        ]);
+        $description = new Description([
+            'baseUri' => 'http://httpbin.org',
+            'operations' => [
+                'getXml' => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/xml',
+                    'responseModel' => 'XmlResponse',
+                ],
+            ],
+            'models' => [
+                'XmlResponse' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'value' => [
+                            'type' => 'string',
+                            'location' => 'xml',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $client = new GuzzleClient(
+            new HttpClient(['handler' => $mock]),
+            $description,
+            null,
+            null,
+            null,
+            ['response_locations' => ['xml' => new XmlLocation('xml', 1)]]
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response exceeds maximum depth of 1');
+
+        $client->getXml();
     }
 
     public function testExecuteWithMultiPartLocation(): void

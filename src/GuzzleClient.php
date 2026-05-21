@@ -112,7 +112,7 @@ class GuzzleClient extends ServiceClient
 
         return $responseToResultTransformer !== null
             ? $responseToResultTransformer
-            : new Deserializer($this->description, $process);
+            : new Deserializer($this->description, $process, $this->config['response_locations'] ?? []);
     }
 
     /**
