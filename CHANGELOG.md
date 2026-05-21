@@ -6,6 +6,8 @@
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
 * Deprecate non-string and empty-array header location values
 * Preserve explicit `null` JSON response properties
+* Validate `ToArrayInterface` object properties after conversion
+* Enforce zero-valued schema validation bounds
 
 ## 1.5.2 - UPCOMING
 
