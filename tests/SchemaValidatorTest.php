@@ -281,9 +281,46 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals('boolean', $r->invoke($p, 'boolean', false));
         $this->assertEquals(false, $r->invoke($p, 'boolean', 'false'));
         $this->assertEquals('null', $r->invoke($p, 'null', null));
+        $this->assertEquals(false, $r->invoke($p, 'null', false));
+        $this->assertEquals(false, $r->invoke($p, 'null', 0));
+        $this->assertEquals(false, $r->invoke($p, 'null', ''));
+        $this->assertEquals(false, $r->invoke($p, 'null', []));
         $this->assertEquals(false, $r->invoke($p, 'null', 'abc'));
         $this->assertEquals('array', $r->invoke($p, 'array', []));
         $this->assertEquals(false, $r->invoke($p, 'array', 'foo'));
+    }
+
+    public function testNullTypeRejectsNonNullFalsyValues(): void
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'null',
+        ]);
+
+        foreach ([false, 0, '', []] as $value) {
+            $this->assertFalse($this->validator->validate($param, $value));
+            $this->assertEquals(['[test] must be of type null'], $this->validator->getErrors());
+        }
+    }
+
+    public function testNullableUnionTypesAcceptExplicitFalsyTypes(): void
+    {
+        $cases = [
+            [['null', 'boolean'], false],
+            [['null', 'integer'], 0],
+            [['null', 'string'], ''],
+            [['null', 'array'], []],
+        ];
+
+        foreach ($cases as $case) {
+            $param = new Parameter([
+                'name' => 'test',
+                'type' => $case[0],
+            ]);
+            $value = $case[1];
+
+            $this->assertTrue($this->validator->validate($param, $value));
+        }
     }
 
     public function testValidatesFalseAdditionalProperties(): void

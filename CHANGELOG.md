@@ -15,6 +15,7 @@
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
+* Require `null` schema types to match only `null` values
 
 ## 1.6.0 - UPCOMING
 
