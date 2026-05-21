@@ -22,6 +22,11 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonLocationTest extends TestCase
 {
+    public static function markAdditional($value)
+    {
+        return 'additional';
+    }
+
     /**
      * @group ResponseLocation
      */
@@ -407,6 +412,101 @@ class JsonLocationTest extends TestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testVisitsTopLevelNullResponseProperties()
+    {
+        $json = [
+            'link' => null,
+        ];
+
+        $body = Utils::jsonEncode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j',
+                ],
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'link' => [
+                            'location' => 'json',
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+
+        $this->assertEquals(['link' => null], $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testAdditionalPropertiesDoNotOverwriteNullResponseProperties()
+    {
+        $json = [
+            'known' => null,
+            'extra' => 'value',
+        ];
+
+        $body = Utils::jsonEncode($json);
+        $response = new Response(200, ['Content-Type' => 'application/json'], $body);
+        $mock = new MockHandler([$response]);
+
+        $httpClient = new Client(['handler' => $mock]);
+
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => 'http://httpbin.org',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'j',
+                ],
+            ],
+            'models' => [
+                'j' => [
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => [
+                        'known' => [
+                            'location' => 'json',
+                            'type' => 'string',
+                        ],
+                    ],
+                    'additionalProperties' => [
+                        'location' => 'json',
+                        'type' => 'string',
+                        'filters' => [__CLASS__.'::markAdditional'],
+                    ],
+                ],
+            ],
+        ]);
+        $guzzle = new GuzzleClient($httpClient, $description);
+        /** @var ResultInterface $result */
+        $result = $guzzle->foo();
+
+        $this->assertEquals([
+            'known' => null,
+            'extra' => 'additional',
+        ], $result->toArray());
     }
 
     /**
