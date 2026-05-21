@@ -31,6 +31,8 @@ class GuzzleClient extends ServiceClient
      *   effect.
      * - process: Specify if HTTP responses are parsed (defaults to true).
      *   When false, the raw response is returned in the command result.
+     *   Individual operations can override this setting with their own process
+     *   option.
      *   Changing this setting after the client has been created will have no
      *   effect.
      * - response_locations: Associative array of location types mapping to

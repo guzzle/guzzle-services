@@ -63,6 +63,40 @@ See [UPGRADING.md](UPGRADING.md) for upgrade notes.
 
 ## Cookbook
 
+### Disabling response processing for an operation
+
+By default, responses are parsed according to the operation's `responseModel`.
+For operations that return binary data or another response body that should not
+be parsed, set `process` to `false` on that operation:
+
+```php
+$description = new Description([
+	'operations' => [
+		'getMetadata' => [
+			'httpMethod' => 'GET',
+			'uri' => '/metadata/{id}',
+			'responseModel' => 'metadataResponse',
+		],
+		'getFile' => [
+			'httpMethod' => 'GET',
+			'uri' => '/files/{id}',
+			'process' => false,
+		]
+	]
+]);
+```
+
+When response processing is disabled, the raw PSR-7 response is returned in the
+result's `response` key:
+
+```php
+$result = $guzzleClient->getFile(['id' => 123]);
+$response = $result['response'];
+```
+
+Operation-level `process` overrides the client-level `process` option. If an
+operation omits `process`, or sets it to `null`, it inherits the client setting.
+
 ### Changing the way query params are serialized
 
 By default, query params are serialized using strict RFC3986 rules, using `http_build_query` method. With this, array params are serialized this way:

@@ -90,6 +90,19 @@ $operation->toArray()['httpMethod']; // 'GET'
 Explicit `httpMethod` values must now be non-empty strings. Passing an empty
 string or a non-string value throws `InvalidArgumentException`.
 
+#### Operation Response Processing
+
+`process` is now a first-class operation option. When set to `false`, response
+model parsing is disabled for that operation. When set to `true`, response model
+parsing is enabled for that operation even if the client-level `process` option
+is disabled. When omitted or set to `null`, the operation inherits the client
+setting.
+
+Existing service descriptions that used a custom top-level operation key named
+`process` should move that metadata under the operation's `data` key, or ensure
+the value is a boolean or `null` and intentionally controls response processing.
+Non-boolean `process` values now throw `InvalidArgumentException`.
+
 #### Header Location Values
 
 Header location values must now be strings or non-empty arrays of strings.

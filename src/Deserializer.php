@@ -69,13 +69,14 @@ class Deserializer
      */
     public function __invoke(ResponseInterface $response, RequestInterface $request, CommandInterface $command): ResultInterface
     {
-        // If processing is disabled, expose the raw response without parsing it.
-        if ($this->process === false) {
-            return new Result(['response' => $response]);
-        }
-
         $name = $command->getName();
         $operation = $this->description->getOperation($name);
+        $process = $operation->getProcess() ?? $this->process;
+
+        // If processing is disabled, expose the raw response without parsing it.
+        if ($process === false) {
+            return new Result(['response' => $response]);
+        }
 
         $this->handleErrorResponses($response, $request, $command, $operation);
 

@@ -86,6 +86,87 @@ class DeserializerTest extends TestCase
         self::assertInstanceOf(Result::class, $client->foo(['bar' => 'baz']));
     }
 
+    public function testOperationCanDisableResponseProcessing(): void
+    {
+        $rawResponse = new Response(200, ['Content-Type' => 'application/octet-stream'], 'raw');
+        $jsonResponse = new Response(200, ['Content-Type' => 'application/json'], '{"foo":"bar"}');
+        $mock = new MockHandler([$rawResponse, $jsonResponse]);
+
+        $description = new Description([
+            'operations' => [
+                'download' => [
+                    'uri' => 'http://httpbin.org/download',
+                    'httpMethod' => 'GET',
+                    'process' => false,
+                    'responseModel' => 'JsonResponse',
+                ],
+                'getJson' => [
+                    'uri' => 'http://httpbin.org/json',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'JsonResponse',
+                ],
+            ],
+            'models' => [
+                'JsonResponse' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'json',
+                    ],
+                ],
+            ],
+        ]);
+
+        $client = new GuzzleClient(new HttpClient(['handler' => $mock]), $description);
+
+        $rawResult = $client->download();
+        $this->assertInstanceOf(Result::class, $rawResult);
+        $this->assertSame($rawResponse, $rawResult['response']);
+
+        $parsedResult = $client->getJson();
+        $this->assertInstanceOf(Result::class, $parsedResult);
+        $this->assertEquals(['foo' => 'bar'], $parsedResult->toArray());
+    }
+
+    public function testOperationCanEnableResponseProcessing(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '{"foo":"bar"}'),
+        ]);
+
+        $description = new Description([
+            'operations' => [
+                'getJson' => [
+                    'uri' => 'http://httpbin.org/json',
+                    'httpMethod' => 'GET',
+                    'process' => true,
+                    'responseModel' => 'JsonResponse',
+                ],
+            ],
+            'models' => [
+                'JsonResponse' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'json',
+                    ],
+                ],
+            ],
+        ]);
+
+        $client = new GuzzleClient(
+            new HttpClient(['handler' => $mock]),
+            $description,
+            null,
+            null,
+            null,
+            ['process' => false]
+        );
+
+        $result = $client->getJson();
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(['foo' => 'bar'], $result->toArray());
+    }
+
     public function testCreateExceptionWithCode(): void
     {
         $this->expectException(CustomCommandException::class);

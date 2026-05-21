@@ -36,6 +36,8 @@ class Operation implements ToArrayInterface
      * - documentationUrl: (string) Reference URL providing more information
      *   about the operation.
      * - responseModel: (string) The model name used for processing response.
+     * - process: (bool|null) Whether this operation's HTTP response should be
+     *   parsed. Null inherits the client setting.
      * - deprecated: (bool) Set to true if this is a deprecated command
      * - errorResponses: (array) Errors that could occur when executing the
      *   command. Array of hashes, each with a 'code' (the HTTP response code),
@@ -59,6 +61,7 @@ class Operation implements ToArrayInterface
             'httpMethod' => 'GET',
             'uri' => '',
             'responseModel' => null,
+            'process' => null,
             'notes' => '',
             'summary' => '',
             'documentationUrl' => null,
@@ -79,6 +82,13 @@ class Operation implements ToArrayInterface
             && (!is_string($config['httpMethod']) || $config['httpMethod'] === '')
         ) {
             throw new \InvalidArgumentException('httpMethod must be a non-empty string');
+        }
+
+        if (array_key_exists('process', $config)
+            && $config['process'] !== null
+            && !is_bool($config['process'])
+        ) {
+            throw new \InvalidArgumentException('process must be a boolean or null');
         }
 
         $this->config = $config + $defaults;
@@ -185,6 +195,14 @@ class Operation implements ToArrayInterface
     public function getResponseModel(): ?string
     {
         return $this->config['responseModel'];
+    }
+
+    /**
+     * Get whether this operation overrides response processing.
+     */
+    public function getProcess(): ?bool
+    {
+        return $this->config['process'];
     }
 
     /**
