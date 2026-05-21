@@ -112,6 +112,106 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testDefaultMaxDepthMatchesJsonDecodeDefault(): void
+    {
+        $this->assertSame(512, XmlLocation::DEFAULT_MAX_DEPTH);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testRejectsInvalidMaxDepth(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('XML max depth must be greater than 0');
+
+        new XmlLocation('xml', 0);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testRejectsAdditionalPropertiesBeyondConfiguredDepth(): void
+    {
+        $location = new XmlLocation('xml', 2);
+        $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $result = $location->before(new Result(), $response, $model);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response exceeds maximum depth of 2');
+
+        $location->after($result, $response, $model);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testAllowsAdditionalPropertiesAtConfiguredDepth(): void
+    {
+        $location = new XmlLocation('xml', 3);
+        $model = new Parameter(['additionalProperties' => ['location' => 'xml']]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $result = $location->before(new Result(), $response, $model);
+        $result = $location->after($result, $response, $model);
+
+        $this->assertSame(['one' => ['two' => 'value']], $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testRejectsKnownPropertiesBeyondConfiguredDepth(): void
+    {
+        $location = new XmlLocation('xml', 2);
+        $parameter = new Parameter([
+            'name' => 'one',
+            'type' => 'object',
+            'location' => 'xml',
+            'additionalProperties' => false,
+            'properties' => [
+                'two' => ['type' => 'string'],
+            ],
+        ]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $location->before(new Result(), $response, new Parameter());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response exceeds maximum depth of 2');
+
+        $location->visit(new Result(), $response, $parameter);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testAllowsKnownPropertiesAtConfiguredDepth(): void
+    {
+        $location = new XmlLocation('xml', 3);
+        $parameter = new Parameter([
+            'name' => 'one',
+            'type' => 'object',
+            'location' => 'xml',
+            'additionalProperties' => false,
+            'properties' => [
+                'two' => ['type' => 'string'],
+            ],
+        ]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $result = $location->before(new Result(), $response, new Parameter());
+        $result = $location->visit($result, $response, $parameter);
+        $result = $location->after($result, $response, new Parameter());
+
+        $this->assertSame(['one' => ['two' => 'value']], $result->toArray());
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testEnsuresFlatArraysAreFlat(): void
     {
         $param = new Parameter([
