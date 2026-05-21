@@ -101,6 +101,72 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($p, $o));
     }
 
+    public function testValidatesToArrayInterfacePropertiesAfterConversion()
+    {
+        $o = $this->getMockBuilder(ToArrayInterface::class)
+            ->setMethods(['toArray'])
+            ->getMockForAbstractClass();
+        $o->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $p = new Parameter([
+            'name' => 'test',
+            'type' => 'object',
+            'properties' => [
+                'foo' => ['type' => 'string', 'required' => true],
+            ],
+        ]);
+
+        $this->assertFalse($this->validator->validate($p, $o));
+        $this->assertEquals(['[test][foo] is a required string'], $this->validator->getErrors());
+    }
+
+    public function testValidatesZeroNumberBounds()
+    {
+        $minimum = new Parameter([
+            'name' => 'test',
+            'type' => 'integer',
+            'minimum' => 0,
+        ]);
+        $minimumValue = -1;
+
+        $this->assertFalse($this->validator->validate($minimum, $minimumValue));
+        $this->assertEquals(['[test] must be greater than or equal to 0'], $this->validator->getErrors());
+
+        $maximum = new Parameter([
+            'name' => 'test',
+            'type' => 'integer',
+            'maximum' => 0,
+        ]);
+        $maximumValue = 1;
+
+        $this->assertFalse($this->validator->validate($maximum, $maximumValue));
+        $this->assertEquals(['[test] must be less than or equal to 0'], $this->validator->getErrors());
+    }
+
+    public function testValidatesZeroCollectionBounds()
+    {
+        $string = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'maxLength' => 0,
+        ]);
+        $stringValue = 'a';
+
+        $this->assertFalse($this->validator->validate($string, $stringValue));
+        $this->assertEquals(['[test] length must be less than or equal to 0'], $this->validator->getErrors());
+
+        $array = new Parameter([
+            'name' => 'test',
+            'type' => 'array',
+            'maxItems' => 0,
+        ]);
+        $arrayValue = ['a'];
+
+        $this->assertFalse($this->validator->validate($array, $arrayValue));
+        $this->assertEquals(['[test] must contain 0 or fewer elements'], $this->validator->getErrors());
+    }
+
     public function testMergesValidationErrorsInPropertiesWithParent(): void
     {
         $p = new Parameter([

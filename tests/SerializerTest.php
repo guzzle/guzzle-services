@@ -40,4 +40,26 @@ class SerializerTest extends TestCase
         $request = $serializer($command);
         $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
+
+    public function testAllowsAdditionalParametersWithoutLocation()
+    {
+        $description = new Description([
+            'baseUri' => 'http://test.com',
+            'operations' => [
+                'test' => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/api',
+                    'additionalParameters' => [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+        ]);
+
+        $command = new Command('test', ['extra' => 'value']);
+        $serializer = new Serializer($description);
+        /** @var Request $request */
+        $request = $serializer($command);
+        $this->assertEquals('http://test.com/api', $request->getUri());
+    }
 }
