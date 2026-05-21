@@ -101,7 +101,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertTrue($this->validator->validate($p, $o));
     }
 
-    public function testValidatesToArrayInterfacePropertiesAfterConversion()
+    public function testValidatesToArrayInterfacePropertiesAfterConversion(): void
     {
         $o = $this->getMockBuilder(ToArrayInterface::class)
             ->setMethods(['toArray'])
@@ -121,7 +121,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[test][foo] is a required string'], $this->validator->getErrors());
     }
 
-    public function testValidatesZeroNumberBounds()
+    public function testValidatesZeroNumberBounds(): void
     {
         $minimum = new Parameter([
             'name' => 'test',
@@ -144,7 +144,7 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals(['[test] must be less than or equal to 0'], $this->validator->getErrors());
     }
 
-    public function testValidatesZeroCollectionBounds()
+    public function testValidatesZeroCollectionBounds(): void
     {
         $string = new Parameter([
             'name' => 'test',
