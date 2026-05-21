@@ -7,7 +7,7 @@
 * Remove the legacy `baseUrl` service description option; use `baseUri` instead
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Default operations without an `httpMethod` to `GET` and reject invalid `httpMethod` values
-* Require header location values to be strings or arrays of strings
+* Require header location values to be strings or non-empty arrays of strings
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Require custom implementations and subclasses of public service APIs to match native method signatures
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion

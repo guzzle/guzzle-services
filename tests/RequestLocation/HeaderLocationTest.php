@@ -59,7 +59,7 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
 
         $location->visit($command, $request, $param);
     }
@@ -75,7 +75,7 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
 
         $location->visit($command, $request, $param);
     }
@@ -91,7 +91,23 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+
+        $location->visit($command, $request, $param);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testVisitsLocationRejectsEmptyArrayHeaderValue(): void
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => []]);
+        $request = new Request('POST', 'http://httbin.org');
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
 
         $location->visit($command, $request, $param);
     }
@@ -133,7 +149,28 @@ class HeaderLocationTest extends TestCase
         $request = new Request('POST', 'http://httbin.org');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+
+        $location->after($command, $request, $operation);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testAdditionalPropertiesRejectEmptyArrayHeaderValue(): void
+    {
+        $location = new HeaderLocation('header');
+        $command = new Command('foo', ['foo' => 'bar']);
+        $command['add'] = [];
+        $operation = new Operation([
+            'additionalParameters' => [
+                'location' => 'header',
+            ],
+        ]);
+        $request = new Request('POST', 'http://httbin.org');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
 
         $location->after($command, $request, $operation);
     }
