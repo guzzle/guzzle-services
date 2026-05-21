@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonLocationTest extends TestCase
 {
-    public static function markAdditional($value)
+    public static function markAdditional(string $value): string
     {
         return 'additional';
     }
@@ -417,7 +417,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testVisitsTopLevelNullResponseProperties()
+    public function testVisitsTopLevelNullResponseProperties(): void
     {
         $json = [
             'link' => null,
@@ -460,7 +460,7 @@ class JsonLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
-    public function testAdditionalPropertiesDoNotOverwriteNullResponseProperties()
+    public function testAdditionalPropertiesDoNotOverwriteNullResponseProperties(): void
     {
         $json = [
             'known' => null,
