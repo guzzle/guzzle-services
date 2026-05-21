@@ -61,15 +61,19 @@ class HeaderLocation extends AbstractLocation
         }
 
         if (is_array($value)) {
+            if ($value === []) {
+                throw new \InvalidArgumentException('Header location values must be strings or non-empty arrays of strings.');
+            }
+
             foreach ($value as $item) {
                 if (!is_string($item)) {
-                    throw new \InvalidArgumentException('Header location values must be strings or arrays of strings.');
+                    throw new \InvalidArgumentException('Header location values must be strings or non-empty arrays of strings.');
                 }
             }
 
             return $value;
         }
 
-        throw new \InvalidArgumentException('Header location values must be strings or arrays of strings.');
+        throw new \InvalidArgumentException('Header location values must be strings or non-empty arrays of strings.');
     }
 }
