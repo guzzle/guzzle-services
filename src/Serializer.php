@@ -96,7 +96,12 @@ class Serializer
         // Ensure that the after() method is invoked for additionalParameters
         /** @var Parameter $additional */
         if ($additional = $operation->getAdditionalParameters()) {
-            $visitedLocations[$additional->getLocation()] = true;
+            if ($location = $additional->getLocation()) {
+                if (!isset($this->locations[$location])) {
+                    throw new \RuntimeException('No location registered for additionalParameters');
+                }
+                $visitedLocations[$location] = true;
+            }
         }
 
         // Call the after() method for each visited location
