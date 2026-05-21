@@ -93,25 +93,31 @@ class XmlLocation extends AbstractLocation
         ResponseInterface $response,
         Parameter $param
     ): ResultInterface {
-        $sentAs = $param->getWireName();
-        $ns = null;
-        if (null !== $sentAs && strstr($sentAs, ':')) {
-            list($ns, $sentAs) = explode(':', $sentAs);
+        try {
+            $sentAs = $param->getWireName();
+            $ns = null;
+            if (null !== $sentAs && strstr($sentAs, ':')) {
+                list($ns, $sentAs) = explode(':', $sentAs);
+            }
+
+            $xml = $this->getXml();
+            $children = $xml->children($ns, true)->{$sentAs};
+
+            // Process the primary property
+            if (count($children)) {
+                $result[$param->getName()] = $this->recursiveProcess(
+                    $param,
+                    $children,
+                    1
+                );
+            }
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->xml = null;
+
+            throw $e;
         }
-
-        $xml = $this->getXml();
-        $children = $xml->children($ns, true)->{$sentAs};
-
-        // Process the primary property
-        if (count($children)) {
-            $result[$param->getName()] = $this->recursiveProcess(
-                $param,
-                $children,
-                1
-            );
-        }
-
-        return $result;
     }
 
     private function getXml(): \SimpleXMLElement

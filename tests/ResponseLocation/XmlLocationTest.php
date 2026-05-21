@@ -188,6 +188,38 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testDepthErrorClearsParsedResponse(): void
+    {
+        $location = new XmlLocation('xml', 2);
+        $parameter = new Parameter([
+            'name' => 'one',
+            'type' => 'object',
+            'location' => 'xml',
+            'additionalProperties' => false,
+            'properties' => [
+                'two' => ['type' => 'string'],
+            ],
+        ]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $location->before(new Result(), $response, new Parameter());
+
+        try {
+            $location->visit(new Result(), $response, $parameter);
+            $this->fail('Expected XML response depth to be rejected.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('XML response exceeds maximum depth of 2', $e->getMessage());
+        }
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response has not been parsed');
+
+        $location->visit(new Result(), $response, $parameter);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testAllowsKnownPropertiesAtConfiguredDepth(): void
     {
         $location = new XmlLocation('xml', 3);

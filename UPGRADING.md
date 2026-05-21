@@ -110,7 +110,7 @@ deeply nested XML responses consuming excessive stack, CPU, or memory during
 conversion.
 
 Applications that consume trusted services with legitimately deeper XML can
-register a custom XML response location with a higher limit:
+register a custom XML response location with a higher traversal limit:
 
 ```php
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -132,7 +132,8 @@ $client = new GuzzleClient(
 
 Only raise this limit for responses from trusted services. This limit guards the
 recursive traversal and conversion stage after XML parsing; it is not a response
-body size limit.
+body size limit and does not relax libxml's own XML parser limits. Responses
+that exceed libxml parser limits will still fail before response traversal.
 
 #### Strict Types and Extension Points
 
