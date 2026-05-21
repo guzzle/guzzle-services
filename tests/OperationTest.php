@@ -143,6 +143,38 @@ class OperationTest extends TestCase
         $this->assertEquals('POST', $o->toArray()['httpMethod']);
     }
 
+    public function testDefaultsProcessToNull(): void
+    {
+        $o = new Operation();
+
+        $this->assertNull($o->getProcess());
+        $this->assertNull($o->toArray()['process']);
+    }
+
+    public function testCanDisableResponseProcessing(): void
+    {
+        $o = new Operation(['process' => false]);
+
+        $this->assertFalse($o->getProcess());
+        $this->assertFalse($o->toArray()['process']);
+    }
+
+    public function testCanEnableResponseProcessing(): void
+    {
+        $o = new Operation(['process' => true]);
+
+        $this->assertTrue($o->getProcess());
+        $this->assertTrue($o->toArray()['process']);
+    }
+
+    public function testEnsuresProcessIsBoolOrNull(): void
+    {
+        $this->expectExceptionMessage('process must be a boolean or null');
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Operation(['process' => 'false']);
+    }
+
     public function testEnsuresHttpMethodIsNotEmptyString(): void
     {
         $this->expectExceptionMessage('httpMethod must be a non-empty string');
@@ -218,6 +250,7 @@ class OperationTest extends TestCase
         $d = new Description([
             'operations' => [
                 'A' => [
+                    'process' => false,
                     'parameters' => [
                         'A' => [
                             'type' => 'object',
@@ -234,6 +267,7 @@ class OperationTest extends TestCase
                 ],
                 'C' => [
                     'extends' => 'B',
+                    'process' => true,
                     'summary' => 'Bar',
                     'parameters' => [
                         'B' => ['type' => 'number'],
@@ -244,6 +278,7 @@ class OperationTest extends TestCase
 
         $a = $d->getOperation('A');
         $this->assertEquals('GET', $a->getHttpMethod());
+        $this->assertFalse($a->getProcess());
         $this->assertEquals('foo', $a->getSummary());
         $this->assertTrue($a->hasParam('A'));
         $this->assertEquals('string', $a->getParam('B')->getType());
@@ -251,12 +286,14 @@ class OperationTest extends TestCase
         $b = $d->getOperation('B');
         $this->assertTrue($a->hasParam('A'));
         $this->assertEquals('POST', $b->getHttpMethod());
+        $this->assertFalse($b->getProcess());
         $this->assertEquals('Bar', $b->getSummary());
         $this->assertEquals('string', $a->getParam('B')->getType());
 
         $c = $d->getOperation('C');
         $this->assertTrue($a->hasParam('A'));
         $this->assertEquals('POST', $c->getHttpMethod());
+        $this->assertTrue($c->getProcess());
         $this->assertEquals('Bar', $c->getSummary());
         $this->assertEquals('number', $c->getParam('B')->getType());
     }
