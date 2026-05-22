@@ -90,6 +90,12 @@ $operation->toArray()['httpMethod']; // 'GET'
 Explicit `httpMethod` values must now be non-empty strings. Passing an empty
 string or a non-string value throws `InvalidArgumentException`.
 
+Explicit `httpMethod` casing is now preserved when requests are serialized.
+Guzzle Services 2.0 uses Guzzle PSR-7 3.x, whose request implementation no
+longer uppercases explicitly provided methods. If a service description sets
+`httpMethod` to `get`, the serialized request method is `get`. Use `GET` in the
+service description when the service expects an uppercase method name.
+
 #### Operation Response Processing
 
 `process` is now a first-class operation option. When set to `false`, response
