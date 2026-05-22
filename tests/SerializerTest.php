@@ -41,6 +41,25 @@ class SerializerTest extends TestCase
         $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
 
+    public function testPreservesConfiguredHttpMethodCasing(): void
+    {
+        $description = new Description([
+            'baseUri' => 'http://test.com',
+            'operations' => [
+                'test' => [
+                    'httpMethod' => 'get',
+                    'uri' => '/api',
+                ],
+            ],
+        ]);
+
+        $command = new Command('test');
+        $serializer = new Serializer($description);
+        $request = $serializer($command);
+
+        $this->assertSame('get', $request->getMethod());
+    }
+
     public function testAllowsAdditionalParametersWithoutLocation(): void
     {
         $description = new Description([

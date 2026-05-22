@@ -6,7 +6,7 @@
 * Require `guzzlehttp/command` ^2.0, `guzzlehttp/guzzle` ^8.0, `guzzlehttp/psr7` ^3.0, and `guzzlehttp/uri-template` ^2.0
 * Remove the legacy `baseUrl` service description option; use `baseUri` instead
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
-* Default operations without an `httpMethod` to `GET` and reject invalid `httpMethod` values
+* Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
 * Require header location values to be strings or non-empty arrays of strings
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Allow operations to override response processing with the `process` operation option
