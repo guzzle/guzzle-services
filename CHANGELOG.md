@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.5.2 - UPCOMING
+## 1.5.2 - 2026-05-22
 
 * Fix request serialization for validation-only `additionalParameters`
 
