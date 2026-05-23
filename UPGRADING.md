@@ -16,8 +16,13 @@ and extension points need closer review.
 Guzzle Services 2.0 requires PHP `^7.4 || ^8.0`. Guzzle Services 1.x supported
 PHP `^7.2.5 || ^8.0`.
 
-Guzzle Services 2.0 also requires Guzzle Command 2.x, Guzzle 8.x, Guzzle PSR-7
-3.x, and Guzzle URI Template 2.x.
+Guzzle Services 2.0 also requires
+[Guzzle Command 2.x](https://github.com/guzzle/command/blob/2.0/UPGRADING.md),
+[Guzzle 8.x](https://github.com/guzzle/guzzle/blob/8.0/UPGRADING.md),
+[Guzzle PSR-7 3.x](https://github.com/guzzle/psr7/blob/3.0/UPGRADING.md), and
+[Guzzle URI Template 2.x](https://github.com/guzzle/uri-template/blob/2.0/UPGRADING.md).
+Guzzle Services 1.x supported Guzzle Command `^1.4`, Guzzle `^7.10`, Guzzle
+PSR-7 `^2.8`, and Guzzle URI Template `^1.0.5`.
 
 If your application still supports PHP 7.2 or 7.3, or still uses the Guzzle 7
 dependency stack, continue using Guzzle Services 1.x until your minimum PHP and
@@ -229,9 +234,7 @@ for names and URIs, booleans for flags, and integers for min/max constraints.
 #### Command Client Dependency
 
 `GuzzleHttp\Command\Guzzle\GuzzleClient` continues to build on
-`guzzlehttp/command`, but the required Command major version is now 2.x. Review
-the Guzzle Command 2.0 upgrade guide if your application uses Command APIs
-directly.
+`guzzlehttp/command`, but the required Command major version is now 2.x.
 
 #### Service Descriptions and URIs
 
@@ -241,11 +244,6 @@ URI templates, request hosts, or unsupported query data may now fail earlier.
 
 Guzzle URI Template 2.x drops PHP 7.2 and 7.3 support. URI template expansion is
 otherwise expected to remain compatible with 1.x.
-
-#### Downstream Upgrade Guides
-
-Review the Guzzle 8, Guzzle Command 2.0, Guzzle PSR-7 3.0, Guzzle Promises 3.0,
-and Guzzle URI Template 2.0 upgrade guides for dependency-level behavior changes.
 
 1.0 from 0.6
 ------------
