@@ -7,8 +7,13 @@ namespace GuzzleHttp\Command\Guzzle;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler;
+use GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Default Guzzle web service client implementation.
@@ -38,9 +43,21 @@ class GuzzleClient extends ServiceClient
      * - response_locations: Associative array of location types mapping to
      *   ResponseLocationInterface objects.
      *
-     * @param ClientInterface      $client      HTTP client to use.
-     * @param DescriptionInterface $description Guzzle service description
-     * @param array                $config      Configuration options
+     * The response_locations map uses PHP array keys. Numeric-string keys are
+     * normalized to integer keys before the constructor receives them.
+     *
+     * @param ClientInterface                                                                         $client                      HTTP client to use.
+     * @param DescriptionInterface                                                                    $description                 Guzzle service description.
+     * @param (callable(CommandInterface): RequestInterface)|null                                     $commandToRequestTransformer Command-to-request transformer.
+     * @param (callable(ResponseInterface, RequestInterface, CommandInterface): ResultInterface)|null $responseToResultTransformer Response-to-result transformer.
+     * @param HandlerStack<callable(CommandInterface): PromiseInterface<ResultInterface, mixed>>|null $commandHandlerStack         Command handler stack.
+     * @param array{
+     *     defaults?: array<array-key, mixed>,
+     *     validate?: bool,
+     *     process?: bool,
+     *     response_locations?: array<array-key, ResponseLocationInterface>,
+     *     ...
+     * } $config Configuration options.
      */
     public function __construct(
         ClientInterface $client,
@@ -94,7 +111,9 @@ class GuzzleClient extends ServiceClient
     /**
      * Returns the passed Serializer when set, a new instance otherwise
      *
-     * @return Serializer
+     * @param (callable(CommandInterface): RequestInterface)|null $commandToRequestTransformer
+     *
+     * @return callable(CommandInterface): RequestInterface
      */
     private function getSerializer(?callable $commandToRequestTransformer): callable
     {
@@ -106,7 +125,9 @@ class GuzzleClient extends ServiceClient
     /**
      * Returns the passed Deserializer when set, a new instance otherwise
      *
-     * @return Deserializer
+     * @param (callable(ResponseInterface, RequestInterface, CommandInterface): ResultInterface)|null $responseToResultTransformer
+     *
+     * @return callable(ResponseInterface, RequestInterface, CommandInterface): ResultInterface
      */
     private function getDeserializer(?callable $responseToResultTransformer): callable
     {

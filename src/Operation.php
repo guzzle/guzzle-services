@@ -49,8 +49,29 @@ class Operation implements ToArrayInterface
      * - additionalParameters: (null|array) Parameter schema to use when an
      *   option is passed to the operation that is not in the schema
      *
-     * @param array                $config      Array of configuration data
-     * @param DescriptionInterface $description Service description used to resolve models if $ref tags are found
+     * @param array{
+     *     name?: string,
+     *     extends?: string,
+     *     httpMethod?: string,
+     *     uri?: string|null,
+     *     parameters?: array<array-key, array<array-key, mixed>>,
+     *     summary?: string,
+     *     notes?: string,
+     *     documentationUrl?: string|null,
+     *     responseModel?: string|null,
+     *     process?: bool|null,
+     *     deprecated?: bool,
+     *     errorResponses?: array<array-key, array{
+     *         code: int|string,
+     *         class: string,
+     *         phrase?: string,
+     *         ...
+     *     }>,
+     *     data?: array<array-key, mixed>,
+     *     additionalParameters?: array<array-key, mixed>|Parameter|null,
+     *     ...
+     * } $config Array of configuration data.
+     * @param DescriptionInterface|null $description Service description used to resolve models if $ref tags are found.
      *
      * @throws \InvalidArgumentException
      */

@@ -231,10 +231,28 @@ method signatures to remain compatible.
 Service description values should use the documented PHP types, such as strings
 for names and URIs, booleans for flags, and integers for min/max constraints.
 
-#### Command Client Dependency
+#### Generic Promise And Structured PHPDoc Types
 
-`GuzzleHttp\Command\Guzzle\GuzzleClient` continues to build on
-`guzzlehttp/command`, but the required Command major version is now 2.x.
+Guzzle Services command handler stack annotations now use generic
+`PromiseInterface<ResultInterface, mixed>` PHPDoc types. This is a
+static-analysis-only change and does not alter runtime behavior, but projects
+with stricter static analysis may see new or different diagnostics.
+
+Code using unparameterized promise types continues to work. If your project
+extends `GuzzleClient`, provides custom command middleware, or documents reusable
+command handlers, you may need to update your PHPDoc annotations to include
+promise fulfillment and rejection types.
+
+Service client transformer, service description, operation, parameter, and
+client config PHPDoc now uses structured array and callable shapes. This does not
+change runtime behavior, but stricter static analysis may now report invalid
+option keys, invalid option value types, or callback annotations that were
+previously hidden behind loose `array` or `callable` PHPDoc.
+
+Command-to-request transformers are documented as receiving `CommandInterface`.
+Response-to-result transformers are documented as receiving `ResponseInterface`,
+`RequestInterface`, and `CommandInterface`. Lower-arity userland callables
+continue to work at runtime when PHP accepts them.
 
 #### Service Descriptions and URIs
 

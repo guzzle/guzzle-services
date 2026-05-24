@@ -8,6 +8,7 @@ use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 
 /**
@@ -31,7 +32,9 @@ class ValidatedDescriptionHandler
     }
 
     /**
-     * @param callable(CommandInterface): PromiseInterface $handler
+     * @param callable(CommandInterface): PromiseInterface<ResultInterface, mixed> $handler
+     *
+     * @return \Closure(CommandInterface): PromiseInterface<ResultInterface, mixed>
      */
     public function __invoke(callable $handler): \Closure
     {

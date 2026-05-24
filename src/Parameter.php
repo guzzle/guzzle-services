@@ -172,9 +172,8 @@ class Parameter implements ToArrayInterface
      * - $ref: (string) String referencing a service description model. The
      *   parameter is replaced by the schema contained in the model.
      *
-     * @param array $data    Array of data as seen in service descriptions
-     * @param array $options Options used when creating the parameter. You can
-     *                       specify a Guzzle service description in the 'description' key.
+     * @param array<array-key, mixed>                   $data    Array of data as seen in service descriptions.
+     * @param array{description?: DescriptionInterface} $options Options used when creating the parameter.
      *
      * @throws \InvalidArgumentException
      */
