@@ -254,11 +254,6 @@ Response-to-result transformers are documented as receiving `ResponseInterface`,
 `RequestInterface`, and `CommandInterface`. Lower-arity userland callables
 continue to work at runtime when PHP accepts them.
 
-#### Command Client Dependency
-
-`GuzzleHttp\Command\Guzzle\GuzzleClient` continues to build on
-`guzzlehttp/command`, but the required Command major version is now 2.x.
-
 #### Service Descriptions and URIs
 
 Guzzle PSR-7 3.x validates URI hosts, URI schemes, query values, and
