@@ -8,6 +8,7 @@ use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
+use GuzzleHttp\Promise\PromiseInterface;
 
 /**
  * Handler used to validate command input against a service description.
@@ -29,9 +30,12 @@ class ValidatedDescriptionHandler
         $this->validator = $schemaValidator ?: new SchemaValidator();
     }
 
+    /**
+     * @param callable(CommandInterface): PromiseInterface $handler
+     */
     public function __invoke(callable $handler): \Closure
     {
-        return function (CommandInterface $command) use ($handler) {
+        return function (CommandInterface $command) use ($handler): PromiseInterface {
             $errors = [];
             $operation = $this->description->getOperation($command->getName());
 
