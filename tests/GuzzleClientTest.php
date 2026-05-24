@@ -790,6 +790,10 @@ class GuzzleClientTest extends TestCase
         $this->assertSame('BAZ', $query['baz']);
     }
 
+    /**
+     * @param array<array-key, mixed>                             $responses
+     * @param (callable(CommandInterface): RequestInterface)|null $commandToRequestTransformer
+     */
     private function getServiceClient(
         array $responses,
         ?MockHandler $mock = null,
@@ -813,6 +817,9 @@ class GuzzleClientTest extends TestCase
         );
     }
 
+    /**
+     * @return callable(CommandInterface): RequestInterface
+     */
     private function commandToRequestTransformer(): callable
     {
         return function (CommandInterface $command): Request {
@@ -823,6 +830,9 @@ class GuzzleClientTest extends TestCase
         };
     }
 
+    /**
+     * @return callable(ResponseInterface, RequestInterface, CommandInterface): ResultInterface
+     */
     private function responseToResultTransformer(): callable
     {
         return function (ResponseInterface $response, RequestInterface $request, CommandInterface $command): Result {

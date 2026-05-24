@@ -35,9 +35,16 @@ class Description implements DescriptionInterface
     private SchemaFormatter $formatter;
 
     /**
-     * @param array $config  Service description data
-     * @param array $options Custom options to apply to the description
-     *                       - formatter: Can provide a custom SchemaFormatter class
+     * @param array{
+     *     name?: string,
+     *     models?: array<array-key, array<array-key, mixed>>,
+     *     apiVersion?: string,
+     *     description?: string,
+     *     baseUri?: string|\Stringable,
+     *     operations?: array<array-key, array<array-key, mixed>>,
+     *     ...
+     * } $config Service description data.
+     * @param array{formatter?: SchemaFormatter} $options Custom options to apply to the description.
      *
      * @throws \InvalidArgumentException
      */
@@ -47,11 +54,18 @@ class Description implements DescriptionInterface
         // later used to determine extra data keys.
         static $defaultKeys = ['name', 'models', 'apiVersion', 'description'];
 
-        // Pull in the default configuration values
-        foreach ($defaultKeys as $key) {
-            if (isset($config[$key])) {
-                $this->{$key} = $config[$key];
-            }
+        // Pull in the default configuration values.
+        if (isset($config['name'])) {
+            $this->name = $config['name'];
+        }
+        if (isset($config['models'])) {
+            $this->models = $config['models'];
+        }
+        if (isset($config['apiVersion'])) {
+            $this->apiVersion = $config['apiVersion'];
+        }
+        if (isset($config['description'])) {
+            $this->description = $config['description'];
         }
 
         // Set the baseUri
