@@ -43,6 +43,9 @@ class GuzzleClient extends ServiceClient
      * - response_locations: Associative array of location types mapping to
      *   ResponseLocationInterface objects.
      *
+     * The response_locations map uses PHP array keys. Numeric-string keys are
+     * normalized to integer keys before the constructor receives them.
+     *
      * @param ClientInterface                                                                         $client                      HTTP client to use.
      * @param DescriptionInterface                                                                    $description                 Guzzle service description.
      * @param (callable(CommandInterface): RequestInterface)|null                                     $commandToRequestTransformer Command-to-request transformer.

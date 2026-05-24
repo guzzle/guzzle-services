@@ -35,6 +35,9 @@ class Description implements DescriptionInterface
     private SchemaFormatter $formatter;
 
     /**
+     * The models and operations maps use PHP array keys. Numeric-string names
+     * are normalized to integer keys before the constructor receives them.
+     *
      * @param array{
      *     name?: string,
      *     models?: array<array-key, array<array-key, mixed>>,
