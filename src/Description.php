@@ -12,19 +12,19 @@ use GuzzleHttp\Psr7\Uri;
 class Description implements DescriptionInterface
 {
     /** @var array Array of {@see OperationInterface} objects */
-    private $operations = [];
+    private array $operations = [];
 
     /** @var array Array of API models */
-    private $models = [];
+    private array $models = [];
 
-    /** @var string Name of the API */
-    private $name;
+    /** @var string|null Name of the API */
+    private ?string $name = null;
 
-    /** @var string API version */
-    private $apiVersion;
+    /** @var string|null API version */
+    private ?string $apiVersion = null;
 
-    /** @var string Summary of the API */
-    private $description;
+    /** @var string|null Summary of the API */
+    private ?string $description = null;
 
     /** @var array Any extra API data */
     private array $extraData = [];
