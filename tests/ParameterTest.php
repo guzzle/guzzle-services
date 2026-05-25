@@ -138,24 +138,46 @@ class ParameterTest extends TestCase
     public function invalidParameterDataProvider(): array
     {
         return [
-            ['name', [], 'name must be a string, stringable value, or null'],
-            ['required', [], 'required must be a boolean, scalar, or null'],
-            ['static', new \stdClass(), 'static must be a boolean, scalar, or null'],
+            ['name', [], 'name must be a string or null'],
+            ['required', [], 'required must be a boolean'],
+            ['static', new \stdClass(), 'static must be a boolean'],
             ['minimum', 'abc', 'minimum must be an integer or null'],
             ['maxItems', 1.5, 'maxItems must be an integer or null'],
             ['minimum', true, 'minimum must be an integer or null'],
-            ['filters', true, 'filters must be an array, string, or null'],
+            ['filters', true, 'filters must be an array'],
             ['filters', [true], 'Filters must be strings or complex filter arrays'],
             ['filters', [['method' => 'strtolower', 'args' => 'bad']], 'An [args] array must be specified for each complex filter'],
-            ['properties', 'foo', 'properties must be an array or null'],
+            ['properties', 'foo', 'properties must be an array'],
             ['properties', ['foo' => true], 'properties must contain only arrays or Parameter instances'],
-            ['data', 'foo', 'data must be an array or null'],
+            ['data', 'foo', 'data must be an array'],
             ['enum', 'foo', 'enum must be an array or null'],
             ['additionalProperties', 'foo', 'additionalProperties must be a boolean, array, Parameter, or null'],
             ['items', 'foo', 'items must be an array, Parameter, or null'],
             ['type', true, 'type must be a string, array, or null'],
             ['type', [true], 'type arrays must contain only strings'],
         ];
+    }
+
+    public function testInitializesOptionalTypedProperties(): void
+    {
+        $p = new Parameter();
+
+        $this->assertNull($p->getName());
+        $this->assertNull($p->getDescription());
+        $this->assertNull($p->getEnum());
+        $this->assertNull($p->getPattern());
+        $this->assertNull($p->getMinimum());
+        $this->assertNull($p->getMaximum());
+        $this->assertNull($p->getMinLength());
+        $this->assertNull($p->getMaxLength());
+        $this->assertNull($p->getMinItems());
+        $this->assertNull($p->getMaxItems());
+        $this->assertNull($p->getLocation());
+        $this->assertNull($p->getSentAs());
+        $this->assertNull($p->getFormat());
+        $this->assertFalse($p->isRequired());
+        $this->assertFalse($p->isStatic());
+        $this->assertSame([], $p->getFilters());
     }
 
     public function testAllowsSimpleLocationValue(): void
