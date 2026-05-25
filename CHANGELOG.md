@@ -5,6 +5,7 @@
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
 * Deprecate non-string and empty-array header location values
+* Deprecate loose parameter schema values and reject values that cannot be safely normalized
 * Preserve explicit `null` JSON response properties
 * Validate `ToArrayInterface` object properties after conversion
 * Enforce zero-valued schema validation bounds

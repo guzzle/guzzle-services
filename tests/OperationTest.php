@@ -168,8 +168,8 @@ class OperationTest extends TestCase
                 'date' => ['type' => 'string'],
                 'timestamp' => ['type' => 'string'],
                 'string' => ['type' => 'string'],
-                'username' => ['type' => 'string', 'required' => true, 'filters' => 'strtolower'],
-                'test_function' => ['type' => 'string', 'filters' => __CLASS__.'::strtoupper'],
+                'username' => ['type' => 'string', 'required' => true, 'filters' => ['strtolower']],
+                'test_function' => ['type' => 'string', 'filters' => [__CLASS__.'::strtoupper']],
             ],
             'errorResponses' => [
                 [
