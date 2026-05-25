@@ -404,17 +404,6 @@ class ParameterTest extends TestCase
         $this->assertEquals($data, $p->toArray());
     }
 
-    public function testThrowsWhenNotPassString(): void
-    {
-        $this->expectExceptionMessage('Expected a string. Got: array');
-        $this->expectException(\InvalidArgumentException::class);
-        $emptyParam = new Parameter();
-        $this->assertFalse($emptyParam->has([]));
-        $this->assertFalse($emptyParam->has(new \stdClass()));
-        $this->assertFalse($emptyParam->has('1'));
-        $this->assertFalse($emptyParam->has(1));
-    }
-
     public function testHasReturnsFalseForWrongOrEmptyValues(): void
     {
         $emptyParam = new Parameter();

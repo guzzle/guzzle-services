@@ -79,11 +79,9 @@ class GuzzleClient extends ServiceClient
     /**
      * Returns the command if valid; otherwise an Exception
      *
-     * @param string $name
-     *
      * @throws \InvalidArgumentException
      */
-    public function getCommand($name, array $args = []): CommandInterface
+    public function getCommand(string $name, array $args = []): CommandInterface
     {
         if (!$this->description->hasOperation($name)) {
             $name = ucfirst($name);

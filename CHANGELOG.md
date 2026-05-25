@@ -16,6 +16,7 @@
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
 * Require `null` schema types to match only `null` values
+* Add native parameter types to `GuzzleClient::getCommand()` and `Parameter::has()`
 * Improve PHPDoc for service client transformers, command handler stacks, and service description configuration arrays
 
 ## 1.6.0 - UPCOMING

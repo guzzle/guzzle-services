@@ -13,32 +13,20 @@ parameters:
 			path: src/Deserializer.php
 
 		-
-			message: '#^Call to function is_object\(\) with \*NEVER\* will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Parameter.php
-
-		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Parameter.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 2
 			path: src/Parameter.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
+			message: '#^Instanceof between GuzzleHttp\\Command\\Guzzle\\DescriptionInterface and GuzzleHttp\\Command\\Guzzle\\DescriptionInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: src/Parameter.php
 
 		-
-			message: '#^Instanceof between GuzzleHttp\\Command\\Guzzle\\DescriptionInterface and GuzzleHttp\\Command\\Guzzle\\DescriptionInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
 			count: 1
 			path: src/Parameter.php
 

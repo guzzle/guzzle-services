@@ -231,6 +231,10 @@ method signatures to remain compatible.
 Service description values should use the documented PHP types, such as strings
 for names and URIs, booleans for flags, and integers for min/max constraints.
 
+`Parameter::has()` now requires a string property name. Passing arrays, objects,
+integers, or other non-string values now raises `TypeError` instead of the
+previous `InvalidArgumentException`.
+
 #### Generic Promise And Structured PHPDoc Types
 
 Guzzle Services command handler stack annotations now use generic
