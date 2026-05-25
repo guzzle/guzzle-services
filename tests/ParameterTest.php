@@ -68,7 +68,7 @@ class ParameterTest extends TestCase
     {
         $d = $this->data;
         $d['default'] = 'foo';
-        $d['static'] = null;
+        $d['static'] = false;
         $p = new Parameter($d);
         $this->assertEquals('foo', $p->getValue(null));
     }
@@ -76,7 +76,7 @@ class ParameterTest extends TestCase
     public function testReturnsYourValue(): void
     {
         $d = $this->data;
-        $d['static'] = null;
+        $d['static'] = false;
         $p = new Parameter($d);
         $this->assertEquals('foo', $p->getValue('foo'));
     }
@@ -85,7 +85,7 @@ class ParameterTest extends TestCase
     {
         $d = $this->data;
         $d['default'] = '1';
-        $d['static'] = null;
+        $d['static'] = false;
         $p = new Parameter($d);
         $this->assertEquals('0', $p->getValue('0'));
     }
@@ -93,8 +93,8 @@ class ParameterTest extends TestCase
     public function testFiltersValues(): void
     {
         $d = $this->data;
-        $d['static'] = null;
-        $d['filters'] = 'strtoupper';
+        $d['static'] = false;
+        $d['filters'] = ['strtoupper'];
         $p = new Parameter($d);
         $this->assertEquals('FOO', $p->filter('foo'));
     }
@@ -119,9 +119,43 @@ class ParameterTest extends TestCase
     public function testUsesArrayByDefaultForFilters(): void
     {
         $d = $this->data;
-        $d['filters'] = null;
+        $d['filters'] = [];
         $p = new Parameter($d);
         $this->assertEquals([], $p->getFilters());
+    }
+
+    /**
+     * @dataProvider invalidParameterDataProvider
+     */
+    public function testRejectsInvalidParameterData($key, $value, $message): void
+    {
+        $this->expectExceptionMessage($message);
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Parameter([$key => $value]);
+    }
+
+    public function invalidParameterDataProvider(): array
+    {
+        return [
+            ['name', [], 'name must be a string, stringable value, or null'],
+            ['required', [], 'required must be a boolean, scalar, or null'],
+            ['static', new \stdClass(), 'static must be a boolean, scalar, or null'],
+            ['minimum', 'abc', 'minimum must be an integer or null'],
+            ['maxItems', 1.5, 'maxItems must be an integer or null'],
+            ['minimum', true, 'minimum must be an integer or null'],
+            ['filters', true, 'filters must be an array, string, or null'],
+            ['filters', [true], 'Filters must be strings or complex filter arrays'],
+            ['filters', [['method' => 'strtolower', 'args' => 'bad']], 'An [args] array must be specified for each complex filter'],
+            ['properties', 'foo', 'properties must be an array or null'],
+            ['properties', ['foo' => true], 'properties must contain only arrays or Parameter instances'],
+            ['data', 'foo', 'data must be an array or null'],
+            ['enum', 'foo', 'enum must be an array or null'],
+            ['additionalProperties', 'foo', 'additionalProperties must be a boolean, array, Parameter, or null'],
+            ['items', 'foo', 'items must be an array, Parameter, or null'],
+            ['type', true, 'type must be a string, array, or null'],
+            ['type', [true], 'type arrays must contain only strings'],
+        ];
     }
 
     public function testAllowsSimpleLocationValue(): void

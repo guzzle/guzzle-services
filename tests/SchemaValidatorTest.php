@@ -95,7 +95,7 @@ class SchemaValidatorTest extends TestCase
             'name' => 'test',
             'type' => 'object',
             'properties' => [
-                'foo' => ['required' => 'true'],
+                'foo' => ['required' => true],
             ],
         ]);
         $this->assertTrue($this->validator->validate($p, $o));
