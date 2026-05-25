@@ -252,6 +252,9 @@ change runtime behavior, but stricter static analysis may now report invalid
 option keys, invalid option value types, or callback annotations that were
 previously hidden behind loose `array` or `callable` PHPDoc.
 
+If your project documents reusable service description, operation, or parameter
+schema arrays, update those PHPDoc annotations to match the supported shapes.
+
 Command-to-request transformers are documented as receiving `CommandInterface`.
 Response-to-result transformers are documented as receiving `ResponseInterface`,
 `RequestInterface`, and `CommandInterface`. Lower-arity userland callables
