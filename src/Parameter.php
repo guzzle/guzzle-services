@@ -157,7 +157,34 @@ class Parameter implements ToArrayInterface
      * - $ref: (string) String referencing a service description model. The
      *   parameter is replaced by the schema contained in the model.
      *
-     * @param array<array-key, mixed>                   $data    Array of data as seen in service descriptions.
+     * @param array{
+     *     name?: string,
+     *     type?: string|array<array-key, string>,
+     *     required?: bool,
+     *     default?: mixed,
+     *     static?: bool,
+     *     description?: string,
+     *     location?: string,
+     *     sentAs?: string,
+     *     filters?: array<array-key, string|array{method: callable, args: array<array-key, mixed>}>,
+     *     properties?: array<array-key, array<array-key, mixed>|Parameter>,
+     *     additionalProperties?: bool|array<array-key, mixed>|Parameter|null,
+     *     items?: array<array-key, mixed>|Parameter,
+     *     pattern?: string,
+     *     enum?: array<array-key, mixed>,
+     *     minItems?: int,
+     *     maxItems?: int,
+     *     minLength?: int,
+     *     maxLength?: int,
+     *     minimum?: int,
+     *     maximum?: int,
+     *     data?: array<array-key, mixed>,
+     *     format?: string,
+     *     '$ref'?: string,
+     *     extends?: string,
+     *     instanceOf?: string,
+     *     ...
+     * } $data Array of data as seen in service descriptions.
      * @param array{description?: DescriptionInterface} $options Options used when creating the parameter.
      *
      * @throws \InvalidArgumentException
@@ -650,7 +677,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get whether or not the default value can be changed
      *
-     * @return bool|null
+     * @return bool
      */
     public function isStatic()
     {
@@ -662,7 +689,7 @@ class Parameter implements ToArrayInterface
      */
     public function getFilters(): array
     {
-        return $this->filters ?: [];
+        return $this->filters;
     }
 
     /**

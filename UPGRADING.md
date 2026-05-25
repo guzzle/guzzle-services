@@ -229,8 +229,10 @@ signatures to remain compatible.
 `process` client option is `false`, the raw PSR-7 response is available as the
 `response` key of the returned result instead of being returned directly.
 
-Service description values should use the documented PHP types, such as strings
-for names and URIs, booleans for flags, and integers for min/max constraints.
+Service description values must use the documented PHP types, such as strings
+for names and URIs, booleans for flags, arrays for schema collections, and
+integers for min/max constraints. Parameter schema values that Guzzle Services
+1.6 deprecated and normalized are rejected instead of being cast.
 
 #### Generic Promise And Structured PHPDoc Types
 
