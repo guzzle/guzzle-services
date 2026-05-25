@@ -16,56 +16,42 @@ class Parameter implements ToArrayInterface
 
     private array $resolvedData;
 
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var string */
-    private $description;
+    private ?string $description = null;
 
     /** @var string|array */
     private $type;
 
-    /** @var bool */
-    private $required = false;
+    private bool $required = false;
 
-    /** @var array|null */
-    private $enum;
+    private ?array $enum = null;
 
-    /** @var string */
-    private $pattern;
+    private ?string $pattern = null;
 
-    /** @var int */
-    private $minimum;
+    private ?int $minimum = null;
 
-    /** @var int */
-    private $maximum;
+    private ?int $maximum = null;
 
-    /** @var int */
-    private $minLength;
+    private ?int $minLength = null;
 
-    /** @var int */
-    private $maxLength;
+    private ?int $maxLength = null;
 
-    /** @var int */
-    private $minItems;
+    private ?int $minItems = null;
 
-    /** @var int */
-    private $maxItems;
+    private ?int $maxItems = null;
 
     /** @var mixed */
     private $default;
 
-    /** @var bool */
-    private $static = false;
+    private bool $static = false;
 
-    /** @var array */
-    private $filters = [];
+    /** @var array<array-key, string|array{method: callable, args: array<array-key, mixed>}> */
+    private array $filters = [];
 
-    /** @var string */
-    private $location;
+    private ?string $location = null;
 
-    /** @var string|null */
-    private $sentAs;
+    private ?string $sentAs = null;
 
     private array $data = [];
 
@@ -77,8 +63,7 @@ class Parameter implements ToArrayInterface
     /** @var array|Parameter */
     private $items;
 
-    /** @var string */
-    private $format;
+    private ?string $format = null;
 
     private ?array $propertiesCache = null;
 
@@ -304,13 +289,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        if (is_scalar($value) || (is_object($value) && method_exists($value, '__toString'))) {
-            self::deprecateLooseParameterValue($key, $value, 'string|null');
-
-            return (string) $value;
-        }
-
-        throw new \InvalidArgumentException($key.' must be a string, stringable value, or null');
+        throw new \InvalidArgumentException($key.' must be a string or null');
     }
 
     /**
@@ -324,13 +303,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        if ($value === null || is_scalar($value)) {
-            self::deprecateLooseParameterValue($key, $value, 'bool');
-
-            return (bool) $value;
-        }
-
-        throw new \InvalidArgumentException($key.' must be a boolean, scalar, or null');
+        throw new \InvalidArgumentException($key.' must be a boolean');
     }
 
     /**
@@ -342,15 +315,6 @@ class Parameter implements ToArrayInterface
     {
         if ($value === null || is_int($value)) {
             return $value;
-        }
-
-        if (!is_bool($value) && is_scalar($value)) {
-            $filtered = filter_var($value, FILTER_VALIDATE_INT);
-            if ($filtered !== false) {
-                self::deprecateLooseParameterValue($key, $value, 'int|null');
-
-                return $filtered;
-            }
         }
 
         throw new \InvalidArgumentException($key.' must be an integer or null');
@@ -367,19 +331,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        if ($value === null) {
-            self::deprecateLooseParameterValue('filters', $value, 'array');
-
-            return [];
-        }
-
-        if (is_string($value)) {
-            self::deprecateLooseParameterValue('filters', $value, 'array');
-
-            return [$value];
-        }
-
-        throw new \InvalidArgumentException('filters must be an array, string, or null');
+        throw new \InvalidArgumentException('filters must be an array');
     }
 
     /**
@@ -410,13 +362,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        if ($value === null) {
-            self::deprecateLooseParameterValue($key, $value, 'array');
-
-            return [];
-        }
-
-        throw new \InvalidArgumentException($key.' must be an array or null');
+        throw new \InvalidArgumentException($key.' must be an array');
     }
 
     /**
@@ -483,23 +429,6 @@ class Parameter implements ToArrayInterface
         }
 
         throw new \InvalidArgumentException('type must be a string, array, or null');
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return void
-     */
-    private static function deprecateLooseParameterValue($key, $value, $expected)
-    {
-        \trigger_deprecation(
-            'guzzlehttp/guzzle-services',
-            '1.6',
-            'Passing %s as a parameter "%s" value is deprecated; guzzlehttp/guzzle-services 2.0 requires %s.',
-            get_debug_type($value),
-            $key,
-            $expected
-        );
     }
 
     /**
@@ -721,7 +650,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get whether or not the default value can be changed
      *
-     * @return bool
+     * @return bool|null
      */
     public function isStatic()
     {
