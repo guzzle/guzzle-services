@@ -20,10 +20,8 @@ class Parameter implements ToArrayInterface
 
     private ?string $description = null;
 
-    private ?string $type = null;
-
-    /** @var array<array-key, string>|null */
-    private ?array $typeList = null;
+    /** @var string|array */
+    private $type;
 
     private bool $required = false;
 
@@ -59,11 +57,11 @@ class Parameter implements ToArrayInterface
 
     private array $properties = [];
 
-    private ?bool $additionalProperties = null;
+    /** @var array|bool|Parameter */
+    private $additionalProperties;
 
-    private ?Parameter $additionalPropertiesSchema = null;
-
-    private ?Parameter $items = null;
+    /** @var array|Parameter */
+    private $items;
 
     private ?string $format = null;
 
@@ -236,33 +234,12 @@ class Parameter implements ToArrayInterface
                 continue;
             }
 
-            if ($key === 'type') {
-                $this->setType($value);
-                $this->resolvedData[$key] = $value;
-
-                continue;
-            }
-
-            if ($key === 'additionalProperties') {
-                $this->setAdditionalProperties($value);
-                $this->resolvedData[$key] = $value;
-
-                continue;
-            }
-
-            if ($key === 'items') {
-                $this->setItems($value);
-                $this->resolvedData[$key] = $value;
-
-                continue;
-            }
-
             $this->{$key} = $value;
             $this->resolvedData[$key] = $value;
         }
 
-        if ($this->type === 'object' && $this->getAdditionalProperties() === null) {
-            $this->setAdditionalProperties(true);
+        if ($this->type == 'object' && $this->additionalProperties === null) {
+            $this->additionalProperties = true;
         }
     }
 
@@ -522,7 +499,7 @@ class Parameter implements ToArrayInterface
         }
 
         // Convert Boolean values
-        if ($this->getType() == 'boolean' && !is_bool($value)) {
+        if ($this->type == 'boolean' && !is_bool($value)) {
             $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         }
 
@@ -578,11 +555,11 @@ class Parameter implements ToArrayInterface
     /**
      * Get the type(s) of the parameter
      *
-     * @return string|array<array-key, string>|null
+     * @return string|array
      */
     public function getType()
     {
-        return $this->typeList ?? $this->type;
+        return $this->type;
     }
 
     /**
@@ -691,12 +668,6 @@ class Parameter implements ToArrayInterface
             return $this->data;
         } elseif (isset($this->data[$name])) {
             return $this->data[$name];
-        } elseif ($name === 'type') {
-            return $this->getType();
-        } elseif ($name === 'additionalProperties') {
-            return $this->getAdditionalProperties();
-        } elseif ($name === 'items') {
-            return $this->getItems();
         } elseif (isset($this->{$name})) {
             return $this->{$name};
         }
@@ -768,7 +739,14 @@ class Parameter implements ToArrayInterface
      */
     public function getAdditionalProperties()
     {
-        return $this->additionalPropertiesSchema ?? $this->additionalProperties;
+        if (is_array($this->additionalProperties)) {
+            $this->additionalProperties = new static(
+                $this->additionalProperties,
+                ['description' => $this->serviceDescription]
+            );
+        }
+
+        return $this->additionalProperties;
     }
 
     /**
@@ -776,6 +754,13 @@ class Parameter implements ToArrayInterface
      */
     public function getItems(): ?Parameter
     {
+        if (is_array($this->items)) {
+            $this->items = new static(
+                $this->items,
+                ['description' => $this->serviceDescription]
+            );
+        }
+
         return $this->items;
     }
 
@@ -819,51 +804,6 @@ class Parameter implements ToArrayInterface
     }
 
     /**
-     * @param string|array<array-key, string>|null $type
-     */
-    private function setType($type): void
-    {
-        if (is_array($type)) {
-            $this->type = null;
-            $this->typeList = $type;
-
-            return;
-        }
-
-        $this->type = $type;
-        $this->typeList = null;
-    }
-
-    /**
-     * @param array<array-key, mixed>|bool|Parameter|null $additionalProperties
-     */
-    private function setAdditionalProperties($additionalProperties): void
-    {
-        $this->additionalProperties = null;
-        $this->additionalPropertiesSchema = null;
-
-        if ($additionalProperties === null || is_bool($additionalProperties)) {
-            $this->additionalProperties = $additionalProperties;
-
-            return;
-        }
-
-        $this->additionalPropertiesSchema = $additionalProperties instanceof self
-            ? $additionalProperties
-            : new static($additionalProperties, ['description' => $this->serviceDescription]);
-    }
-
-    /**
-     * @param array<array-key, mixed>|Parameter|null $items
-     */
-    private function setItems($items): void
-    {
-        $this->items = $items instanceof self || $items === null
-            ? $items
-            : new static($items, ['description' => $this->serviceDescription]);
-    }
-
-    /**
      * Add a filter to the parameter
      *
      * @param mixed $filter Method to filter the value through
@@ -904,37 +844,6 @@ class Parameter implements ToArrayInterface
      */
     public function has(string $var): bool
     {
-        if ($var === 'type') {
-            return self::hasValue($this->getType());
-        }
-
-        if ($var === 'additionalProperties') {
-            if (array_key_exists('additionalProperties', $this->resolvedData)) {
-                return self::hasValue($this->resolvedData['additionalProperties']);
-            }
-
-            return self::hasValue($this->getAdditionalProperties());
-        }
-
-        if ($var === 'items') {
-            return array_key_exists('items', $this->resolvedData)
-                && self::hasValue($this->resolvedData['items']);
-        }
-
-        if (!isset($this->{$var})) {
-            return false;
-        }
-
-        return self::hasValue($this->{$var});
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private static function hasValue($value): bool
-    {
-        return $value !== null
-            && $value !== ''
-            && $value !== [];
+        return isset($this->{$var}) && !empty($this->{$var});
     }
 }
