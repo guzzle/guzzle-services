@@ -219,10 +219,11 @@ explicitly before calling those functions.
 
 #### Native Signatures
 
-Guzzle Services 2.0 adds native parameter, property, and return types to public
-interfaces, request and response locations, serializers, deserializers,
-validators, and formatters. Custom implementations and subclasses must update
-method signatures to remain compatible.
+Guzzle Services 2.0 adds native parameter, property, and return types across
+public service APIs, including interfaces, `GuzzleClient`, service description
+objects, request and response locations, serializers, deserializers, validators,
+and formatters. Custom implementations and subclasses must update method
+signatures to remain compatible.
 
 `GuzzleClient` command execution now returns `ResultInterface` values. When the
 `process` client option is `false`, the raw PSR-7 response is available as the
@@ -230,10 +231,6 @@ method signatures to remain compatible.
 
 Service description values should use the documented PHP types, such as strings
 for names and URIs, booleans for flags, and integers for min/max constraints.
-
-`Parameter::has()` now requires a string property name. Passing arrays, objects,
-integers, or other non-string values now raises `TypeError` instead of the
-previous `InvalidArgumentException`.
 
 #### Generic Promise And Structured PHPDoc Types
 
