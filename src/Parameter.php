@@ -611,15 +611,9 @@ class Parameter implements ToArrayInterface
 
     /**
      * Check if a parameter has a specific variable and if it set.
-     *
-     * @param string $var
      */
-    public function has($var): bool
+    public function has(string $var): bool
     {
-        if (!is_string($var)) {
-            throw new \InvalidArgumentException('Expected a string. Got: '.(is_object($var) ? get_class($var) : gettype($var)));
-        }
-
         return isset($this->{$var}) && !empty($this->{$var});
     }
 }

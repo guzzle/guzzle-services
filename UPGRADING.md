@@ -219,10 +219,11 @@ explicitly before calling those functions.
 
 #### Native Signatures
 
-Guzzle Services 2.0 adds native parameter, property, and return types to public
-interfaces, request and response locations, serializers, deserializers,
-validators, and formatters. Custom implementations and subclasses must update
-method signatures to remain compatible.
+Guzzle Services 2.0 adds native parameter, property, and return types across
+public service APIs, including interfaces, `GuzzleClient`, service description
+objects, request and response locations, serializers, deserializers, validators,
+and formatters. Custom implementations and subclasses must update method
+signatures to remain compatible.
 
 `GuzzleClient` command execution now returns `ResultInterface` values. When the
 `process` client option is `false`, the raw PSR-7 response is available as the
