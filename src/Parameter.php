@@ -308,10 +308,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return string|null
      */
-    private static function normalizeStringValue(string $key, $value)
+    private static function normalizeStringValue(string $key, $value): ?string
     {
         if ($value === null || is_string($value)) {
             return $value;
@@ -322,10 +320,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return bool
      */
-    private static function normalizeBooleanValue(string $key, $value)
+    private static function normalizeBooleanValue(string $key, $value): bool
     {
         if (is_bool($value)) {
             return $value;
@@ -336,10 +332,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return int|null
      */
-    private static function normalizeIntegerValue(string $key, $value)
+    private static function normalizeIntegerValue(string $key, $value): ?int
     {
         if ($value === null || is_int($value)) {
             return $value;
@@ -350,10 +344,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return array
      */
-    private static function normalizeFiltersValue($value)
+    private static function normalizeFiltersValue($value): array
     {
         if (is_array($value)) {
             return $value;
@@ -364,10 +356,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return array
      */
-    private static function normalizePropertiesValue($value)
+    private static function normalizePropertiesValue($value): array
     {
         $value = self::normalizeArrayValue('properties', $value);
         foreach ($value as $property) {
@@ -381,10 +371,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return array
      */
-    private static function normalizeArrayValue(string $key, $value)
+    private static function normalizeArrayValue(string $key, $value): array
     {
         if (is_array($value)) {
             return $value;
@@ -395,10 +383,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param mixed $value
-     *
-     * @return array|null
      */
-    private static function normalizeNullableArrayValue(string $key, $value)
+    private static function normalizeNullableArrayValue(string $key, $value): ?array
     {
         if ($value === null || is_array($value)) {
             return $value;
