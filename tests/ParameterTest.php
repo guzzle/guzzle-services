@@ -482,4 +482,23 @@ class ParameterTest extends TestCase
         $this->assertTrue($p->has('minItems'));
         $this->assertTrue($p->has('maxItems'));
     }
+
+    public function testHasRejectsOnlyNullEmptyStringAndEmptyArrayValues(): void
+    {
+        $p = new Parameter([
+            'description' => '0',
+            'minimum' => 0,
+            'type' => '0',
+            'additionalProperties' => false,
+        ]);
+
+        $this->assertTrue($p->has('description'));
+        $this->assertTrue($p->has('minimum'));
+        $this->assertTrue($p->has('type'));
+        $this->assertTrue($p->has('additionalProperties'));
+
+        $this->assertFalse((new Parameter(['description' => '']))->has('description'));
+        $this->assertFalse((new Parameter(['type' => '']))->has('type'));
+        $this->assertFalse((new Parameter(['type' => []]))->has('type'));
+    }
 }
