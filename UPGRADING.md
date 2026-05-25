@@ -260,6 +260,15 @@ Response-to-result transformers are documented as receiving `ResponseInterface`,
 `RequestInterface`, and `CommandInterface`. Lower-arity userland callables
 continue to work at runtime when PHP accepts them.
 
+#### Parameter Presence Checks
+
+`Parameter::has()` now treats explicit `0`, `'0'`, `0.0`, and `false` values as
+present. It returns `false` for unset values, `null`, empty strings, and empty
+arrays.
+
+If your application calls `Parameter::has()` as a truthiness check, update that
+code to fetch the value and compare it explicitly.
+
 #### Service Descriptions and URIs
 
 Guzzle PSR-7 3.x validates URI hosts, URI schemes, query values, and
