@@ -255,7 +255,8 @@ class Parameter implements ToArrayInterface
     }
 
     /**
-     * @param mixed $value
+     * @param string|int $key
+     * @param mixed      $value
      *
      * @return mixed
      */
@@ -270,17 +271,17 @@ class Parameter implements ToArrayInterface
             case 'format':
             case '$ref':
             case 'extends':
-                return self::normalizeStringValue($key, $value);
+                return self::normalizeStringValue((string) $key, $value);
             case 'required':
             case 'static':
-                return self::normalizeBooleanValue($key, $value);
+                return self::normalizeBooleanValue((string) $key, $value);
             case 'minimum':
             case 'maximum':
             case 'minLength':
             case 'maxLength':
             case 'minItems':
             case 'maxItems':
-                return self::normalizeIntegerValue($key, $value);
+                return self::normalizeIntegerValue((string) $key, $value);
             case 'filters':
                 return self::normalizeFiltersValue($value);
             case 'properties':
@@ -305,7 +306,7 @@ class Parameter implements ToArrayInterface
      *
      * @return string|null
      */
-    private static function normalizeStringValue($key, $value)
+    private static function normalizeStringValue(string $key, $value)
     {
         if ($value === null || is_string($value)) {
             return $value;
@@ -325,7 +326,7 @@ class Parameter implements ToArrayInterface
      *
      * @return bool
      */
-    private static function normalizeBooleanValue($key, $value)
+    private static function normalizeBooleanValue(string $key, $value)
     {
         if (is_bool($value)) {
             return $value;
@@ -345,7 +346,7 @@ class Parameter implements ToArrayInterface
      *
      * @return int|null
      */
-    private static function normalizeIntegerValue($key, $value)
+    private static function normalizeIntegerValue(string $key, $value)
     {
         if ($value === null || is_int($value)) {
             return $value;
@@ -411,7 +412,7 @@ class Parameter implements ToArrayInterface
      *
      * @return array
      */
-    private static function normalizeArrayValue($key, $value)
+    private static function normalizeArrayValue(string $key, $value)
     {
         if (is_array($value)) {
             return $value;
@@ -431,7 +432,7 @@ class Parameter implements ToArrayInterface
      *
      * @return array|null
      */
-    private static function normalizeNullableArrayValue($key, $value)
+    private static function normalizeNullableArrayValue(string $key, $value)
     {
         if ($value === null || is_array($value)) {
             return $value;
@@ -497,7 +498,7 @@ class Parameter implements ToArrayInterface
      *
      * @return void
      */
-    private static function deprecateLooseParameterValue($key, $value, $expected)
+    private static function deprecateLooseParameterValue(string $key, $value, string $expected)
     {
         \trigger_deprecation(
             'guzzlehttp/guzzle-services',
