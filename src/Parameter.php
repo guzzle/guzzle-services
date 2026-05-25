@@ -844,6 +844,12 @@ class Parameter implements ToArrayInterface
      */
     public function has(string $var): bool
     {
-        return isset($this->{$var}) && !empty($this->{$var});
+        if (!isset($this->{$var})) {
+            return false;
+        }
+
+        $value = $this->{$var};
+
+        return $value !== '' && $value !== [];
     }
 }
