@@ -164,6 +164,8 @@ class ParameterTest extends TestCase
 
         $this->assertNull($p->getName());
         $this->assertNull($p->getDescription());
+        $this->assertNull($p->getType());
+        $this->assertNull($p->getDefault());
         $this->assertNull($p->getEnum());
         $this->assertNull($p->getPattern());
         $this->assertNull($p->getMinimum());
@@ -175,6 +177,8 @@ class ParameterTest extends TestCase
         $this->assertNull($p->getLocation());
         $this->assertNull($p->getSentAs());
         $this->assertNull($p->getFormat());
+        $this->assertNull($p->getAdditionalProperties());
+        $this->assertNull($p->getItems());
         $this->assertFalse($p->isRequired());
         $this->assertFalse($p->isStatic());
         $this->assertSame([], $p->getFilters());
@@ -191,6 +195,15 @@ class ParameterTest extends TestCase
     {
         $p = new Parameter(['type' => 'foo']);
         $this->assertEquals('foo', $p->getType());
+    }
+
+    public function testParsesArrayTypeValues(): void
+    {
+        $p = new Parameter(['type' => ['string', 'null']]);
+
+        $this->assertSame(['string', 'null'], $p->getType());
+        $this->assertSame(['string', 'null'], $p->getData('type'));
+        $this->assertTrue($p->has('type'));
     }
 
     public function testValidatesComplexFilters(): void
@@ -253,6 +266,19 @@ class ParameterTest extends TestCase
         $this->assertEquals(['name' => 'test'], $p->getData());
         $this->assertNull($p->getData('fjnweefe'));
         $this->assertEquals('hi!', $p->getData('extra'));
+    }
+
+    public function testCanRetrieveVirtualSchemaPropertiesUsingDataMethod(): void
+    {
+        $p = new Parameter([
+            'type' => 'array',
+            'items' => ['type' => 'string'],
+        ]);
+
+        $this->assertSame('array', $p->getData('type'));
+        $this->assertInstanceOf(Parameter::class, $p->getData('items'));
+        $this->assertNull($p->getData('additionalProperties'));
+        $this->assertTrue($p->has('items'));
     }
 
     public function testHasPattern(): void
@@ -481,5 +507,24 @@ class ParameterTest extends TestCase
         $this->assertTrue($p->has('maximum'));
         $this->assertTrue($p->has('minItems'));
         $this->assertTrue($p->has('maxItems'));
+    }
+
+    public function testHasOnlyRejectsNullEmptyStringAndEmptyArrayValues(): void
+    {
+        $p = new Parameter([
+            'description' => '0',
+            'minimum' => 0,
+            'type' => '0',
+        ]);
+
+        $this->assertTrue($p->has('description'));
+        $this->assertTrue($p->has('minimum'));
+        $this->assertTrue($p->has('type'));
+
+        $this->assertFalse((new Parameter(['description' => '']))->has('description'));
+        $this->assertFalse((new Parameter(['type' => '']))->has('type'));
+        $this->assertFalse((new Parameter(['type' => []]))->has('type'));
+        $this->assertFalse((new Parameter(['type' => 'array', 'items' => []]))->has('items'));
+        $this->assertTrue((new Parameter(['type' => 'object', 'additionalProperties' => false]))->has('additionalProperties'));
     }
 }
