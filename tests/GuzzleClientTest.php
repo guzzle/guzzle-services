@@ -25,29 +25,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 class GuzzleClientTest extends TestCase
 {
-    public function testExecuteCommandViaMagicMethod(): void
-    {
-        $client = $this->getServiceClient(
-            [
-                new Response(200, [], '{"foo":"bar"}'),
-                new Response(200, [], '{"foofoo":"barbar"}'),
-            ],
-            null,
-            $this->commandToRequestTransformer()
-        );
-
-        // Synchronous
-        $result1 = $client->doThatThingYouDo(['fizz' => 'buzz']);
-        $this->assertEquals('bar', $result1['foo']);
-        $this->assertEquals('buzz', $result1['_request']['fizz']);
-        $this->assertEquals('doThatThingYouDo', $result1['_request']['action']);
-
-        // Asynchronous
-        $result2 = $client->doThatThingOtherYouDoAsync(['fizz' => 'buzz'])->wait();
-        $this->assertEquals('barbar', $result2['foofoo']);
-        $this->assertEquals('doThatThingOtherYouDo', $result2['_request']['action']);
-    }
-
     public function testExecuteWithQueryLocation(): void
     {
         $mock = new MockHandler();
@@ -272,6 +249,63 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals([], $guzzle->getConfig('defaults'));
         $guzzle->setConfig('abc', 'listen');
         $this->assertEquals('listen', $guzzle->getConfig('abc'));
+    }
+
+    public function testGetCommandUsesExactOperationName(): void
+    {
+        $guzzle = new GuzzleClient(
+            new HttpClient(),
+            new Description(['operations' => ['Foo' => []]]),
+            $this->commandToRequestTransformer(),
+            $this->responseToResultTransformer(),
+            null,
+            ['validate' => false, 'process' => false]
+        );
+
+        $command = $guzzle->getCommand('Foo', ['bar' => 'baz']);
+
+        $this->assertSame('Foo', $command->getName());
+        $this->assertSame('baz', $command['bar']);
+    }
+
+    public function testGetCommandFallsBackToUcfirstOperationName(): void
+    {
+        $guzzle = new GuzzleClient(
+            new HttpClient(),
+            new Description(['operations' => ['Foo' => []]]),
+            $this->commandToRequestTransformer(),
+            $this->responseToResultTransformer(),
+            null,
+            ['validate' => false, 'process' => false]
+        );
+
+        $command = $guzzle->getCommand('foo');
+
+        $this->assertSame('Foo', $command->getName());
+    }
+
+    public function testGetCommandMergesDefaultsWithoutOverwritingExplicitArgs(): void
+    {
+        $guzzle = new GuzzleClient(
+            new HttpClient(),
+            new Description(['operations' => ['Foo' => []]]),
+            $this->commandToRequestTransformer(),
+            $this->responseToResultTransformer(),
+            null,
+            [
+                'defaults' => [
+                    'bar' => 'default',
+                    'baz' => 'default',
+                ],
+                'validate' => false,
+                'process' => false,
+            ]
+        );
+
+        $command = $guzzle->getCommand('Foo', ['bar' => 'explicit']);
+
+        $this->assertSame('explicit', $command['bar']);
+        $this->assertSame('default', $command['baz']);
     }
 
     public function testAddsValidateHandlerWhenTrue(): void
@@ -626,78 +660,6 @@ class GuzzleClientTest extends TestCase
         $query = [];
         parse_str($requests[0]->getUri()->getQuery(), $query);
         $this->assertSame('42', $query['baz']);
-    }
-
-    public function testMagicMethodExecutesCommands(): void
-    {
-        $client = new HttpClient();
-        $description = new Description(
-            [
-                'name' => 'Testing API ',
-                'baseUri' => 'http://httpbin.org/',
-                'operations' => [
-                    'Foo' => [
-                        'httpMethod' => 'GET',
-                        'uri' => '/get',
-                        'parameters' => [
-                            'bar' => [
-                                'type' => 'string',
-                                'required' => false,
-                                'description' => 'Bar',
-                                'location' => 'query',
-                            ],
-                            'baz' => [
-                                'type' => 'string',
-                                'required' => true,
-                                'description' => 'baz',
-                                'location' => 'query',
-                            ],
-                        ],
-                        'responseModel' => 'Foo',
-                    ],
-                ],
-                'models' => [
-                    'Foo' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'id' => [
-                                'location' => 'json',
-                                'type' => 'string',
-                            ],
-                            'location' => [
-                                'location' => 'header',
-                                'sentAs' => 'Location',
-                                'type' => 'string',
-                            ],
-                            'age' => [
-                                'location' => 'json',
-                                'type' => 'integer',
-                            ],
-                            'statusCode' => [
-                                'location' => 'statusCode',
-                                'type' => 'integer',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        $guzzle = $this->getMockBuilder(GuzzleClient::class)
-            ->setConstructorArgs([
-                $client,
-                $description,
-            ])
-            ->onlyMethods(['execute'])
-            ->getMock();
-
-        $result = new Result(['foo' => 'bar']);
-
-        $guzzle->expects($this->once())
-            ->method('execute')
-            ->will($this->returnValue($result));
-
-        $this->assertSame($result, $guzzle->foo([]));
     }
 
     public function testThrowsWhenOperationNotFoundInDescription(): void
