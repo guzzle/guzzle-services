@@ -4,6 +4,7 @@
 
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
+* Deprecate non-uppercase operation `httpMethod` values; 2.0 preserves method casing
 * Deprecate non-string and empty-array header location values
 * Deprecate loose parameter schema values and reject values that cannot be safely normalized
 * Preserve explicit `null` JSON response properties
