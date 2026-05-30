@@ -38,6 +38,7 @@ class SerializerTest extends TestCase
         $serializer = new Serializer($description);
         /** @var Request */
         $request = $serializer($command);
+        $this->assertSame('GET', $request->getMethod());
         $this->assertEquals('http://test.com/api/bar/foo', $request->getUri());
     }
 
@@ -58,6 +59,23 @@ class SerializerTest extends TestCase
         $request = $serializer($command);
 
         $this->assertSame('get', $request->getMethod());
+    }
+
+    public function testCreatesRequestWithUppercaseMethodWithoutUriTemplate(): void
+    {
+        $description = new Description([
+            'baseUri' => 'http://test.com',
+            'operations' => [
+                'test' => [
+                    'httpMethod' => 'POST',
+                ],
+            ],
+        ]);
+
+        $request = (new Serializer($description))(new Command('test'));
+
+        $this->assertSame('POST', $request->getMethod());
+        $this->assertEquals('http://test.com', $request->getUri());
     }
 
     public function testAllowsAdditionalParametersWithoutLocation(): void
