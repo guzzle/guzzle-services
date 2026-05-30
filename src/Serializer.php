@@ -125,8 +125,22 @@ class Serializer
 
         // If command does not specify a template, assume the client's base URL.
         if (null === $operation->getUri()) {
+            /** @var mixed $method */
+            $method = $operation->getHttpMethod() ?: 'GET';
+            if (is_string($method)) {
+                $normalizedMethod = strtoupper($method);
+                if ($method !== $normalizedMethod) {
+                    \trigger_deprecation(
+                        'guzzlehttp/guzzle-services',
+                        '1.6',
+                        'Passing a non-uppercase operation "httpMethod" value to Serializer::createRequest() is deprecated; guzzlehttp/guzzle-services 2.0 will preserve HTTP method casing. Pass an uppercase method explicitly if uppercase is required.'
+                    );
+                    $method = $normalizedMethod;
+                }
+            }
+
             return new Request(
-                $operation->getHttpMethod() ?: 'GET',
+                $method,
                 $this->description->getBaseUri()
             );
         }
@@ -159,9 +173,22 @@ class Serializer
 
         // Expand the URI template.
         $uri = new Uri(UriTemplate::expand($operation->getUri(), $variables));
+        /** @var mixed $method */
+        $method = $operation->getHttpMethod() ?: 'GET';
+        if (is_string($method)) {
+            $normalizedMethod = strtoupper($method);
+            if ($method !== $normalizedMethod) {
+                \trigger_deprecation(
+                    'guzzlehttp/guzzle-services',
+                    '1.6',
+                    'Passing a non-uppercase operation "httpMethod" value to Serializer::createCommandWithUri() is deprecated; guzzlehttp/guzzle-services 2.0 will preserve HTTP method casing. Pass an uppercase method explicitly if uppercase is required.'
+                );
+                $method = $normalizedMethod;
+            }
+        }
 
         return new Request(
-            $operation->getHttpMethod() ?: 'GET',
+            $method,
             UriResolver::resolve($this->description->getBaseUri(), $uri)
         );
     }
