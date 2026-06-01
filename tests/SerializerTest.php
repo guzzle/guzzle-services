@@ -10,8 +10,8 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
 use GuzzleHttp\Command\Guzzle\Serializer;
 use GuzzleHttp\Psr7\Request;
-use Psr\Http\Message\RequestInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Serializer
