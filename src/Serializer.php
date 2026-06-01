@@ -30,7 +30,7 @@ class Serializer
     private DescriptionInterface $description;
 
     /** @var RequestLocationInterface[] */
-    private $customRequestLocations;
+    private array $customRequestLocations;
 
     /**
      * @param RequestLocationInterface[] $requestLocations Extra request locations
@@ -57,7 +57,7 @@ class Serializer
         }
     }
 
-    private function resetDefaultRequestLocations()
+    private function resetDefaultRequestLocations(): void
     {
         $this->locations = $this->customRequestLocations + [
             'body' => new BodyLocation(),
