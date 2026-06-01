@@ -105,21 +105,21 @@ class SerializerTest extends TestCase
         $this->assertEquals('http://test.com/api', $request->getUri());
     }
 
-    public function testDoesNotLeakJsonLocationStateAfterFailedSerialization()
+    public function testDoesNotLeakJsonLocationStateAfterFailedSerialization(): void
     {
         $request = $this->serializeAfterFailure('json');
 
         $this->assertSame('{"public":"ok"}', (string) $request->getBody());
     }
 
-    public function testDoesNotLeakFormParamLocationStateAfterFailedSerialization()
+    public function testDoesNotLeakFormParamLocationStateAfterFailedSerialization(): void
     {
         $request = $this->serializeAfterFailure('formParam');
 
         $this->assertSame('public=ok', (string) $request->getBody());
     }
 
-    public function testDoesNotLeakMultipartLocationStateAfterFailedSerialization()
+    public function testDoesNotLeakMultipartLocationStateAfterFailedSerialization(): void
     {
         $body = (string) $this->serializeAfterFailure('multipart')->getBody();
 
@@ -129,7 +129,7 @@ class SerializerTest extends TestCase
         $this->assertStringNotContainsString('TOPSECRET', $body);
     }
 
-    public function testDoesNotLeakXmlLocationStateAfterFailedSerialization()
+    public function testDoesNotLeakXmlLocationStateAfterFailedSerialization(): void
     {
         $body = (string) $this->serializeAfterFailure('xml')->getBody();
 
@@ -138,7 +138,7 @@ class SerializerTest extends TestCase
         $this->assertStringNotContainsString('TOPSECRET', $body);
     }
 
-    public function testSerializerInstancesDoNotShareDefaultRequestLocationState()
+    public function testSerializerInstancesDoNotShareDefaultRequestLocationState(): void
     {
         $description = $this->createFailedSerializationDescription('json');
         $first = new Serializer($description, ['fail' => $this->createFailingRequestLocation()]);
@@ -150,7 +150,7 @@ class SerializerTest extends TestCase
         $this->assertSame('{"public":"ok"}', (string) $request->getBody());
     }
 
-    public function testCustomRequestLocationIsPreservedAfterFailedSerialization()
+    public function testCustomRequestLocationIsPreservedAfterFailedSerialization(): void
     {
         $customLocation = new class implements RequestLocationInterface {
             public function visit(
@@ -182,7 +182,7 @@ class SerializerTest extends TestCase
         $this->assertSame('', (string) $request->getBody());
     }
 
-    private function serializeAfterFailure($statefulLocation)
+    private function serializeAfterFailure(string $statefulLocation): RequestInterface
     {
         $serializer = new Serializer(
             $this->createFailedSerializationDescription($statefulLocation),
@@ -194,7 +194,7 @@ class SerializerTest extends TestCase
         return $serializer(new Command('Next', ['public' => 'ok']));
     }
 
-    private function triggerFailedSerialization(Serializer $serializer)
+    private function triggerFailedSerialization(Serializer $serializer): void
     {
         try {
             $serializer(new Command('Fail', [
@@ -207,7 +207,7 @@ class SerializerTest extends TestCase
         }
     }
 
-    private function createFailedSerializationDescription($statefulLocation)
+    private function createFailedSerializationDescription(string $statefulLocation): Description
     {
         return new Description([
             'baseUri' => 'https://example.test',
@@ -231,7 +231,7 @@ class SerializerTest extends TestCase
         ]);
     }
 
-    private function createFailingRequestLocation()
+    private function createFailingRequestLocation(): RequestLocationInterface
     {
         return new class implements RequestLocationInterface {
             public function visit(
