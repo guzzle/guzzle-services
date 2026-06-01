@@ -2,6 +2,7 @@
 
 ## 1.5.3 - Upcoming
 
+* Harden request serialization state after failures
 * Preserve explicit `null` JSON response properties
 
 ## 1.5.2 - 2026-05-22
