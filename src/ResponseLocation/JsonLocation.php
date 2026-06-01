@@ -64,7 +64,7 @@ class JsonLocation extends AbstractLocation
         $addLocation = $additional->getLocation() ?: $model->getLocation();
         if ($addLocation == $this->locationName) {
             foreach ($this->json as $prop => $val) {
-                if (!isset($result[$prop])) {
+                if (!array_key_exists($prop, $result->toArray())) {
                     // Only recurse if there is a type specified
                     $result[$prop] = $additional->getType()
                         ? $this->recurse($additional, $val)
@@ -94,7 +94,7 @@ class JsonLocation extends AbstractLocation
             // Treat as javascript array
             if ($name) {
                 // name provided, store it under a key in the array
-                $subArray = isset($this->json[$key]) ? $this->json[$key] : null;
+                $subArray = $key !== null && array_key_exists($key, $this->json) ? $this->json[$key] : null;
                 $result[$name] = $this->recurse($param, $subArray);
             } else {
                 // top-level `array` or an empty name
@@ -103,7 +103,7 @@ class JsonLocation extends AbstractLocation
                     $this->recurse($param, $this->json)
                 ));
             }
-        } elseif ($key !== null && isset($this->json[$key])) {
+        } elseif ($key !== null && array_key_exists($key, $this->json)) {
             $result[$name] = $this->recurse($param, $this->json[$key]);
         }
 
