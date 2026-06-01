@@ -7,6 +7,10 @@
 * Deprecate non-uppercase operation `httpMethod` values; 2.0 preserves method casing
 * Deprecate non-string and empty-array header location values
 * Deprecate loose parameter schema values and reject values that cannot be safely normalized
+
+## 1.5.3 - Upcoming
+
+* Harden request serialization state after failures
 * Preserve explicit `null` JSON response properties
 * Validate `ToArrayInterface` object properties after conversion
 * Enforce zero-valued schema validation bounds
