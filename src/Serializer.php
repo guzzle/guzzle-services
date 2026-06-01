@@ -29,6 +29,9 @@ class Serializer
 
     private DescriptionInterface $description;
 
+    /** @var RequestLocationInterface[] */
+    private $customRequestLocations;
+
     /**
      * @param RequestLocationInterface[] $requestLocations Extra request locations
      */
@@ -36,20 +39,8 @@ class Serializer
         DescriptionInterface $description,
         array $requestLocations = []
     ) {
-        static $defaultRequestLocations;
-        if (!$defaultRequestLocations) {
-            $defaultRequestLocations = [
-                'body' => new BodyLocation(),
-                'query' => new QueryLocation(),
-                'header' => new HeaderLocation(),
-                'json' => new JsonLocation(),
-                'xml' => new XmlLocation(),
-                'formParam' => new FormParamLocation(),
-                'multipart' => new MultiPartLocation(),
-            ];
-        }
-
-        $this->locations = $requestLocations + $defaultRequestLocations;
+        $this->customRequestLocations = $requestLocations;
+        $this->resetDefaultRequestLocations();
         $this->description = $description;
     }
 
@@ -57,7 +48,26 @@ class Serializer
     {
         $request = $this->createRequest($command);
 
-        return $this->prepareRequest($command, $request);
+        try {
+            return $this->prepareRequest($command, $request);
+        } catch (\Throwable $e) {
+            $this->resetDefaultRequestLocations();
+
+            throw $e;
+        }
+    }
+
+    private function resetDefaultRequestLocations()
+    {
+        $this->locations = $this->customRequestLocations + [
+            'body' => new BodyLocation(),
+            'query' => new QueryLocation(),
+            'header' => new HeaderLocation(),
+            'json' => new JsonLocation(),
+            'xml' => new XmlLocation(),
+            'formParam' => new FormParamLocation(),
+            'multipart' => new MultiPartLocation(),
+        ];
     }
 
     /**
