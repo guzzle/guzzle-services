@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.5.4 - Upcoming
+## 1.5.4 - 2026-06-02
 
 * Prevent XML CDATA injection during request serialization (GHSA-q8r6-5hfw-5jff)
 
