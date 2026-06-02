@@ -217,11 +217,26 @@ class XmlLocation extends AbstractLocation
             $writer->startElement($name);
         }
         if ($value !== null && strpbrk($value, '<>&')) {
-            $writer->writeCData($value);
+            $this->writeSafeCData($writer, $value);
         } else {
             $writer->writeRaw($value);
         }
         $writer->endElement();
+    }
+
+    private function writeSafeCData(\XMLWriter $writer, $value)
+    {
+        $parts = explode(']]>', $value);
+        $last = array_pop($parts);
+
+        foreach ($parts as $part) {
+            $writer->writeCData($part.']]');
+            $writer->writeCData('>');
+        }
+
+        if ($last !== '') {
+            $writer->writeCData($last);
+        }
     }
 
     /**
