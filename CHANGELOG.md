@@ -18,6 +18,7 @@
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
 * Require `null` schema types to match only `null` values
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
+* Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
 
 ## 1.6.0 - 2026-06-02
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace GuzzleHttp\Command\Guzzle\QuerySerializer;
 
+/**
+ * @final
+ */
 class Rfc3986Serializer implements QuerySerializerInterface
 {
     private bool $removeNumericIndices;
