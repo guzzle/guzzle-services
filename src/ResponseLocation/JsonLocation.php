@@ -33,11 +33,13 @@ class JsonLocation extends AbstractLocation
     ): ResultInterface {
         $body = (string) $response->getBody();
         $decoded = $body !== '' ? Utils::jsonDecode($body, true) : [];
+
         if (!is_array($decoded)) {
             throw new \RuntimeException('JSON response body must be an object or array');
         }
 
         $this->json = $decoded;
+
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
         if ($model->getType() === 'array' && ($name = $model->getName())) {
