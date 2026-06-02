@@ -8,7 +8,11 @@
 * Deprecate non-string and empty-array header location values
 * Deprecate loose parameter schema values and reject values that cannot be safely normalized
 
-## 1.5.3 - Upcoming
+## 1.5.4 - 2026-06-02
+
+* Prevent XML CDATA injection during request serialization (GHSA-q8r6-5hfw-5jff)
+
+## 1.5.3 - 2026-06-02
 
 * Harden request serialization state after failures
 * Preserve explicit `null` JSON response properties
