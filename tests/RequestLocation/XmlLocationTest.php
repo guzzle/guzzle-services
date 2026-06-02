@@ -528,7 +528,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testSplitsCDataTerminatorsToPreventXmlInjection()
+    public function testSplitsCDataTerminatorsToPreventXmlInjection(): void
     {
         $payload = 'x]]></Foo><Injected attr="1"/><Foo><![CDATA[y';
         $document = simplexml_load_string($this->serializeXmlValue($payload));
@@ -539,7 +539,7 @@ class XmlLocationTest extends TestCase
         $this->assertSame($payload, (string) $document->Foo);
     }
 
-    public function cdataTerminatorProvider()
+    public static function cdataTerminatorProvider(): array
     {
         return [
             ['a]]>b'],
@@ -553,7 +553,7 @@ class XmlLocationTest extends TestCase
      *
      * @group RequestLocation
      */
-    public function testPreservesTextContainingCDataTerminators($value)
+    public function testPreservesTextContainingCDataTerminators(string $value): void
     {
         $document = simplexml_load_string($this->serializeXmlValue($value));
 
@@ -561,7 +561,7 @@ class XmlLocationTest extends TestCase
         $this->assertSame($value, (string) $document->Foo);
     }
 
-    private function serializeXmlValue($value)
+    private function serializeXmlValue(string $value): string
     {
         $location = new XmlLocation();
         $command = new Command('foo', ['Foo' => $value]);
