@@ -224,7 +224,7 @@ class XmlLocation extends AbstractLocation
         $writer->endElement();
     }
 
-    private function writeSafeCData(\XMLWriter $writer, $value)
+    protected function writeSafeCData(\XMLWriter $writer, $value)
     {
         $parts = explode(']]>', $value);
         $last = array_pop($parts);
