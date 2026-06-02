@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.5.3 - Upcoming
+## 1.5.3 - 2026-06-02
 
 * Harden request serialization state after failures
 * Preserve explicit `null` JSON response properties
