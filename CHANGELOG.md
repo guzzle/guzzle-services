@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.6.0 - UPCOMING
+## 1.6.0 - 2026-06-02
 
 * Require `guzzlehttp/guzzle` ^7.11 and `guzzlehttp/psr7` ^2.11
 * Require `guzzlehttp/command` ^1.5 and `guzzlehttp/uri-template` ^1.0.6
