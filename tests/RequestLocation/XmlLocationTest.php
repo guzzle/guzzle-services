@@ -388,7 +388,7 @@ class XmlLocationTest extends TestCase
                     ],
                 ],
                 ['Foo' => '<h1>This is a title</h1>'],
-                '<Request><Foo xmlns="http://foo.com"><![CDATA[<h1>This is a title</h1>]]></Foo></Request>',
+                '<Request><Foo xmlns="http://foo.com">&lt;h1&gt;This is a title&lt;/h1&gt;</Foo></Request>',
             ],
             // Flat array at top level
             [
@@ -528,7 +528,7 @@ class XmlLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
-    public function testSplitsCDataTerminatorsToPreventXmlInjection(): void
+    public function testSerializesCDataTerminatorsAsTextWithoutXmlInjection(): void
     {
         $payload = 'x]]></Foo><Injected attr="1"/><Foo><![CDATA[y';
         $document = simplexml_load_string($this->serializeXmlValue($payload));

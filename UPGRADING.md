@@ -142,6 +142,13 @@ explicitly:
 ['type' => ['null', 'boolean']]
 ```
 
+#### XML Request Text Serialization
+
+XML request scalar element values containing `<`, `>`, or `&` are now
+serialized as escaped text instead of CDATA sections. XML parsers see the same
+text value, but applications or tests that compare raw XML request bodies may
+need to update expected strings.
+
 #### XML Response Depth Limit
 
 XML response deserialization now rejects XML responses that exceed 512 nested
