@@ -524,4 +524,57 @@ class XmlLocationTest extends TestCase
             $this->assertEquals($xml, $body);
         }
     }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testSplitsCDataTerminatorsToPreventXmlInjection()
+    {
+        $payload = 'x]]></Foo><Injected attr="1"/><Foo><![CDATA[y';
+        $document = simplexml_load_string($this->serializeXmlValue($payload));
+
+        $this->assertNotFalse($document);
+        $this->assertCount(1, $document->Foo);
+        $this->assertCount(0, $document->Injected);
+        $this->assertSame($payload, (string) $document->Foo);
+    }
+
+    public function cdataTerminatorProvider()
+    {
+        return [
+            ['a]]>b'],
+            ['abc]]>'],
+            [']]>'],
+        ];
+    }
+
+    /**
+     * @dataProvider cdataTerminatorProvider
+     *
+     * @group RequestLocation
+     */
+    public function testPreservesTextContainingCDataTerminators($value)
+    {
+        $document = simplexml_load_string($this->serializeXmlValue($value));
+
+        $this->assertNotFalse($document);
+        $this->assertSame($value, (string) $document->Foo);
+    }
+
+    private function serializeXmlValue($value)
+    {
+        $location = new XmlLocation();
+        $command = new Command('foo', ['Foo' => $value]);
+        $request = new Request('POST', 'http://httbin.org');
+        $param = new Parameter([
+            'name' => 'Foo',
+            'location' => 'xml',
+            'type' => 'string',
+        ]);
+
+        $location->visit($command, $request, $param);
+        $request = $location->after($command, $request, new Operation());
+
+        return (string) $request->getBody();
+    }
 }
