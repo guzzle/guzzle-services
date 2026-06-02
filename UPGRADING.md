@@ -241,6 +241,19 @@ for names and URIs, booleans for flags, arrays for schema collections, and
 integers for min/max constraints. Parameter schema values that Guzzle Services
 1.6 deprecated and normalized are rejected instead of being cast.
 
+#### Soft-Final Classes
+
+`GuzzleHttp\Command\Guzzle\Operation`,
+`GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler`, and
+`GuzzleHttp\Command\Guzzle\QuerySerializer\Rfc3986Serializer` are now annotated
+with `@final`.
+
+Code extending `Operation` should model operation data in service descriptions
+instead of subclassing the runtime operation object. Code extending
+`ValidatedDescriptionHandler` should use command middleware composition instead.
+Code extending `Rfc3986Serializer` should implement `QuerySerializerInterface`
+and pass the custom serializer to `QueryLocation`.
+
 #### Generic Promise And Structured PHPDoc Types
 
 Guzzle Services command handler stack annotations now use generic
