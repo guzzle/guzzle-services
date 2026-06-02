@@ -14,6 +14,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 /**
  * Handler used to validate command input against a service description.
  *
+ * @final
+ *
  * @author Stefano Kowalke <info@arroba-it.de>
  */
 class ValidatedDescriptionHandler

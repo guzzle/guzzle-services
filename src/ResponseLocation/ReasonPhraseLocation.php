@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Extracts the reason phrase of a response into a result field
+ *
+ * @final
  */
 class ReasonPhraseLocation extends AbstractLocation
 {

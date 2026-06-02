@@ -8,6 +8,8 @@ use GuzzleHttp\Command\ToArrayInterface;
 
 /**
  * Guzzle operation
+ *
+ * @final
  */
 class Operation implements ToArrayInterface
 {

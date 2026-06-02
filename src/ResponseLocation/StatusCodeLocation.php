@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Extracts the status code of a response into a result field
+ *
+ * @final
  */
 class StatusCodeLocation extends AbstractLocation
 {
