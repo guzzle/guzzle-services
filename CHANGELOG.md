@@ -3,7 +3,8 @@
 ## 2.0.0 - UPCOMING
 
 * Drop support for PHP 7.2 and 7.3
-* Require `guzzlehttp/command` ^2.0, `guzzlehttp/guzzle` ^8.0, `guzzlehttp/psr7` ^3.0, and `guzzlehttp/uri-template` ^2.0
+* Require `guzzlehttp/guzzle` ^8.0 and `guzzlehttp/psr7` ^3.0
+* Require `guzzlehttp/command` ^2.0 and `guzzlehttp/uri-template` ^2.0
 * Remove the legacy `baseUrl` service description option; use `baseUri` instead
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
