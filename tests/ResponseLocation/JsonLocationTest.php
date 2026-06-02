@@ -125,6 +125,7 @@ class JsonLocationTest extends TestCase
     {
         return [
             ['null'],
+            ['0'],
             ['123'],
             ['"x"'],
             ['true'],

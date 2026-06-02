@@ -32,8 +32,7 @@ class JsonLocation extends AbstractLocation
         Parameter $model
     ): ResultInterface {
         $body = (string) $response->getBody();
-        $body = $body ?: '{}';
-        $decoded = Utils::jsonDecode($body, true);
+        $decoded = $body !== '' ? Utils::jsonDecode($body, true) : [];
         if (!is_array($decoded)) {
             throw new \RuntimeException('JSON response body must be an object or array');
         }
