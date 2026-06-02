@@ -19,8 +19,10 @@
 * Require `null` schema types to match only `null` values
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 
-## 1.6.0 - UPCOMING
+## 1.6.0 - 2026-06-02
 
+* Require `guzzlehttp/guzzle` ^7.11 and `guzzlehttp/psr7` ^2.11
+* Require `guzzlehttp/command` ^1.5 and `guzzlehttp/uri-template` ^1.0.6
 * Deprecate the legacy `baseUrl` service description option; use `baseUri` instead
 * Deprecate the legacy `responseClass` operation option; use `responseModel` instead
 * Deprecate non-uppercase operation `httpMethod` values; 2.0 preserves method casing
