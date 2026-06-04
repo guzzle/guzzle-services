@@ -77,6 +77,17 @@ class HeaderLocation extends AbstractLocation
             return $value;
         }
 
+        if ($value === null) {
+            \trigger_deprecation(
+                'guzzlehttp/guzzle-services',
+                '1.6',
+                'Passing %s as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
+                get_debug_type($value)
+            );
+
+            return '';
+        }
+
         if (is_scalar($value)) {
             \trigger_deprecation(
                 'guzzlehttp/guzzle-services',
@@ -101,6 +112,19 @@ class HeaderLocation extends AbstractLocation
 
             foreach ($value as $key => $item) {
                 if (is_string($item)) {
+                    continue;
+                }
+
+                if ($item === null) {
+                    \trigger_deprecation(
+                        'guzzlehttp/guzzle-services',
+                        '1.6',
+                        'Passing %s inside a header location value array is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
+                        get_debug_type($item)
+                    );
+
+                    $value[$key] = '';
+
                     continue;
                 }
 

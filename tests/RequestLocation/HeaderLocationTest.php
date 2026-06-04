@@ -52,7 +52,7 @@ class HeaderLocationTest extends TestCase
     public function testVisitsLocationRejectsInvalidHeaderValue()
     {
         $location = new HeaderLocation('header');
-        $command = new Command('foo', ['foo' => null]);
+        $command = new Command('foo', ['foo' => new \stdClass()]);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
 
@@ -68,7 +68,7 @@ class HeaderLocationTest extends TestCase
     public function testVisitsLocationRejectsInvalidArrayHeaderValue()
     {
         $location = new HeaderLocation('header');
-        $command = new Command('foo', ['foo' => ['bar', null]]);
+        $command = new Command('foo', ['foo' => ['bar', new \stdClass()]]);
         $request = new Request('POST', 'http://httbin.org');
         $param = new Parameter(['name' => 'foo']);
 
@@ -106,7 +106,7 @@ class HeaderLocationTest extends TestCase
     {
         $location = new HeaderLocation('header');
         $command = new Command('foo', ['foo' => 'bar']);
-        $command['add'] = null;
+        $command['add'] = new \stdClass();
         $operation = new Operation([
             'additionalParameters' => [
                 'location' => 'header',
