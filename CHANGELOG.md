@@ -21,7 +21,7 @@
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
 
-## 1.6.1 - Upcoming
+## 1.6.1 - 2026-06-04
 
 * Allow deprecated `null` header location values to normalize to empty strings
 
