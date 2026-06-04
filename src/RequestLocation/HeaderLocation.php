@@ -77,18 +77,7 @@ class HeaderLocation extends AbstractLocation
             return $value;
         }
 
-        if ($value === null) {
-            \trigger_deprecation(
-                'guzzlehttp/guzzle-services',
-                '1.6',
-                'Passing %s as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                get_debug_type($value)
-            );
-
-            return '';
-        }
-
-        if (is_scalar($value)) {
+        if (is_scalar($value) || $value === null) {
             \trigger_deprecation(
                 'guzzlehttp/guzzle-services',
                 '1.6',
@@ -115,7 +104,7 @@ class HeaderLocation extends AbstractLocation
                     continue;
                 }
 
-                if ($item === null) {
+                if (is_scalar($item) || $item === null) {
                     \trigger_deprecation(
                         'guzzlehttp/guzzle-services',
                         '1.6',
@@ -123,23 +112,12 @@ class HeaderLocation extends AbstractLocation
                         get_debug_type($item)
                     );
 
-                    $value[$key] = '';
+                    $value[$key] = (string) $item;
 
                     continue;
                 }
 
-                if (!is_scalar($item)) {
-                    throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
-                }
-
-                \trigger_deprecation(
-                    'guzzlehttp/guzzle-services',
-                    '1.6',
-                    'Passing %s inside a header location value array is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                    get_debug_type($item)
-                );
-
-                $value[$key] = (string) $item;
+                throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
             }
 
             return $value;
