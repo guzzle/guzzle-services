@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.1 - Upcoming
+
+* Allow deprecated `null` header location values to normalize to empty strings
+
 ## 1.6.0 - 2026-06-02
 
 * Require `guzzlehttp/guzzle` ^7.11 and `guzzlehttp/psr7` ^2.11
