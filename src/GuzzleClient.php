@@ -67,7 +67,7 @@ class GuzzleClient extends ServiceClient
         ?HandlerStack $commandHandlerStack = null,
         array $config = []
     ) {
-        self::deprecateInvalidConfigOptionTypes($config);
+        self::assertConfigOptionTypes($config);
 
         $this->config = $config;
         $this->description = $description;
@@ -155,7 +155,7 @@ class GuzzleClient extends ServiceClient
     public function setConfig($option, $value): void
     {
         if (is_int($option) || is_string($option)) {
-            self::deprecateInvalidConfigOptionValue((string) $option, $value);
+            self::assertConfigOptionType((string) $option, $value);
         }
 
         $this->config[$option] = $value;
@@ -164,10 +164,10 @@ class GuzzleClient extends ServiceClient
     /**
      * @return void
      */
-    private static function deprecateInvalidConfigOptionTypes(array $config)
+    private static function assertConfigOptionTypes(array $config)
     {
         foreach ($config as $option => $value) {
-            self::deprecateInvalidConfigOptionValue((string) $option, $value);
+            self::assertConfigOptionType((string) $option, $value);
         }
     }
 
@@ -176,16 +176,16 @@ class GuzzleClient extends ServiceClient
      *
      * @return void
      */
-    private static function deprecateInvalidConfigOptionValue(string $option, $value)
+    private static function assertConfigOptionType(string $option, $value)
     {
         if ($option === 'defaults' && !is_array($value)) {
-            self::deprecateInvalidConfigOptionType($option, 'array', $value);
+            self::invalidConfigOptionType($option, 'array', $value);
 
             return;
         }
 
         if (($option === 'validate' || $option === 'process') && !is_bool($value)) {
-            self::deprecateInvalidConfigOptionType($option, 'bool', $value);
+            self::invalidConfigOptionType($option, 'bool', $value);
 
             return;
         }
@@ -195,14 +195,14 @@ class GuzzleClient extends ServiceClient
         }
 
         if (!is_array($value)) {
-            self::deprecateInvalidConfigOptionType($option, 'array', $value);
+            self::invalidConfigOptionType($option, 'array', $value);
 
             return;
         }
 
         foreach ($value as $name => $location) {
             if (!$location instanceof ResponseLocationInterface) {
-                self::deprecateInvalidConfigOptionType(
+                self::invalidConfigOptionType(
                     $option.'.'.(string) $name,
                     ResponseLocationInterface::class,
                     $location
@@ -216,16 +216,14 @@ class GuzzleClient extends ServiceClient
      *
      * @return void
      */
-    private static function deprecateInvalidConfigOptionType(string $option, string $expected, $value)
+    private static function invalidConfigOptionType(string $option, string $expected, $value)
     {
-        \trigger_deprecation(
-            'guzzlehttp/guzzle-services',
-            '1.7',
-            'Passing %s to GuzzleClient config option "%s" is deprecated; guzzlehttp/guzzle-services 2.0 requires %s.',
+        throw new \InvalidArgumentException(\sprintf(
+            'Passing %s to GuzzleClient config option "%s" is invalid; expected %s.',
             get_debug_type($value),
             $option,
             $expected
-        );
+        ));
     }
 
     /**

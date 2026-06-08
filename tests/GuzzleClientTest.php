@@ -251,6 +251,69 @@ class GuzzleClientTest extends TestCase
         $this->assertEquals('listen', $guzzle->getConfig('abc'));
     }
 
+    /**
+     * @dataProvider invalidConfigProvider
+     */
+    public function testRejectsInvalidConfigOptions(array $config, string $expectedMessage): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        new GuzzleClient(
+            new HttpClient(),
+            new Description([]),
+            $this->commandToRequestTransformer(),
+            $this->responseToResultTransformer(),
+            null,
+            $config
+        );
+    }
+
+    public static function invalidConfigProvider(): iterable
+    {
+        yield 'defaults' => [
+            ['defaults' => 'invalid'],
+            'Passing string to GuzzleClient config option "defaults" is invalid; expected array.',
+        ];
+
+        yield 'validate' => [
+            ['validate' => 'true'],
+            'Passing string to GuzzleClient config option "validate" is invalid; expected bool.',
+        ];
+
+        yield 'process' => [
+            ['process' => 'false'],
+            'Passing string to GuzzleClient config option "process" is invalid; expected bool.',
+        ];
+
+        yield 'response_locations' => [
+            ['response_locations' => 'json'],
+            'Passing string to GuzzleClient config option "response_locations" is invalid; expected array.',
+        ];
+
+        yield 'response_locations value' => [
+            ['response_locations' => ['json' => new \stdClass()]],
+            'Passing stdClass to GuzzleClient config option "response_locations.json" is invalid; expected GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface.',
+        ];
+    }
+
+    public function testRejectsInvalidConfigOptionSetAfterConstruction(): void
+    {
+        $guzzle = new GuzzleClient(
+            new HttpClient(),
+            new Description([]),
+            $this->commandToRequestTransformer(),
+            $this->responseToResultTransformer(),
+            null,
+            ['validate' => false, 'process' => false]
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Passing string to GuzzleClient config option "process" is invalid; expected bool.');
+
+        $guzzle->setConfig('process', 'false');
+    }
+
     public function testGetCommandUsesExactOperationName(): void
     {
         $guzzle = new GuzzleClient(
