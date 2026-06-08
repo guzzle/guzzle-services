@@ -193,7 +193,7 @@ class OperationTest extends TestCase
 
     public function testEnsuresParametersAreArrays(): void
     {
-        $this->expectExceptionMessage('Parameters must be arrays, test.foo is bool');
+        $this->expectExceptionMessage('Passing bool as operation parameter "test.foo" is invalid; expected array.');
         $this->expectException(\InvalidArgumentException::class);
         new Operation(['name' => 'test', 'parameters' => ['foo' => true]]);
     }
