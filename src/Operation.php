@@ -296,9 +296,12 @@ class Operation implements ToArrayInterface
         // Parameters need special handling when adding
         foreach ($this->config['parameters'] as $name => $param) {
             if (!is_array($param)) {
-                throw new \InvalidArgumentException(
-                    "Parameters must be arrays, {$this->config['name']}.$name is ".gettype($param)
-                );
+                throw new \InvalidArgumentException(\sprintf(
+                    'Passing %s as operation parameter "%s.%s" is invalid; expected array.',
+                    get_debug_type($param),
+                    $this->config['name'],
+                    $name
+                ));
             }
             $param['name'] = $name;
             $this->parameters[$name] = new Parameter(
