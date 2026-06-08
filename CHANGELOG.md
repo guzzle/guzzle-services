@@ -17,6 +17,7 @@
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Serialize XML request scalar element text with XMLWriter text escaping instead of CDATA sections
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
+* Reject invalid `GuzzleClient` configuration option values
 * Require `null` schema types to match only `null` values
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
