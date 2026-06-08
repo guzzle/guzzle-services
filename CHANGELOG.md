@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.0 - Upcoming
+
+* Deprecate invalid `GuzzleClient` configuration option values
+
 ## 1.6.1 - 2026-06-04
 
 * Allow deprecated `null` header location values to normalize to empty strings
