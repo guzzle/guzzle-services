@@ -297,7 +297,7 @@ class Operation implements ToArrayInterface
         foreach ($this->config['parameters'] as $name => $param) {
             if (!is_array($param)) {
                 throw new \InvalidArgumentException(
-                    "Parameters must be arrays, {$this->config['name']}.$name is ".gettype($param)
+                    "Parameters must be arrays, {$this->config['name']}.$name is ".get_debug_type($param)
                 );
             }
             $param['name'] = $name;

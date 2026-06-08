@@ -193,9 +193,9 @@ class OperationTest extends TestCase
 
     public function testEnsuresParametersAreArrays(): void
     {
-        $this->expectExceptionMessage('Parameters must be arrays');
+        $this->expectExceptionMessage('Parameters must be arrays, test.foo is bool');
         $this->expectException(\InvalidArgumentException::class);
-        new Operation(['parameters' => ['foo' => true]]);
+        new Operation(['name' => 'test', 'parameters' => ['foo' => true]]);
     }
 
     public function testHasDescription(): void
