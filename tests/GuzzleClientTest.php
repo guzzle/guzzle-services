@@ -6,6 +6,7 @@ namespace GuzzleHttp\Tests\Command\Guzzle;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
@@ -373,8 +374,21 @@ class GuzzleClientTest extends TestCase
 
     public function testAddsValidateHandlerWhenTrue(): void
     {
-        $client = new HttpClient();
-        $description = new Description([]);
+        $client = new HttpClient([
+            'handler' => new MockHandler([new Response(200, [], '{"ok":true}')]),
+        ]);
+        $description = new Description([
+            'operations' => [
+                'Foo' => [
+                    'parameters' => [
+                        'bar' => [
+                            'type' => 'string',
+                            'required' => true,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
         $guzzle = new GuzzleClient(
             $client,
             $description,
@@ -387,15 +401,29 @@ class GuzzleClientTest extends TestCase
             ]
         );
 
-        $handlers = explode("\n", $guzzle->getHandlerStack()->__toString());
-        $handlers = array_filter($handlers);
-        $this->assertCount(3, $handlers);
+        $this->expectException(CommandException::class);
+        $this->expectExceptionMessage('Validation errors: [bar] is a required string');
+
+        $guzzle->execute($guzzle->getCommand('Foo'));
     }
 
-    public function testDisablesHandlersWhenFalse(): void
+    public function testSkipsValidationWhenFalse(): void
     {
-        $client = new HttpClient();
-        $description = new Description([]);
+        $client = new HttpClient([
+            'handler' => new MockHandler([new Response(200, [], '{"ok":true}')]),
+        ]);
+        $description = new Description([
+            'operations' => [
+                'Foo' => [
+                    'parameters' => [
+                        'bar' => [
+                            'type' => 'string',
+                            'required' => true,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
         $guzzle = new GuzzleClient(
             $client,
             $description,
@@ -408,9 +436,10 @@ class GuzzleClientTest extends TestCase
             ]
         );
 
-        $handlers = explode("\n", $guzzle->getHandlerStack()->__toString());
-        $handlers = array_filter($handlers);
-        $this->assertCount(1, $handlers);
+        $result = $guzzle->execute($guzzle->getCommand('Foo'));
+
+        $this->assertSame(true, $result['ok']);
+        $this->assertSame('Foo', $result['_request']['action']);
     }
 
     public function testValidateDescription(): void
@@ -500,7 +529,7 @@ class GuzzleClientTest extends TestCase
     public function testValidateDescriptionFailsDueMissingRequiredParameter(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] is a required string: baz');
-        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
+        $this->expectException(CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
@@ -577,7 +606,7 @@ class GuzzleClientTest extends TestCase
     public function testValidateDescriptionFailsDueTypeMismatch(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] must be of type integer');
-        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
+        $this->expectException(CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
