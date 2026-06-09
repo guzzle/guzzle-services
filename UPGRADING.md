@@ -298,6 +298,12 @@ URI templates, request hosts, or unsupported query data may now fail earlier.
 Guzzle URI Template 2.x drops PHP 7.2 and 7.3 support. URI template expansion is
 otherwise expected to remain compatible with 1.x.
 
+#### Native PHP Serialization of Runtime Objects
+
+`GuzzleClient`, `ValidatedDescriptionHandler`, `Serializer`, and `Deserializer`
+no longer support native PHP `serialize()` or `unserialize()`. Persist service
+description arrays or configuration instead of runtime pipeline objects.
+
 1.0 from 0.6
 ------------
 
