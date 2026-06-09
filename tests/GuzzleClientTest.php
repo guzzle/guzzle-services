@@ -529,7 +529,7 @@ class GuzzleClientTest extends TestCase
     public function testValidateDescriptionFailsDueMissingRequiredParameter(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] is a required string: baz');
-        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
+        $this->expectException(CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
@@ -606,7 +606,7 @@ class GuzzleClientTest extends TestCase
     public function testValidateDescriptionFailsDueTypeMismatch(): void
     {
         $this->expectExceptionMessage('Validation errors: [baz] must be of type integer');
-        $this->expectException(\GuzzleHttp\Command\Exception\CommandException::class);
+        $this->expectException(CommandException::class);
         $client = new HttpClient();
         $description = new Description(
             [
