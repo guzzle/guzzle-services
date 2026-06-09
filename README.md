@@ -50,12 +50,10 @@ $result = $client->getUser(['id' => '123']);
 
 ## Documentation
 
-- [Full documentation](docs/index.md)
-- [Cookbook](docs/index.md#cookbook)
-- [Response processing](docs/index.md#disabling-response-processing-for-an-operation)
-- [Query serialization](docs/index.md#changing-the-way-query-params-are-serialized)
-- [Extension points](docs/index.md#service-client-extension-points)
-- [Upgrade guide](UPGRADING.md)
+- [Service Descriptions](docs/service-descriptions.md)
+- [Cookbook](docs/cookbook.md)
+- [Extension Points](docs/extension-points.md)
+- [Upgrade Guide](UPGRADING.md)
 
 ## Security
 
