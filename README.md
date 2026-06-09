@@ -10,6 +10,13 @@ Use this package when you are building an SDK-style client for an API and want o
 composer require guzzlehttp/guzzle-services
 ```
 
+## Version Guidance
+
+| Version | Status       | PHP Version  |
+|---------|--------------|--------------|
+| 2.x     | Experimental | >=7.4,<8.6   |
+| 1.x     | Latest       | >=7.2.5,<8.6 |
+
 ## Quick Start
 
 ```php
@@ -49,13 +56,6 @@ $result = $client->getUser(['id' => '123']);
 - [Query serialization](docs/index.md#changing-the-way-query-params-are-serialized)
 - [Extension points](docs/index.md#service-client-extension-points)
 - [Upgrade guide](UPGRADING.md)
-
-## Version Guidance
-
-| Version | Status       | PHP Version  |
-|---------|--------------|--------------|
-| 2.x     | Experimental | >=7.4,<8.6   |
-| 1.x     | Latest       | >=7.2.5,<8.6 |
 
 ## Security
 
