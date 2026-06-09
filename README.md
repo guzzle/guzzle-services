@@ -1,8 +1,8 @@
 # Guzzle Services
 
-`guzzlehttp/guzzle-services` builds service-description-driven clients on top of [`guzzlehttp/command`](https://github.com/guzzle/command). A service description maps named operations and parameters to HTTP requests, then maps responses into result data.
+`guzzlehttp/guzzle-services` builds service-description-driven clients on top of [`guzzlehttp/command`](https://github.com/guzzle/command/blob/2.0/README.md). A service description maps named operations and parameters to HTTP requests, then maps responses into result data.
 
-Use this package when you are building an SDK-style client for an API and want operations described in arrays instead of hand-writing every request serializer. If you only need to send HTTP requests directly, install [`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle) instead.
+Use this package when you are building an SDK-style client for an API and want operations described in arrays instead of hand-writing every request serializer. If you only need to send HTTP requests directly, install [`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle/blob/8.0/README.md) instead.
 
 ## Installation
 
@@ -52,8 +52,9 @@ $result = $client->getUser(['id' => '123']);
 
 - [Service Descriptions](docs/service-descriptions.md)
 - [Cookbook](docs/cookbook.md)
-- [Extension Points](docs/extension-points.md)
+- [Service Client Extension Points](docs/service-client-extension-points.md)
 - [Upgrade Guide](UPGRADING.md)
+- [Changelog](CHANGELOG.md)
 
 ## Security
 
