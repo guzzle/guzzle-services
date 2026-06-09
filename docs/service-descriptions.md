@@ -1,50 +1,45 @@
 # Service Descriptions
 
-Guzzle Services builds command-based clients from service description arrays. A description maps operation names and parameters to HTTP requests, then maps responses into result data.
-
-## Basic Description
+Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.
 
 ```php
 use GuzzleHttp\Client;
-use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\Description;
 
+$client = new Client();
 $description = new Description([
-    'baseUri' => 'https://api.example.com',
-    'operations' => [
-        'getUser' => [
-            'httpMethod' => 'GET',
-            'uri' => '/users/{id}',
-            'responseModel' => 'user',
-            'parameters' => [
-                'id' => ['type' => 'string', 'location' => 'uri'],
-            ],
-        ],
-    ],
-    'models' => [
-        'user' => [
-            'type' => 'object',
-            'additionalProperties' => ['location' => 'json'],
-        ],
-    ],
+	'baseUri' => 'http://httpbin.org/',
+	'operations' => [
+		'testing' => [
+			'httpMethod' => 'GET',
+			'uri' => '/get{?foo}',
+			'responseModel' => 'getResponse',
+			'parameters' => [
+				'foo' => [
+					'type' => 'string',
+					'location' => 'uri'
+				],
+				'bar' => [
+					'type' => 'string',
+					'location' => 'query'
+				]
+			]
+		]
+	],
+	'models' => [
+		'getResponse' => [
+			'type' => 'object',
+			'additionalProperties' => [
+				'location' => 'json'
+			]
+		]
+	]
 ]);
 
-$client = new GuzzleClient(new Client(), $description);
-$result = $client->getUser(['id' => '123']);
+$guzzleClient = new GuzzleClient($client, $description);
+
+$result = $guzzleClient->testing(['foo' => 'bar']);
+echo $result['args']['foo'];
+// bar
 ```
-
-## Operations
-
-Operations describe how a command becomes an HTTP request. Common operation keys include:
-
-- `httpMethod`: the HTTP method to send
-- `uri`: the URI template for the operation
-- `parameters`: operation parameters and their request locations
-- `responseModel`: the model used to process the response
-- `process`: whether response processing should run for the operation
-
-## Models
-
-Models describe the shape of processed response data. A response model can read fields from JSON and expose them as result data.
-
-Use `additionalProperties` when a JSON object should allow properties beyond a fixed schema.
