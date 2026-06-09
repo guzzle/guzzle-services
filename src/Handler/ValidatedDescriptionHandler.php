@@ -7,6 +7,7 @@ namespace GuzzleHttp\Command\Guzzle\Handler;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
+use GuzzleHttp\Command\Guzzle\NonSerializableTrait;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -20,6 +21,8 @@ use GuzzleHttp\Promise\PromiseInterface;
  */
 class ValidatedDescriptionHandler
 {
+    use NonSerializableTrait;
+
     private SchemaValidator $validator;
 
     private DescriptionInterface $description;

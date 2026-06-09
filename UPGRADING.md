@@ -28,6 +28,12 @@ If your application still supports PHP 7.2 or 7.3, or still uses the Guzzle 7
 dependency stack, continue using Guzzle Services 1.x until your minimum PHP and
 dependency versions are raised.
 
+#### Native PHP Serialization Of Runtime Objects
+
+`GuzzleClient`, `ValidatedDescriptionHandler`, `Serializer`, and `Deserializer`
+no longer support native PHP `serialize()` or `unserialize()`. Persist service
+description arrays or configuration instead of runtime pipeline objects.
+
 #### Legacy Service Description Aliases
 
 The legacy `baseUrl` service description option has been removed. Use `baseUri`

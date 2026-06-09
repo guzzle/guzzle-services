@@ -24,6 +24,8 @@ use Psr\Http\Message\RequestInterface;
  */
 class Serializer
 {
+    use NonSerializableTrait;
+
     /** @var RequestLocationInterface[] */
     private array $locations;
 

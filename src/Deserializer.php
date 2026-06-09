@@ -32,6 +32,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Deserializer
 {
+    use NonSerializableTrait;
+
     /** @var ResponseLocationInterface[] */
     private array $responseLocations;
 
