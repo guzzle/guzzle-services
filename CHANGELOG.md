@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.2 - Upcoming
+
+* Fixed non-finite float values emitting coercion warnings on PHP 8.5
+
 ## 1.6.1 - 2026-06-04
 
 * Allow deprecated `null` header location values to normalize to empty strings

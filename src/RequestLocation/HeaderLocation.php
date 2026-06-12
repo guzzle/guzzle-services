@@ -3,6 +3,7 @@
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use Psr\Http\Message\MessageInterface;
@@ -85,7 +86,7 @@ class HeaderLocation extends AbstractLocation
                 get_debug_type($value)
             );
 
-            return (string) $value;
+            return (string) NonFiniteFloats::normalize($value);
         }
 
         if (is_array($value)) {
@@ -112,7 +113,7 @@ class HeaderLocation extends AbstractLocation
                         get_debug_type($item)
                     );
 
-                    $value[$key] = (string) $item;
+                    $value[$key] = (string) NonFiniteFloats::normalize($item);
 
                     continue;
                 }
