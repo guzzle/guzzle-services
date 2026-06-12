@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.6.2 - Upcoming
+## 1.6.2 - 2026-06-12
 
 * Fixed non-finite float values emitting coercion warnings on PHP 8.5
 
