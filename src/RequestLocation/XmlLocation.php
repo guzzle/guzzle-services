@@ -176,7 +176,7 @@ class XmlLocation extends AbstractLocation
 
             return;
         }
-        $value = NonFiniteFloats::normalize($value);
+        $value = NonFiniteFloats::normalize($value, 'an xml location value');
         if ($param->getData('xmlAttribute')) {
             $this->writeAttribute($writer, $prefix, $name, $namespace, $value);
         } else {

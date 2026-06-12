@@ -3,6 +3,7 @@
 ## 1.7.0 - Upcoming
 
 * Deprecate invalid `GuzzleClient` configuration option values
+* Deprecate non-finite float location values; 2.0 rejects them
 
 ## 1.6.2 - 2026-06-12
 

@@ -175,7 +175,7 @@ class Serializer
                 if (isset($command[$name])) {
                     $variables[$name] = $arg->filter($command[$name]);
                     if (!is_array($variables[$name])) {
-                        $variables[$name] = (string) NonFiniteFloats::normalize($variables[$name]);
+                        $variables[$name] = (string) NonFiniteFloats::normalize($variables[$name], 'a uri location value');
                     }
                 }
             }
