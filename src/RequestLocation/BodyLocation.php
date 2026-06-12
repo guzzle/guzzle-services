@@ -3,6 +3,7 @@
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message\MessageInterface;
@@ -34,7 +35,7 @@ class BodyLocation extends AbstractLocation
         $oldValue = $request->getBody()->getContents();
 
         $value = $command[$param->getName()];
-        $value = $param->getName().'='.$param->filter($value);
+        $value = $param->getName().'='.NonFiniteFloats::normalize($param->filter($value));
 
         if ($oldValue !== '') {
             $value = $oldValue.'&'.$value;
