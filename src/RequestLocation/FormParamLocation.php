@@ -60,7 +60,8 @@ class FormParamLocation extends AbstractLocation
             }
         }
 
-        $body = http_build_query(NonFiniteFloats::normalizeAll($data['form_params'], 'a formParam location value'), '', '&');
+        NonFiniteFloats::assertAllFinite($data['form_params'], 'a formParam location value');
+        $body = http_build_query($data['form_params'], '', '&');
         $modify['body'] = Psr7\Utils::streamFor($body);
         $modify['set_headers']['Content-Type'] = $this->contentType;
 
