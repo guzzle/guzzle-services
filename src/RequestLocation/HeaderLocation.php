@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
-use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use Psr\Http\Message\RequestInterface;
@@ -61,17 +60,6 @@ class HeaderLocation extends AbstractLocation
             return $value;
         }
 
-        if (is_scalar($value) || $value === null) {
-            \trigger_deprecation(
-                'guzzlehttp/guzzle-services',
-                '1.6',
-                'Passing %s as a header location value is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                get_debug_type($value)
-            );
-
-            return (string) NonFiniteFloats::normalize($value);
-        }
-
         if (is_array($value)) {
             if ($value === []) {
                 throw new \InvalidArgumentException('Header location values must be strings or non-empty arrays of strings.');
@@ -81,21 +69,6 @@ class HeaderLocation extends AbstractLocation
                 if (!is_string($item)) {
                     throw new \InvalidArgumentException('Header location values must be strings or non-empty arrays of strings.');
                 }
-
-                if (is_scalar($item) || $item === null) {
-                    \trigger_deprecation(
-                        'guzzlehttp/guzzle-services',
-                        '1.6',
-                        'Passing %s inside a header location value array is deprecated; guzzlehttp/guzzle-services 2.0 requires string|string[].',
-                        get_debug_type($item)
-                    );
-
-                    $value[$key] = (string) NonFiniteFloats::normalize($item);
-
-                    continue;
-                }
-
-                throw new \InvalidArgumentException('Header location values must be scalar or an array of scalars.');
             }
 
             return $value;

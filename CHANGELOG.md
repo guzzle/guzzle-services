@@ -10,6 +10,7 @@
 * Reject native PHP serialization of runtime client pipeline objects
 * Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
 * Require header location values to be strings or non-empty arrays of strings
+* Reject non-finite float command values in request locations
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Allow operations to override response processing with the `process` operation option
 * Support JSON response fields with multiple allowed `type` values
