@@ -35,7 +35,7 @@ class BodyLocation extends AbstractLocation
         $oldValue = $request->getBody()->getContents();
 
         $value = $command[$param->getName()];
-        $value = $param->getName().'='.NonFiniteFloats::normalize($param->filter($value));
+        $value = $param->getName().'='.NonFiniteFloats::normalize($param->filter($value), 'a body location value');
 
         if ($oldValue !== '') {
             $value = $oldValue.'&'.$value;
