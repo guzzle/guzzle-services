@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
@@ -171,6 +172,7 @@ class XmlLocation extends AbstractLocation
 
             return;
         }
+        $value = NonFiniteFloats::normalize($value, 'an xml location value');
         if ($param->getData('xmlAttribute')) {
             $value = $value === null ? null : (string) $value;
             $this->writeAttribute($writer, $prefix, $name, $namespace, $value);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
@@ -59,7 +60,7 @@ class FormParamLocation extends AbstractLocation
             }
         }
 
-        $body = http_build_query($data['form_params'], '', '&');
+        $body = http_build_query(NonFiniteFloats::normalizeAll($data['form_params'], 'a formParam location value'), '', '&');
         $modify['body'] = Psr7\Utils::streamFor($body);
         $modify['set_headers']['Content-Type'] = $this->contentType;
 

@@ -26,6 +26,11 @@
 ## 1.7.0 - Upcoming
 
 * Deprecate invalid `GuzzleClient` configuration option values
+* Deprecate non-finite float location values; 2.0 rejects them
+
+## 1.6.2 - 2026-06-12
+
+* Fixed non-finite float values emitting coercion warnings on PHP 8.5
 
 ## 1.6.1 - 2026-06-04
 
