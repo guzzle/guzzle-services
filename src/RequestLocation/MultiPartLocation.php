@@ -38,10 +38,11 @@ class MultiPartLocation extends AbstractLocation
         RequestInterface $request,
         Parameter $param
     ) {
-        $contents = $this->prepareValue($command[$param->getName()], $param);
-        $contents = is_array($contents)
-            ? NonFiniteFloats::normalizeAll($contents, 'a multipart location value')
-            : NonFiniteFloats::normalize($contents, 'a multipart location value');
+        $value = $this->prepareValue($command[$param->getName()], $param);
+
+        $contents = is_array($value)
+            ? NonFiniteFloats::normalizeAll($value, 'a multipart location value')
+            : NonFiniteFloats::normalize($value, 'a multipart location value');
 
         $this->multipartData[] = [
             'name' => $param->getWireName(),
