@@ -372,8 +372,8 @@ and `multipart`.
 #### Custom Locations and Subscribers
 
 Guzzle Services 1.0 serializes PSR-7 requests for Guzzle 6. Custom request or
-response location implementations should use PSR-7 message interfaces and return
-the modified message instead of mutating the message in place.
+response location implementations should use PSR-7 message interfaces and
+return the modified message instead of mutating the message in place.
 
 The old subscriber-based response processing and input validation hooks were
 replaced by Guzzle Command handlers. Move custom validation or processing logic
