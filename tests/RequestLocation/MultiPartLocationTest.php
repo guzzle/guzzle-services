@@ -56,4 +56,30 @@ class MultiPartLocationTest extends TestCase
         $this->assertNotFalse(strpos($actual, 'bar'));
         $this->assertSame('application/vnd.example', $request->getHeaderLine('Content-Type'));
     }
+
+    public function testRejectsNonFiniteFloatLocationValues(): void
+    {
+        $location = new MultiPartLocation();
+        $command = new Command('foo', ['foo' => NAN]);
+        $request = new Request('POST', 'http://httbin.org', []);
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Non-finite floats are not supported for a multipart location value.');
+
+        $location->visit($command, $request, $param);
+    }
+
+    public function testRejectsNestedNonFiniteFloatLocationValues(): void
+    {
+        $location = new MultiPartLocation();
+        $command = new Command('foo', ['foo' => ['score' => INF]]);
+        $request = new Request('POST', 'http://httbin.org', []);
+        $param = new Parameter(['name' => 'foo']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Non-finite floats are not supported for a multipart location value.');
+
+        $location->visit($command, $request, $param);
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 
 use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\NonFiniteFloats;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Psr7;
@@ -32,9 +33,17 @@ class MultiPartLocation extends AbstractLocation
         RequestInterface $request,
         Parameter $param
     ): RequestInterface {
+        $value = $this->prepareValue($command[$param->getName()], $param);
+
+        if (is_array($value)) {
+            NonFiniteFloats::assertAllFinite($value, 'a multipart location value');
+        } else {
+            NonFiniteFloats::assertFinite($value, 'a multipart location value');
+        }
+
         $this->multipartData[] = [
             'name' => $param->getWireName(),
-            'contents' => $this->prepareValue($command[$param->getName()], $param),
+            'contents' => $value,
         ];
 
         return $request;
