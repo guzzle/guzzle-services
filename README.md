@@ -52,7 +52,7 @@ This project can be installed using Composer:
 composer require guzzlehttp/guzzle-services
 ```
 
-See UPGRADING.md for notes on upgrading from 0.6 to 1.0.
+See [UPGRADING.md](UPGRADING.md) for notes on upgrading from 0.6 to 1.0.
 
 ## Cookbook
 
