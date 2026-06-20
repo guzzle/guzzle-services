@@ -189,7 +189,7 @@ class DeserializerTest extends TestCase
         ]);
         $client = new GuzzleClient(new HttpClient(['handler' => $mock]), $description);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(CommandException::class);
         $this->expectExceptionMessage('Invalid response model type array; expected object or array.');
 
         $client->getJson();
