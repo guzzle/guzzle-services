@@ -124,11 +124,11 @@ class JsonLocationTest extends TestCase
     public static function scalarJsonResponseBodyProvider(): array
     {
         return [
-            ['null'],
-            ['0'],
-            ['123'],
-            ['"x"'],
-            ['true'],
+            ['null', 'null'],
+            ['0', 'int'],
+            ['123', 'int'],
+            ['"x"', 'string'],
+            ['true', 'bool'],
         ];
     }
 
@@ -137,12 +137,12 @@ class JsonLocationTest extends TestCase
      *
      * @group ResponseLocation
      */
-    public function testRejectsScalarJsonResponseBodies(string $body): void
+    public function testRejectsScalarJsonResponseBodies(string $body, string $type): void
     {
         $location = new JsonLocation();
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('JSON response body must be an object or array');
+        $this->expectExceptionMessage('JSON response body must be an object or array; got '.$type.'.');
 
         $location->before(new Result(), new Response(200, [], $body), new Parameter());
     }

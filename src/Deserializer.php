@@ -110,7 +110,7 @@ class Deserializer
         } elseif ($model->getType() === 'array') {
             $result = $this->visitOuterArray($model, $result, $response, $context);
         } else {
-            throw new \InvalidArgumentException('Invalid response model: '.$model->getType());
+            throw new \InvalidArgumentException(\sprintf('Invalid response model type %s; expected object or array.', get_debug_type($model->getType())));
         }
 
         // Call the after() method of each found visitor

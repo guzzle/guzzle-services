@@ -167,6 +167,34 @@ class DeserializerTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $result->toArray());
     }
 
+    public function testRejectsInvalidResponseModelType(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '{"foo":"bar"}'),
+        ]);
+
+        $description = new Description([
+            'operations' => [
+                'getJson' => [
+                    'uri' => 'http://httpbin.org/json',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'JsonResponse',
+                ],
+            ],
+            'models' => [
+                'JsonResponse' => [
+                    'type' => ['object', 'string'],
+                ],
+            ],
+        ]);
+        $client = new GuzzleClient(new HttpClient(['handler' => $mock]), $description);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid response model type array; expected object or array.');
+
+        $client->getJson();
+    }
+
     public function testCreateExceptionWithCode(): void
     {
         $this->expectException(CustomCommandException::class);
