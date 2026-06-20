@@ -589,6 +589,60 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testObjectPropertiesCanUseDefaultNamespaceSentAs(): void
+    {
+        $param = new Parameter([
+            'name' => 'wrap',
+            'type' => 'object',
+            'sentAs' => ':wrap',
+            'additionalProperties' => false,
+            'properties' => [
+                'bar' => [
+                    'type' => 'string',
+                    'sentAs' => ':foo',
+                ],
+            ],
+        ]);
+
+        $xml = '<root xmlns="urn:test"><wrap><foo>bar</foo></wrap></root>';
+
+        $this->xmlTest($param, $xml, [
+            'wrap' => [
+                'bar' => 'bar',
+            ],
+        ]);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
+    public function testDefaultNamespaceSentAsDoesNotDuplicateAdditionalProperties(): void
+    {
+        $param = new Parameter([
+            'name' => 'wrap',
+            'type' => 'object',
+            'sentAs' => ':wrap',
+            'additionalProperties' => true,
+            'properties' => [
+                'bar' => [
+                    'type' => 'string',
+                    'sentAs' => ':foo',
+                ],
+            ],
+        ]);
+
+        $xml = '<root xmlns="urn:test"><wrap><foo>bar</foo></wrap></root>';
+
+        $this->xmlTest($param, $xml, [
+            'wrap' => [
+                'bar' => 'bar',
+            ],
+        ]);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testProcessingOfNestedAdditionalProperties(): void
     {
         $param = new Parameter([
