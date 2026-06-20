@@ -85,7 +85,7 @@ class Description implements DescriptionInterface
         if (isset($config['operations'])) {
             foreach ($config['operations'] as $name => $operation) {
                 if (!is_array($operation)) {
-                    throw new \InvalidArgumentException('Operations must be arrays');
+                    throw new \InvalidArgumentException(\sprintf('Operation "%s" must be an array; got %s.', (string) $name, get_debug_type($operation)));
                 }
                 $this->operations[$name] = $operation;
             }

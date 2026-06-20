@@ -315,7 +315,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException($key.' must be a string or null');
+        throw new \InvalidArgumentException(\sprintf('%s must be a string or null; got %s.', $key, get_debug_type($value)));
     }
 
     /**
@@ -327,7 +327,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException($key.' must be a boolean');
+        throw new \InvalidArgumentException(\sprintf('%s must be a boolean; got %s.', $key, get_debug_type($value)));
     }
 
     /**
@@ -339,7 +339,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException($key.' must be an integer or null');
+        throw new \InvalidArgumentException(\sprintf('%s must be an integer or null; got %s.', $key, get_debug_type($value)));
     }
 
     /**
@@ -351,7 +351,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException('filters must be an array');
+        throw new \InvalidArgumentException(\sprintf('filters must be an array; got %s.', get_debug_type($value)));
     }
 
     /**
@@ -362,7 +362,7 @@ class Parameter implements ToArrayInterface
         $value = self::normalizeArrayValue('properties', $value);
         foreach ($value as $property) {
             if (!is_array($property) && !$property instanceof self) {
-                throw new \InvalidArgumentException('properties must contain only arrays or Parameter instances');
+                throw new \InvalidArgumentException(\sprintf('properties must contain only arrays or Parameter instances; got %s.', get_debug_type($property)));
             }
         }
 
@@ -378,7 +378,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException($key.' must be an array');
+        throw new \InvalidArgumentException(\sprintf('%s must be an array; got %s.', $key, get_debug_type($value)));
     }
 
     /**
@@ -390,7 +390,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException($key.' must be an array or null');
+        throw new \InvalidArgumentException(\sprintf('%s must be an array or null; got %s.', $key, get_debug_type($value)));
     }
 
     /**
@@ -404,7 +404,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException('additionalProperties must be a boolean, array, Parameter, or null');
+        throw new \InvalidArgumentException(\sprintf('additionalProperties must be a boolean, array, Parameter, or null; got %s.', get_debug_type($value)));
     }
 
     /**
@@ -418,7 +418,7 @@ class Parameter implements ToArrayInterface
             return $value;
         }
 
-        throw new \InvalidArgumentException('items must be an array, Parameter, or null');
+        throw new \InvalidArgumentException(\sprintf('items must be an array, Parameter, or null; got %s.', get_debug_type($value)));
     }
 
     /**
@@ -435,14 +435,14 @@ class Parameter implements ToArrayInterface
         if (is_array($value)) {
             foreach ($value as $type) {
                 if (!is_string($type)) {
-                    throw new \InvalidArgumentException('type arrays must contain only strings');
+                    throw new \InvalidArgumentException(\sprintf('type arrays must contain only strings; got %s.', get_debug_type($type)));
                 }
             }
 
             return $value;
         }
 
-        throw new \InvalidArgumentException('type must be a string, array, or null');
+        throw new \InvalidArgumentException(\sprintf('type must be a string, array, or null; got %s.', get_debug_type($value)));
     }
 
     /**
@@ -805,7 +805,7 @@ class Parameter implements ToArrayInterface
         }
 
         if (!is_array($filter)) {
-            throw new \InvalidArgumentException('Filters must be strings or complex filter arrays');
+            throw new \InvalidArgumentException(\sprintf('Filters must be strings or complex filter arrays; got %s.', get_debug_type($filter)));
         }
 
         if (!isset($filter['method'])) {
@@ -815,9 +815,7 @@ class Parameter implements ToArrayInterface
         }
 
         if (!isset($filter['args']) || !is_array($filter['args'])) {
-            throw new \InvalidArgumentException(
-                'An [args] array must be specified for each complex filter'
-            );
+            throw new \InvalidArgumentException(\sprintf('An [args] array must be specified for each complex filter; got %s.', get_debug_type($filter['args'] ?? null)));
         }
 
         $this->filters[] = $filter;

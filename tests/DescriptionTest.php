@@ -119,6 +119,8 @@ class DescriptionTest extends TestCase
     public function testValidatesOperationTypes(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Operation "foo" must be an array; got stdClass.');
+
         new Description([
             'operations' => ['foo' => new \stdClass()],
         ]);

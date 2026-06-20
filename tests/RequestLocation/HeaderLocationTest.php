@@ -59,7 +59,7 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings; got stdClass.');
 
         $location->visit($command, $request, $param);
     }
@@ -75,7 +75,7 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings; got int.');
 
         $location->visit($command, $request, $param);
     }
@@ -91,7 +91,7 @@ class HeaderLocationTest extends TestCase
         $param = new Parameter(['name' => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+        $this->expectExceptionMessage('Header location value array items must be strings; got int.');
 
         $location->visit($command, $request, $param);
     }
@@ -149,7 +149,7 @@ class HeaderLocationTest extends TestCase
         $request = new Request('POST', 'http://httbin.org');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings.');
+        $this->expectExceptionMessage('Header location values must be strings or non-empty arrays of strings; got int.');
 
         $location->after($command, $request, $operation);
     }

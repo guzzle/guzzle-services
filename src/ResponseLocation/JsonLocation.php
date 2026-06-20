@@ -35,7 +35,7 @@ class JsonLocation extends AbstractLocation
         $decoded = $body !== '' ? Utils::jsonDecode($body, true) : [];
 
         if (!is_array($decoded)) {
-            throw new \RuntimeException('JSON response body must be an object or array');
+            throw new \RuntimeException(\sprintf('JSON response body must be an object or array; got %s.', get_debug_type($decoded)));
         }
 
         $this->json = $decoded;
