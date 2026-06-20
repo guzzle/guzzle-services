@@ -220,6 +220,54 @@ class SchemaValidatorTest extends TestCase
         ], $this->validator->getErrors());
     }
 
+    public function testPatternNoMatchReportsValidationError()
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'pattern' => '/[0-9]+/',
+        ]);
+        $value = 'abc';
+
+        $this->assertFalse($this->validator->validate($param, $value));
+        $this->assertEquals(
+            ['[test] must match the following regular expression: /[0-9]+/'],
+            $this->validator->getErrors()
+        );
+    }
+
+    public function testPatternEvaluationFailureReportsPcreError()
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'pattern' => '/[/',
+        ]);
+        $value = 'abc';
+
+        $this->assertFalse($this->validator->validate($param, $value));
+        $this->assertStringStartsWith(
+            '[test] could not be matched against /[/: ',
+            $this->validator->getErrors()[0]
+        );
+    }
+
+    public function testPatternMalformedUtf8ReportsPcreError()
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'pattern' => '//u',
+        ]);
+        $value = "\xFF";
+
+        $this->assertFalse($this->validator->validate($param, $value));
+        $this->assertStringStartsWith(
+            '[test] could not be matched against //u: ',
+            $this->validator->getErrors()[0]
+        );
+    }
+
     public function testHandlesNullValuesInArraysWithDefaults()
     {
         $p = new Parameter([

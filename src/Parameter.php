@@ -30,7 +30,7 @@ class Parameter implements ToArrayInterface
     /** @var array|null */
     private $enum;
 
-    /** @var string */
+    /** @var string|null */
     private $pattern;
 
     /** @var int */
@@ -861,7 +861,7 @@ class Parameter implements ToArrayInterface
     /**
      * Get the regex pattern that must match a value when the value is a string
      *
-     * @return string
+     * @return string|null
      */
     public function getPattern()
     {
