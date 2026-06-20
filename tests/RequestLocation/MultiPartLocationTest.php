@@ -32,8 +32,8 @@ class MultiPartLocationTest extends TestCase
         $body = $request->getBody();
         $actual = $body->getContents();
 
-        $this->assertNotFalse(strpos($actual, 'name="foo"'));
-        $this->assertNotFalse(strpos($actual, 'bar'));
+        $this->assertStringContainsString('name="foo"', $actual);
+        $this->assertStringContainsString('bar', $actual);
         $this->assertInstanceOf(MultipartStream::class, $body);
         $this->assertSame('multipart/form-data; boundary='.$body->getBoundary(), $request->getHeaderLine('Content-Type'));
     }
@@ -52,8 +52,8 @@ class MultiPartLocationTest extends TestCase
         $request = $location->after($command, $request, $operation);
         $actual = $request->getBody()->getContents();
 
-        $this->assertNotFalse(strpos($actual, 'name="foo"'));
-        $this->assertNotFalse(strpos($actual, 'bar'));
+        $this->assertStringContainsString('name="foo"', $actual);
+        $this->assertStringContainsString('bar', $actual);
         $this->assertSame('application/vnd.example', $request->getHeaderLine('Content-Type'));
     }
 }
