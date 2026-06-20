@@ -246,8 +246,10 @@ class SchemaValidator
 
         // Perform type specific validation for strings, arrays, and integers
         if ($type == 'string') {
+            $enum = $param->getEnum();
+
             // Strings can have enums which are a list of predefined values
-            if (($enum = $param->getEnum()) && !in_array($value, $enum)) {
+            if ($enum && !in_array($value, $enum)) {
                 $this->errors[] = "{$path} must be one of ".implode(' or ', array_map(function ($s) {
                     return '"'.addslashes($s).'"';
                 }, $enum));
