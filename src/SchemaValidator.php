@@ -257,7 +257,9 @@ class SchemaValidator
                 }, $enum));
             }
             // Strings can have a regex pattern that the value must match
-            if (null !== ($pattern = $param->getPattern()) && $pattern !== '') {
+            $pattern = $param->getPattern();
+
+            if ($pattern !== null && $pattern !== '') {
                 $matched = @preg_match($pattern, $value);
 
                 if ($matched === false) {
