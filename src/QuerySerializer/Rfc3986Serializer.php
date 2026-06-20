@@ -28,6 +28,10 @@ class Rfc3986Serializer implements QuerySerializerInterface
 
         if ($this->removeNumericIndices) {
             $queryString = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $queryString);
+
+            if ($queryString === null) {
+                throw new \RuntimeException('Unable to normalize query string: '.preg_last_error_msg());
+            }
         }
 
         return $queryString;
