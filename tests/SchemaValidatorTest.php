@@ -224,8 +224,9 @@ class SchemaValidatorTest extends TestCase
             'type' => 'string',
             'pattern' => '/[0-9]+/',
         ]);
+        $value = 'abc';
 
-        $this->assertFalse($this->validator->validate($param, 'abc'));
+        $this->assertFalse($this->validator->validate($param, $value));
         $this->assertEquals(
             ['[test] must match the following regular expression: /[0-9]+/'],
             $this->validator->getErrors()
@@ -239,8 +240,9 @@ class SchemaValidatorTest extends TestCase
             'type' => 'string',
             'pattern' => '/[/',
         ]);
+        $value = 'abc';
 
-        $this->assertFalse($this->validator->validate($param, 'abc'));
+        $this->assertFalse($this->validator->validate($param, $value));
         $this->assertStringStartsWith(
             '[test] could not be matched against /[/: ',
             $this->validator->getErrors()[0]
@@ -254,8 +256,9 @@ class SchemaValidatorTest extends TestCase
             'type' => 'string',
             'pattern' => '//u',
         ]);
+        $value = "\xFF";
 
-        $this->assertFalse($this->validator->validate($param, "\xFF"));
+        $this->assertFalse($this->validator->validate($param, $value));
         $this->assertStringStartsWith(
             '[test] could not be matched against //u: ',
             $this->validator->getErrors()[0]
