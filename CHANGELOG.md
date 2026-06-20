@@ -3,6 +3,7 @@
 ## 1.7.1 - Upcoming
 
 * Fixed XML response parsing for default-namespace `sentAs` object properties
+* Report PCRE errors separately from ordinary schema pattern mismatches
 
 ## 1.7.0 - 2026-06-16
 
