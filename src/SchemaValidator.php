@@ -250,8 +250,10 @@ class SchemaValidator
                 $value = (string) $value;
             }
 
+            $enum = $param->getEnum();
+
             // Strings can have enums which are a list of predefined values
-            if (($enum = $param->getEnum()) && !in_array($value, $enum)) {
+            if ($enum && !in_array($value, $enum, true)) {
                 $this->errors[] = "{$path} must be one of ".implode(' or ', array_map(function ($s): string {
                     return '"'.addslashes($s).'"';
                 }, $enum));
