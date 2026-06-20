@@ -149,7 +149,7 @@ class XmlLocation extends AbstractLocation
         $prefix = null;
         $namespace = $param->getData('xmlNamespace');
         $namespace = $namespace === null ? null : (string) $namespace;
-        if (false !== strpos($name, ':')) {
+        if (str_contains($name, ':')) {
             list($prefix, $name) = explode(':', $name, 2);
         }
 
