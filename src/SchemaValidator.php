@@ -257,8 +257,14 @@ class SchemaValidator
                 }, $enum));
             }
             // Strings can have a regex pattern that the value must match
-            if (($pattern = $param->getPattern()) && !preg_match($pattern, $value)) {
-                $this->errors[] = "{$path} must match the following regular expression: {$pattern}";
+            if (null !== ($pattern = $param->getPattern()) && $pattern !== '') {
+                $matched = @preg_match($pattern, $value);
+
+                if ($matched === false) {
+                    $this->errors[] = "{$path} could not be matched against {$pattern}: ".preg_last_error_msg();
+                } elseif ($matched === 0) {
+                    $this->errors[] = "{$path} must match the following regular expression: {$pattern}";
+                }
             }
 
             $strLen = null;
