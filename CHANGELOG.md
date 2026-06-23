@@ -24,8 +24,10 @@
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
 
-## 1.7.1 - Upcoming
+## 1.7.1 - 2026-06-23
 
+* Require `guzzlehttp/guzzle` ^7.12.3 and `guzzlehttp/psr7` ^2.12.3
+* Require `guzzlehttp/command` ^1.5.1 and `guzzlehttp/uri-template` ^1.0.8
 * Fixed XML response parsing for default-namespace `sentAs` object properties
 * Report PCRE errors separately from ordinary schema pattern mismatches
 
