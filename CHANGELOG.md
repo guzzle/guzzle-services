@@ -2,6 +2,8 @@
 
 ## 1.7.1 - Upcoming
 
+* Require `guzzlehttp/guzzle` ^7.12.3 and `guzzlehttp/psr7` ^2.12.3
+* Require `guzzlehttp/command` ^1.5.1 and `guzzlehttp/uri-template` ^1.0.8
 * Fixed XML response parsing for default-namespace `sentAs` object properties
 * Report PCRE errors separately from ordinary schema pattern mismatches
 
