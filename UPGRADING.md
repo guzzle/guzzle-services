@@ -125,6 +125,23 @@ integers, floats, booleans, or other non-string values into header locations. Us
 an empty string for an explicitly empty header value, or omit the command value
 when no header should be sent.
 
+#### Body Response Locations
+
+Result values extracted with the `body` response location are now strings.
+Guzzle Services 1.x stored the PSR-7 response body stream object and left
+reading it to the caller, where methods such as `getContents()` returned only
+the bytes after the current stream position. The 2.0 result value is always
+the complete body, and custom parameter filters on `body`-located values now
+receive that string:
+
+```php
+// 1.x
+$contents = (string) $result['output'];
+
+// 2.0
+$contents = $result['output'];
+```
+
 #### Null Schema Values
 
 Schema parameters with `type` set to `'null'` now match only actual `null`
@@ -224,6 +241,29 @@ scalars or stringable objects to PHP internal functions such as `json_decode()`,
 `parse_str()`, `preg_match()`, `strlen()`, or `XMLWriter` methods, cast values
 explicitly before calling those functions.
 
+#### String Parameter Validation
+
+Integer values cast to strings by `castIntegerToStringType` are now validated
+against the parameter's `enum`, `pattern`, and length constraints; Guzzle
+Services 1.x skipped those checks for cast integers. Enum matching is also
+strict: values match only enum entries of the same type, so string parameters
+must declare enum entries as strings (`'1'` rather than `1`).
+
+#### Non-finite Float Command Values
+
+Command values serialized into request locations now reject `NAN`, `INF`, and
+`-INF` floats with an `InvalidArgumentException`. Guzzle Services 1.7
+deprecated these values; provide finite numbers or preformatted strings
+instead.
+
+#### Client Configuration Option Types
+
+`GuzzleClient` now throws an `InvalidArgumentException` when constructed with
+invalid configuration option values: `defaults` must be an array, `validate`
+and `process` must be booleans, and `response_locations` must be an array of
+`ResponseLocationInterface` instances. Guzzle Services 1.7 deprecated these
+values and passed them through.
+
 #### Native Signatures
 
 Guzzle Services 2.0 adds native parameter, property, and return types across
@@ -267,10 +307,12 @@ command handlers, you may need to update your PHPDoc annotations to include
 promise fulfillment and rejection types.
 
 Service client transformer, service description, operation, parameter, and
-client config PHPDoc now uses structured array and callable shapes. This does not
-change runtime behavior, but stricter static analysis may now report invalid
-option keys, invalid option value types, or callback annotations that were
-previously hidden behind loose `array` or `callable` PHPDoc.
+client config PHPDoc now uses structured array and callable shapes. The PHPDoc
+changes are static-analysis-only, but stricter static analysis may now report
+invalid option keys, invalid option value types, or callback annotations that
+were previously hidden behind loose `array` or `callable` PHPDoc. Invalid
+client configuration option values are additionally rejected at runtime; see
+the Client Configuration Option Types section.
 
 If your project documents reusable service description, operation, or parameter
 schema arrays, update those PHPDoc annotations to match the supported shapes.
@@ -295,8 +337,13 @@ Guzzle PSR-7 3.x validates URI hosts, URI schemes, query values, and
 iterator-backed stream chunks more strictly. Invalid `baseUri` values, operation
 URI templates, request hosts, or unsupported query data may now fail earlier.
 
-Guzzle URI Template 2.x drops PHP 7.2 and 7.3 support. URI template expansion is
-otherwise expected to remain compatible with 1.x.
+Guzzle URI Template 2.x now rejects invalid template syntax, invalid UTF-8,
+and non-finite float values, expands boolean values as `1` and `0`, and treats
+sparse integer-keyed arrays as associative maps. Operation URI templates and
+`uri` parameters that relied on 1.x leniency may now throw or expand
+differently; review the
+[URI Template upgrade guide](https://github.com/guzzle/uri-template/blob/2.0/UPGRADING.md)
+before upgrading.
 
 #### Native PHP Serialization of Runtime Objects
 

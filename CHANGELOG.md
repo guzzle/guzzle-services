@@ -11,11 +11,14 @@
 * Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
 * Require header location values to be strings or non-empty arrays of strings
 * Reject non-finite float command values in request locations
+* Return body response location values as strings instead of PSR-7 streams
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Allow operations to override response processing with the `process` operation option
 * Support JSON response fields with multiple allowed `type` values
 * Require custom implementations and subclasses of public service APIs to match native method signatures
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
+* Validate cast integer values against string enum, pattern, and length constraints
+* Match string enum values strictly by type and value
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Serialize XML request scalar element text with XMLWriter text escaping instead of CDATA sections
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
