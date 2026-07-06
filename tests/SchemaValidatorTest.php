@@ -217,6 +217,22 @@ class SchemaValidatorTest extends TestCase
         ], $this->validator->getErrors());
     }
 
+    public function testValidatesEnumStrictlyAndDescribesNonStringEntries(): void
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'enum' => [1, 'two', true, NAN, -INF],
+        ]);
+        $value = '1';
+
+        $this->assertFalse($this->validator->validate($param, $value));
+        $this->assertEquals(
+            ['[test] must be one of 1 or "two" or true or NAN or -INF'],
+            $this->validator->getErrors()
+        );
+    }
+
     public function testPatternNoMatchReportsValidationError(): void
     {
         $param = new Parameter([

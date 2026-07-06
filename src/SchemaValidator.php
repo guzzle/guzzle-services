@@ -254,9 +254,7 @@ class SchemaValidator
 
             // Strings can have enums which are a list of predefined values
             if ($enum && !in_array($value, $enum, true)) {
-                $this->errors[] = "{$path} must be one of ".implode(' or ', array_map(function ($s): string {
-                    return '"'.addslashes($s).'"';
-                }, $enum));
+                $this->errors[] = "{$path} must be one of ".implode(' or ', array_map([$this, 'describeEnumValue'], $enum));
             }
 
             $pattern = $param->getPattern();
@@ -307,5 +305,32 @@ class SchemaValidator
         }
 
         return empty($this->errors);
+    }
+
+    /**
+     * Describe an enum entry for an error message without casting values,
+     * such as booleans and non-finite floats, that cannot round-trip.
+     *
+     * @param mixed $value
+     */
+    private function describeEnumValue($value): string
+    {
+        if (is_string($value)) {
+            return '"'.addslashes($value).'"';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_float($value) && !is_finite($value)) {
+            return is_nan($value) ? 'NAN' : ($value > 0 ? 'INF' : '-INF');
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        return get_debug_type($value);
     }
 }
