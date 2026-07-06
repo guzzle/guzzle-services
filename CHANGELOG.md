@@ -23,6 +23,7 @@
 * Require `null` schema types to match only `null` values
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
+* Trim XML response text nodes with XML whitespace characters only
 
 ## 1.7.1 - 2026-06-23
 
