@@ -333,7 +333,7 @@ class XmlLocation extends AbstractLocation
         }
 
         // Extract text from node
-        $text = trim((string) $xml);
+        $text = trim((string) $xml, " \t\n\r");
         if ($text === '') {
             $text = null;
         }
