@@ -1,10 +1,15 @@
 # Cookbook
 
-This cookbook collects focused recipes for common Guzzle Services tasks. It assumes you already have a `GuzzleHttp\Command\Guzzle\Description` and a `GuzzleHttp\Command\Guzzle\GuzzleClient`; see [Service Descriptions](service-descriptions.md) for the full description format.
+This cookbook collects focused recipes for common Guzzle Services tasks. It
+assumes you already have a `GuzzleHttp\Command\Guzzle\Description` and a
+`GuzzleHttp\Command\Guzzle\GuzzleClient`; see
+[Service Descriptions](service-descriptions.md) for the full description format.
 
 ## Returning Raw Responses
 
-By default, responses are parsed according to the operation's `responseModel`. For operations that return binary data or another response body that should not be parsed, set `process` to `false` on that operation:
+By default, responses are parsed according to the operation's `responseModel`.
+For operations that return binary data or another response body that should not
+be parsed, set `process` to `false` on that operation:
 
 ```php
 $description = new Description([
@@ -37,18 +42,22 @@ $description = new Description([
 ]);
 ```
 
-When response processing is disabled, the raw PSR-7 response is returned in the result's `response` key:
+When response processing is disabled, the raw PSR-7 response is returned in the
+result's `response` key:
 
 ```php
 $result = $guzzleClient->getFile(['id' => '123']);
 $response = $result['response'];
 ```
 
-Operation-level `process` overrides the client-level `process` option. If an operation omits `process`, or sets it to `null`, it inherits the client setting.
+Operation-level `process` overrides the client-level `process` option. If an
+operation omits `process`, or sets it to `null`, it inherits the client setting.
 
 ## Adding Client Defaults
 
-Use client `defaults` for command parameters that should be present on most or all commands, such as an API key, tenant ID, or shared query flag. Explicit command arguments override defaults.
+Use client `defaults` for command parameters that should be present on most or
+all commands, such as an API key, tenant ID, or shared query flag. Explicit
+command arguments override defaults.
 
 ```php
 use GuzzleHttp\Client;
@@ -70,7 +79,9 @@ $guzzleClient = new GuzzleClient(
 $result = $guzzleClient->listUsers();
 ```
 
-The default still needs a matching parameter schema, or an operation-level `additionalParameters` schema, so built-in validation and serialization know how to handle it:
+The default still needs a matching parameter schema, or an operation-level
+`additionalParameters` schema, so built-in validation and serialization know how
+to handle it:
 
 ```php
 'parameters' => [
@@ -84,7 +95,9 @@ The default still needs a matching parameter schema, or an operation-level `addi
 
 ## Modeling JSON Response Fields with Multiple Types
 
-Some JSON APIs return the same field with different types depending on the data. For example, a response field might be `null`, a string, or an array of strings. Model this by setting `type` to an array of allowed types:
+Some JSON APIs return the same field with different types depending on the data.
+For example, a response field might be `null`, a string, or an array of strings.
+Model this by setting `type` to an array of allowed types:
 
 ```php
 $description = new Description([
@@ -114,7 +127,8 @@ $description = new Description([
 
 ## Changing Query Parameter Serialization
 
-By default, query parameters are serialized with strict RFC 3986 encoding using PHP-style array indexes. Array query parameters are serialized like this:
+By default, query parameters are serialized with strict RFC 3986 encoding using
+PHP-style array indexes. Array query parameters are serialized like this:
 
 ```php
 $client->myMethod(['foo' => ['bar', 'baz']]);
@@ -122,7 +136,9 @@ $client->myMethod(['foo' => ['bar', 'baz']]);
 // Query parameters will be foo%5B0%5D=bar&foo%5B1%5D=baz
 ```
 
-Some APIs require numeric indexes to be removed, so the query string becomes `foo%5B%5D=bar&foo%5B%5D=baz`. Change this behavior by creating a query location with a different serializer and passing it to the request serializer:
+Some APIs require numeric indexes to be removed, so the query string becomes
+`foo%5B%5D=bar&foo%5B%5D=baz`. Change this behavior by creating a query location
+with a different serializer and passing it to the request serializer:
 
 ```php
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -135,7 +151,8 @@ $serializer = new Serializer($description, ['query' => $queryLocation]);
 $guzzleClient = new GuzzleClient($client, $description, $serializer);
 ```
 
-You can also implement your own query serializer or replace the `query` request location if your API needs a different query format.
+You can also implement your own query serializer or replace the `query` request
+location if your API needs a different query format.
 
 ## Related
 

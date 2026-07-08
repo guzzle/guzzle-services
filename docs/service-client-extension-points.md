@@ -1,6 +1,13 @@
 # Service Client Extension Points
 
-`GuzzleHttp\Command\Guzzle\GuzzleClient` adapts Guzzle Command service clients to service descriptions. It supplies default request serialization, response deserialization, validation middleware, and client configuration, while leaving each part replaceable. This page covers extension points specific to Guzzle Services; the base command client concepts are documented in [Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md) and [Guzzle Command middleware](https://github.com/guzzle/command/blob/2.0/docs/middleware-extending-the-client.md).
+`GuzzleHttp\Command\Guzzle\GuzzleClient` adapts Guzzle Command service clients
+to service descriptions. It supplies default request serialization, response
+deserialization, validation middleware, and client configuration, while leaving
+each part replaceable. This page covers extension points specific to Guzzle
+Services; the base command client concepts are documented in
+[Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md)
+and
+[Guzzle Command middleware](https://github.com/guzzle/command/blob/2.0/docs/middleware-extending-the-client.md).
 
 ## Constructor Extension Points
 
@@ -33,7 +40,8 @@ callable(
 ): GuzzleHttp\Command\ResultInterface
 ```
 
-The fifth argument is a command `GuzzleHttp\HandlerStack` whose handlers follow this shape:
+The fifth argument is a command `GuzzleHttp\HandlerStack` whose handlers follow
+this shape:
 
 ```php
 callable(
@@ -45,9 +53,13 @@ The sixth argument is the Guzzle Services client config array.
 
 ## Custom Request Locations
 
-Request locations serialize operation parameters into parts of a PSR-7 request. The built-in request locations are `query`, `header`, `body`, `json`, `xml`, `formParam`, and `multipart`. The `uri` location is handled separately by URI template expansion.
+Request locations serialize operation parameters into parts of a PSR-7 request.
+The built-in request locations are `query`, `header`, `body`, `json`, `xml`,
+`formParam`, and `multipart`. The `uri` location is handled separately by URI
+template expansion.
 
-Pass custom locations to `Serializer` as an associative array keyed by location name. Custom keys override built-in keys with the same name.
+Pass custom locations to `Serializer` as an associative array keyed by location
+name. Custom keys override built-in keys with the same name.
 
 ```php
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -63,13 +75,20 @@ $serializer = new Serializer($description, [
 $client = new GuzzleClient($httpClient, $description, $serializer);
 ```
 
-A custom request location implements `GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface`. `visit()` is called for each matching parameter, and `after()` is called once after all visited parameters for that location. `after()` is where locations usually handle `additionalParameters`.
+A custom request location implements
+`GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface`. `visit()`
+is called for each matching parameter, and `after()` is called once after all
+visited parameters for that location. `after()` is where locations usually
+handle `additionalParameters`.
 
 ## Custom Response Locations
 
-Response locations deserialize parts of a PSR-7 response into command result fields. The built-in response locations are `json`, `xml`, `header`, `body`, `statusCode`, and `reasonPhrase`.
+Response locations deserialize parts of a PSR-7 response into command result
+fields. The built-in response locations are `json`, `xml`, `header`, `body`,
+`statusCode`, and `reasonPhrase`.
 
-When using the default deserializer, add or replace response locations with client config:
+When using the default deserializer, add or replace response locations with
+client config:
 
 ```php
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
@@ -88,11 +107,18 @@ $client = new GuzzleClient(
 );
 ```
 
-A custom response location implements `GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface`. `before()` is called once before visiting matching model properties, `visit()` is called for each matching property, and `after()` is called after all matching properties are visited.
+A custom response location implements
+`GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface`.
+`before()` is called once before visiting matching model properties, `visit()`
+is called for each matching property, and `after()` is called after all matching
+properties are visited.
 
 ## Custom Serializer and Deserializer
 
-`Serializer` and `Deserializer` are invokable objects, so they can be passed directly to the `GuzzleClient` constructor. Pass a `Serializer` when you only need to customize request locations; pass a `Deserializer` when you need to customize response locations or response-processing behavior.
+`Serializer` and `Deserializer` are invokable objects, so they can be passed
+directly to the `GuzzleClient` constructor. Pass a `Serializer` when you only
+need to customize request locations; pass a `Deserializer` when you need to
+customize response locations or response-processing behavior.
 
 ```php
 use GuzzleHttp\Command\Guzzle\Deserializer;
@@ -115,11 +141,17 @@ $client = new GuzzleClient(
 );
 ```
 
-You can also pass any callable with the constructor signatures shown above. When you provide a custom response transformer, `response_locations` and client-level `process` config are not applied to it automatically; wire those concerns into your transformer if you need them.
+You can also pass any callable with the constructor signatures shown above. When
+you provide a custom response transformer, `response_locations` and client-level
+`process` config are not applied to it automatically; wire those concerns into
+your transformer if you need them.
 
 ## Command Handler Stack
 
-The command handler stack is separate from the underlying Guzzle HTTP handler stack. Command middleware wraps commands before they are transformed into HTTP requests; HTTP middleware belongs on the underlying `GuzzleHttp\ClientInterface` instead.
+The command handler stack is separate from the underlying Guzzle HTTP handler
+stack. Command middleware wraps commands before they are transformed into HTTP
+requests; HTTP middleware belongs on the underlying `GuzzleHttp\ClientInterface`
+instead.
 
 ```php
 use GuzzleHttp\Command\CommandInterface;
@@ -135,7 +167,8 @@ $client->getHandlerStack()->push(function (callable $handler) {
 }, 'timeout');
 ```
 
-The special `@http` command key is consumed by the base command client and passed as request options to the underlying HTTP client's `sendAsync()` call.
+The special `@http` command key is consumed by the base command client and
+passed as request options to the underlying HTTP client's `sendAsync()` call.
 
 ## Client Config
 
@@ -148,13 +181,24 @@ The special `@http` command key is consumed by the base command client and passe
 | `process` | Boolean. Enables or disables default response processing during construction. Defaults to `true`. Operation `process` can override it. |
 | `response_locations` | Map of response location names to `ResponseLocationInterface` instances used by the default deserializer. |
 
-`defaults` is read when commands are created, so changing it with `setConfig()` affects later commands. `validate`, `process`, and `response_locations` have constructor-only effects in the default client because they install middleware or build the default deserializer during construction.
+`defaults` is read when commands are created, so changing it with `setConfig()`
+affects later commands. `validate`, `process`, and `response_locations` have
+constructor-only effects in the default client because they install middleware
+or build the default deserializer during construction.
 
 ## Constructor-Only `validate` and `process` Effects
 
-Validation is implemented by pushing `ValidatedDescriptionHandler` onto the command handler stack in the constructor. Calling `setConfig('validate', false)` later only changes the stored config value; it does not remove the middleware from the stack.
+Validation is implemented by pushing `ValidatedDescriptionHandler` onto the
+command handler stack in the constructor. Calling `setConfig('validate', false)`
+later only changes the stored config value; it does not remove the middleware
+from the stack.
 
-Response processing is captured when the default `Deserializer` is created in the constructor. Calling `setConfig('process', false)` later only changes the stored config value; it does not replace the deserializer. To change response processing per operation, set the operation's `process` key. To change response processing globally after construction, create a new client with the desired config or pass your own response transformer.
+Response processing is captured when the default `Deserializer` is created in
+the constructor. Calling `setConfig('process', false)` later only changes the
+stored config value; it does not replace the deserializer. To change response
+processing per operation, set the operation's `process` key. To change response
+processing globally after construction, create a new client with the desired
+config or pass your own response transformer.
 
 ## Related
 

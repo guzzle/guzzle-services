@@ -1,6 +1,12 @@
 # Service Descriptions
 
-Service descriptions are arrays consumed by `GuzzleHttp\Command\Guzzle\Description`, `Operation`, `Parameter`, `Serializer`, and `Deserializer`. They describe an API in terms of named commands, how command input becomes an HTTP request, and how an HTTP response becomes a command result. This page covers the Guzzle Services description format; the lower-level command client lifecycle is documented in [Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md).
+Service descriptions are arrays consumed by
+`GuzzleHttp\Command\Guzzle\Description`, `Operation`, `Parameter`, `Serializer`,
+and `Deserializer`. They describe an API in terms of named commands, how command
+input becomes an HTTP request, and how an HTTP response becomes a command
+result. This page covers the Guzzle Services description format; the lower-level
+command client lifecycle is documented in
+[Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md).
 
 ```php
 use GuzzleHttp\Client;
@@ -104,15 +110,21 @@ The top-level description array supports these common keys:
 | `operations` | Map of operation names to operation definitions. |
 | `models` | Map of reusable model names to parameter/model schemas. |
 
-Unknown top-level keys are retained as extra data and can be read with `Description::getData()`.
+Unknown top-level keys are retained as extra data and can be read with
+`Description::getData()`.
 
 ## Base URI
 
-`baseUri` is converted to a PSR-7 URI and combined with each operation `uri`. Relative operation URIs are resolved against `baseUri`; absolute operation URIs replace it. If an operation sets `uri` to `null`, the request is created directly from `baseUri`.
+`baseUri` is converted to a PSR-7 URI and combined with each operation `uri`.
+Relative operation URIs are resolved against `baseUri`; absolute operation URIs
+replace it. If an operation sets `uri` to `null`, the request is created
+directly from `baseUri`.
 
 ## Operations
 
-Each operation becomes a command that can be executed with `$client->operationName([...])`, `$client->operationNameAsync([...])`, or `$client->getCommand('operationName', [...])`.
+Each operation becomes a command that can be executed with
+`$client->operationName([...])`, `$client->operationNameAsync([...])`, or
+`$client->getCommand('operationName', [...])`.
 
 | Key | Purpose |
 | --- | --- |
@@ -126,11 +138,18 @@ Each operation becomes a command that can be executed with `$client->operationNa
 | `deprecated` | Boolean flag exposed by `Operation::getDeprecated()`. |
 | `errorResponses` | List of HTTP error mappings with `code`, optional `phrase`, and exception `class`. |
 
-Operations also accept descriptive keys such as `summary`, `notes`, `documentationUrl`, and `data`. Values in `data` are available to custom serializers and locations through `Operation::getData()`.
+Operations also accept descriptive keys such as `summary`, `notes`,
+`documentationUrl`, and `data`. Values in `data` are available to custom
+serializers and locations through `Operation::getData()`.
 
 ## URI Templates
 
-Operation `uri` values are expanded with `guzzlehttp/uri-template`. Only parameters with `location` set to `uri` are provided to URI template expansion. Use `location: query` when you want Guzzle Services to append query parameters after template expansion, or use URI Template query expressions like `{?filter*}` with `location: uri` when the template should control query expansion.
+Operation `uri` values are expanded with `guzzlehttp/uri-template`. Only
+parameters with `location` set to `uri` are provided to URI template expansion.
+Use `location: query` when you want Guzzle Services to append query parameters
+after template expansion, or use URI Template query expressions like
+`{?filter*}` with `location: uri` when the template should control query
+expansion.
 
 ```php
 'operations' => [
@@ -145,11 +164,18 @@ Operation `uri` values are expanded with `guzzlehttp/uri-template`. Only paramet
 ]
 ```
 
-See [URI Template usage](https://github.com/guzzle/uri-template/blob/2.0/docs/uri-template-usage.md) for supported RFC 6570 expressions and [URI Template input contract](https://github.com/guzzle/uri-template/blob/2.0/docs/input-contract.md) for accepted variable values.
+See
+[URI Template usage](https://github.com/guzzle/uri-template/blob/2.0/docs/uri-template-usage.md)
+for supported RFC 6570 expressions and
+[URI Template input contract](https://github.com/guzzle/uri-template/blob/2.0/docs/input-contract.md)
+for accepted variable values.
 
 ## Parameters and Models
 
-Operation parameters and models use the same schema class, `GuzzleHttp\Command\Guzzle\Parameter`. A model is a named reusable schema in the top-level `models` map. A parameter is an operation input schema in an operation's `parameters` map.
+Operation parameters and models use the same schema class,
+`GuzzleHttp\Command\Guzzle\Parameter`. A model is a named reusable schema in the
+top-level `models` map. A parameter is an operation input schema in an
+operation's `parameters` map.
 
 | Key | Purpose |
 | --- | --- |
@@ -167,7 +193,8 @@ Operation parameters and models use the same schema class, `GuzzleHttp\Command\G
 | `$ref` | Reference to a top-level model. The referenced model is resolved into the parameter. |
 | `extends` | Name of a top-level model to inherit from. Local schema keys override inherited keys. Nested maps such as `properties` are not deep-merged. |
 
-Schemas also support validation-oriented keys such as `enum`, `pattern`, `minimum`, `maximum`, `minLength`, `maxLength`, `minItems`, and `maxItems`.
+Schemas also support validation-oriented keys such as `enum`, `pattern`,
+`minimum`, `maximum`, `minLength`, `maxLength`, `minItems`, and `maxItems`.
 
 ## Request Locations
 
@@ -186,7 +213,9 @@ Request locations are used by operation parameters during serialization.
 
 ## Models
 
-Models are reusable parameter schemas. A response model must have top-level `type` set to `object` or `array`; other response model types are rejected by the deserializer.
+Models are reusable parameter schemas. A response model must have top-level
+`type` set to `object` or `array`; other response model types are rejected by
+the deserializer.
 
 ```php
 'models' => [
@@ -207,7 +236,8 @@ Models are reusable parameter schemas. A response model must have top-level `typ
 
 ## Response Models
 
-Response model properties use response locations to pull data from the PSR-7 response.
+Response model properties use response locations to pull data from the PSR-7
+response.
 
 | Location | Behavior |
 | --- | --- |
@@ -218,13 +248,21 @@ Response model properties use response locations to pull data from the PSR-7 res
 | `statusCode` | Stores the integer response status code. |
 | `reasonPhrase` | Stores the response reason phrase. |
 
-If an operation has no `responseModel`, response processing returns an empty `GuzzleHttp\Command\Result`. If `process` is disabled, response processing returns a result with the raw PSR-7 response in the `response` key.
+If an operation has no `responseModel`, response processing returns an empty
+`GuzzleHttp\Command\Result`. If `process` is disabled, response processing
+returns a result with the raw PSR-7 response in the `response` key.
 
 ## Defaults and Validation
 
-`GuzzleClient` merges client `defaults` into command input when commands are created. Explicit command arguments win over defaults.
+`GuzzleClient` merges client `defaults` into command input when commands are
+created. Explicit command arguments win over defaults.
 
-Validation is enabled by default. It checks required values, types, object properties, additional properties, array items, ranges, lengths, enums, and patterns. It also applies parameter `default` and `static` values. Request serialization and response processing apply the full `filters` and `format` pipeline; validation does limited pre-validation filtering/formatting for present truthy values.
+Validation is enabled by default. It checks required values, types, object
+properties, additional properties, array items, ranges, lengths, enums, and
+patterns. It also applies parameter `default` and `static` values. Request
+serialization and response processing apply the full `filters` and `format`
+pipeline; validation does limited pre-validation filtering/formatting for
+present truthy values.
 
 ```php
 $client = new GuzzleClient($httpClient, $description, null, null, null, [
@@ -233,11 +271,16 @@ $client = new GuzzleClient($httpClient, $description, null, null, null, [
 ]);
 ```
 
-The `validate` option installs a command handler during construction. Changing `validate` with `setConfig()` after construction does not add or remove that handler.
+The `validate` option installs a command handler during construction. Changing
+`validate` with `setConfig()` after construction does not add or remove that
+handler.
 
 ## Response Processing
 
-Response processing is enabled by default. Set client config `process` to `false` to return raw responses for all operations, or set operation `process` to override the client setting for a single operation. Operation `process: null` inherits the client setting.
+Response processing is enabled by default. Set client config `process` to
+`false` to return raw responses for all operations, or set operation `process`
+to override the client setting for a single operation. Operation `process: null`
+inherits the client setting.
 
 ```php
 'operations' => [
@@ -252,11 +295,16 @@ Response processing is enabled by default. Set client config `process` to `false
 ]
 ```
 
-The client-level `process` option is used when the default deserializer is constructed. Changing it with `setConfig()` after construction does not replace the deserializer.
+The client-level `process` option is used when the default deserializer is
+constructed. Changing it with `setConfig()` after construction does not replace
+the deserializer.
 
 ## Error Responses
 
-`errorResponses` maps specific HTTP responses to exception classes. Each entry must include `code`, may include `phrase`, and must include `class`. If both `code` and `phrase` are set, both must match. If only `code` is set, the status code match is enough.
+`errorResponses` maps specific HTTP responses to exception classes. Each entry
+must include `code`, may include `phrase`, and must include `class`. If both
+`code` and `phrase` are set, both must match. If only `code` is set, the status
+code match is enough.
 
 ```php
 'errorResponses' => [
@@ -272,7 +320,12 @@ The client-level `process` option is used when the default deserializer is const
 ]
 ```
 
-Exception classes should extend `GuzzleHttp\Command\Exception\CommandException` when you want the custom exception class to propagate from the command layer. Other compatible exception classes are wrapped by the command layer. `errorResponses` are checked only when response processing is enabled. Unmatched HTTP errors can still be raised by the underlying Guzzle HTTP client when `http_errors` is enabled.
+Exception classes should extend `GuzzleHttp\Command\Exception\CommandException`
+when you want the custom exception class to propagate from the command layer.
+Other compatible exception classes are wrapped by the command layer.
+`errorResponses` are checked only when response processing is enabled. Unmatched
+HTTP errors can still be raised by the underlying Guzzle HTTP client when
+`http_errors` is enabled.
 
 ## Related
 
