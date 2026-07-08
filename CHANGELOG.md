@@ -33,8 +33,10 @@
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
 * Trim XML response text nodes with XML whitespace characters only
 
-## 1.7.2 - UPCOMING
+## 1.7.2 - 2026-07-08
 
+* Require `guzzlehttp/guzzle` ^7.13.3 and `guzzlehttp/psr7` ^2.12.4
+* Require `guzzlehttp/command` ^1.5.2 and `guzzlehttp/uri-template` ^1.0.9
 * Pass explicit trim characters ahead of the PHP 8.6 trim default change
 
 ## 1.7.1 - 2026-06-23
