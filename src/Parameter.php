@@ -832,6 +832,12 @@ class Parameter implements ToArrayInterface
             return false;
         }
 
+        // The required and static bool properties initialize to false, so their
+        // presence must come from the resolved schema data instead of isset().
+        if (($var === 'required' || $var === 'static') && !array_key_exists($var, $this->resolvedData)) {
+            return false;
+        }
+
         $value = $this->{$var};
 
         return $value !== '' && $value !== [];

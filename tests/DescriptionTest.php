@@ -139,6 +139,38 @@ class DescriptionTest extends TestCase
         $this->assertEquals('http://foo.com', $description->getBaseUri());
     }
 
+    /**
+     * @dataProvider invalidBaseUriProvider
+     */
+    public function testValidatesBaseUriType($baseUri, string $type): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('baseUri must be a string or Stringable; got '.$type.'.');
+
+        new Description(['baseUri' => $baseUri]);
+    }
+
+    public static function invalidBaseUriProvider(): array
+    {
+        return [
+            'array' => [[], 'array'],
+            'object' => [new \stdClass(), 'stdClass'],
+        ];
+    }
+
+    public function testAcceptsStringableBaseUri(): void
+    {
+        $baseUri = new class {
+            public function __toString(): string
+            {
+                return 'http://foo.com';
+            }
+        };
+
+        $description = new Description(['baseUri' => $baseUri]);
+        $this->assertEquals('http://foo.com', $description->getBaseUri());
+    }
+
     public function testModelsHaveNames(): void
     {
         $desc = [

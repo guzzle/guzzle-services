@@ -72,7 +72,15 @@ class Description implements DescriptionInterface
         }
 
         // Set the baseUri
-        $this->baseUri = isset($config['baseUri']) ? new Uri((string) $config['baseUri']) : new Uri();
+        if (isset($config['baseUri'])) {
+            $baseUri = $config['baseUri'];
+            if (!is_string($baseUri) && (!is_object($baseUri) || !method_exists($baseUri, '__toString'))) {
+                throw new \InvalidArgumentException(\sprintf('baseUri must be a string or Stringable; got %s.', get_debug_type($baseUri)));
+            }
+            $this->baseUri = new Uri((string) $baseUri);
+        } else {
+            $this->baseUri = new Uri();
+        }
 
         // Ensure that the models and operations properties are always arrays
         $this->models = (array) $this->models;
