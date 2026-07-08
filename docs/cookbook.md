@@ -13,11 +13,25 @@ $description = new Description([
             'httpMethod' => 'GET',
             'uri' => '/metadata/{id}',
             'responseModel' => 'metadataResponse',
+            'parameters' => [
+                'id' => [
+                    'type' => 'string',
+                    'required' => true,
+                    'location' => 'uri',
+                ],
+            ],
         ],
         'getFile' => [
             'httpMethod' => 'GET',
             'uri' => '/files/{id}',
             'process' => false,
+            'parameters' => [
+                'id' => [
+                    'type' => 'string',
+                    'required' => true,
+                    'location' => 'uri',
+                ],
+            ],
         ],
     ],
 ]);
@@ -26,7 +40,7 @@ $description = new Description([
 When response processing is disabled, the raw PSR-7 response is returned in the result's `response` key:
 
 ```php
-$result = $guzzleClient->getFile(['id' => 123]);
+$result = $guzzleClient->getFile(['id' => '123']);
 $response = $result['response'];
 ```
 

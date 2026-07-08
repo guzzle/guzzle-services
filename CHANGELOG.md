@@ -16,15 +16,18 @@
 * Return raw PSR-7 responses in the `response` result key when the `process` client option is `false`
 * Allow operations to override response processing with the `process` operation option
 * Support JSON response fields with multiple allowed `type` values
+* Reject scalar top-level JSON response bodies
 * Require custom implementations and subclasses of public service APIs to match native method signatures
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 * Validate cast integer values against string enum, pattern, and length constraints
 * Match string enum values strictly by type and value
+* Normalize stringable command values for string parameters during validation
 * Treat explicit false values as present in `Parameter::has()` while omitted `required` and `static` flags remain absent
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Serialize XML request scalar element text with XMLWriter text escaping instead of CDATA sections
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
 * Reject invalid `GuzzleClient` configuration option values
+* Reject loose parameter schema values instead of normalizing them
 * Require `null` schema types to match only `null` values
 * Improve PHPDoc for service client transformers, command handler stacks, and service description, operation, and parameter schema arrays
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations

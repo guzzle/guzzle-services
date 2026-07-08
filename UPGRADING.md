@@ -142,6 +142,14 @@ $contents = (string) $result['output'];
 $contents = $result['output'];
 ```
 
+#### JSON Response Bodies
+
+JSON response processing now requires the top-level JSON value to be an object
+or array. Scalar JSON bodies such as `null`, numbers, strings, and booleans now
+throw `RuntimeException`. For endpoints that intentionally return scalar JSON,
+disable response processing with `process: false` and read the raw PSR-7
+response from the result's `response` key.
+
 #### Null Schema Values
 
 Schema parameters with `type` set to `'null'` now match only actual `null`
@@ -249,6 +257,14 @@ Services 1.x skipped those checks for cast integers. Enum matching is also
 strict: values match only enum entries of the same type, so string parameters
 must declare enum entries as strings (`'1'` rather than `1`).
 
+#### Stringable Command Values
+
+When validation is enabled, command values for parameters with `type: string`
+may be stringable objects. Successful validation casts those values to strings
+and stores the normalized strings back on the command before the next handler
+runs. Normalize these values before creating the command if later middleware
+expects the original object instance.
+
 #### Non-finite Float Command Values
 
 Command values serialized into request locations now reject `NAN`, `INF`, and
@@ -280,6 +296,13 @@ Service description values must use the documented PHP types, such as strings
 for names and URIs, booleans for flags, arrays for schema collections, and
 integers for min/max constraints. Parameter schema values that Guzzle Services
 1.6 deprecated and normalized are rejected instead of being cast.
+
+This applies to documented parameter schema keys such as `name`, `description`,
+`location`, `sentAs`, `pattern`, `format`, `$ref`, `extends`, `required`,
+`static`, `minimum`, `maximum`, `minLength`, `maxLength`, `minItems`,
+`maxItems`, `filters`, `properties`, `data`, `enum`, `additionalProperties`,
+`items`, and `type`. Other keys, including `default` and unknown custom keys,
+are retained as parameter data without strict rejection.
 
 #### Soft-Final Classes
 
