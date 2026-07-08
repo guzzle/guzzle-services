@@ -7,6 +7,18 @@ parameters:
 			path: src/Description.php
 
 		-
+			message: '#^Call to function is_object\(\) with Stringable will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Description.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Stringable and ''__toString'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Description.php
+
+		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1

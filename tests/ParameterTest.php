@@ -501,4 +501,31 @@ class ParameterTest extends TestCase
         $this->assertFalse((new Parameter(['type' => '']))->has('type'));
         $this->assertFalse((new Parameter(['type' => []]))->has('type'));
     }
+
+    public function testHasDistinguishesOmittedAndExplicitBooleanFlags(): void
+    {
+        $omitted = new Parameter();
+
+        $this->assertFalse($omitted->has('required'));
+        $this->assertFalse($omitted->has('static'));
+
+        $explicitFalse = new Parameter(['required' => false, 'static' => false]);
+
+        $this->assertTrue($explicitFalse->has('required'));
+        $this->assertTrue($explicitFalse->has('static'));
+    }
+
+    public function testHasTreatsInheritedFalseBooleanFlagsAsPresent(): void
+    {
+        $description = new Description([
+            'models' => [
+                'Base' => ['required' => false, 'static' => false],
+            ],
+        ]);
+
+        $parameter = new Parameter(['extends' => 'Base'], ['description' => $description]);
+
+        $this->assertTrue($parameter->has('required'));
+        $this->assertTrue($parameter->has('static'));
+    }
 }

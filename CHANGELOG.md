@@ -6,6 +6,7 @@
 * Require `guzzlehttp/guzzle` ^8.0 and `guzzlehttp/psr7` ^3.0
 * Require `guzzlehttp/command` ^2.0 and `guzzlehttp/uri-template` ^2.0
 * Remove the legacy `baseUrl` service description option; use `baseUri` instead
+* Reject non-string and non-stringable `baseUri` service-description values before URI construction
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Reject native PHP serialization of runtime client pipeline objects
 * Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
@@ -19,6 +20,7 @@
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 * Validate cast integer values against string enum, pattern, and length constraints
 * Match string enum values strictly by type and value
+* Treat explicit false values as present in `Parameter::has()` while omitted `required` and `static` flags remain absent
 * Limit XML response traversal and additional-property conversion to 512 nested elements by default
 * Serialize XML request scalar element text with XMLWriter text escaping instead of CDATA sections
 * Honor the documented `GuzzleClient` `response_locations` option when building the default deserializer
