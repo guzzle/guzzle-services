@@ -458,6 +458,35 @@ class SchemaValidatorTest extends TestCase
         $this->assertEquals('12', $value);
     }
 
+    public function testCastsIntegerBeforeStringConstraintValidation(): void
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+            'enum' => ['7'],
+        ]);
+        $value = 12;
+        $this->assertFalse($this->validator->validate($param, $value));
+        $this->assertSame('12', $value);
+        $this->assertEquals(['[test] must be one of "7"'], $this->validator->getErrors());
+    }
+
+    public function testNormalizesStringableValuesToStrings(): void
+    {
+        $param = new Parameter([
+            'name' => 'test',
+            'type' => 'string',
+        ]);
+        $value = new class {
+            public function __toString(): string
+            {
+                return 'stringable';
+            }
+        };
+        $this->assertTrue($this->validator->validate($param, $value));
+        $this->assertSame('stringable', $value);
+    }
+
     public function testRequiredMessageIncludesType(): void
     {
         $param = new Parameter([

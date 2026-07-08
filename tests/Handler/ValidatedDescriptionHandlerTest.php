@@ -118,4 +118,39 @@ class ValidatedDescriptionHandlerTest extends TestCase
         // Should not throw any exception
         self::assertInstanceOf(Result::class, $client->foo(['bar' => new \DateTimeImmutable()]));
     }
+
+    public function testWritesNormalizedStringableValuesBackToCommand(): void
+    {
+        $description = new Description([
+            'operations' => [
+                'foo' => [
+                    'uri' => Server::$url,
+                    'httpMethod' => 'GET',
+                    'parameters' => [
+                        'bar' => [
+                            'type' => 'string',
+                            'location' => 'query',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        Server::flush();
+        Server::enqueue([new Response(200)]);
+
+        $client = new GuzzleClient(new HttpClient(), $description);
+        $command = $client->getCommand('foo', [
+            'bar' => new class {
+                public function __toString(): string
+                {
+                    return 'stringable';
+                }
+            },
+        ]);
+
+        $client->execute($command);
+
+        self::assertSame('stringable', $command['bar']);
+    }
 }

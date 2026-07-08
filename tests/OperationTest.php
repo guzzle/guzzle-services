@@ -218,6 +218,20 @@ class OperationTest extends TestCase
         $this->assertEquals('string', $o->getAdditionalParameters()->getType());
     }
 
+    public function testCanProvideAdditionalParametersAsParameter(): void
+    {
+        $parameter = new Parameter(['type' => 'string']);
+        $operation = new Operation(['additionalParameters' => $parameter]);
+        $this->assertSame($parameter, $operation->getAdditionalParameters());
+    }
+
+    public function testEnsuresAdditionalParametersAreArrayOrParameter(): void
+    {
+        $this->expectExceptionMessage('additionalParameters must be an array or Parameter');
+        $this->expectException(\InvalidArgumentException::class);
+        new Operation(['additionalParameters' => true]);
+    }
+
     protected function getOperation(): Operation
     {
         return new Operation([
