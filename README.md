@@ -1,8 +1,15 @@
 # Guzzle Services
 
-`guzzlehttp/guzzle-services` builds service-description-driven clients on top of [`guzzlehttp/command`](https://github.com/guzzle/command/blob/2.0/README.md). A service description maps named operations and parameters to HTTP requests, then maps responses into result data.
+`guzzlehttp/guzzle-services` builds service-description-driven clients on top of
+[`guzzlehttp/command`](https://github.com/guzzle/command/blob/2.0/README.md). A
+service description maps named operations and parameters to HTTP requests, then
+maps responses into result data.
 
-Use this package when you are building an SDK-style client for an API and want operations described in arrays instead of hand-writing every request serializer. If you only need to send HTTP requests directly, install [`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle/blob/8.0/README.md) instead.
+Use this package when you are building an SDK-style client for an API and want
+operations described in arrays instead of hand-writing every request serializer.
+If you only need to send HTTP requests directly, install
+[`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle/blob/8.0/README.md)
+instead.
 
 ## Installation
 
@@ -58,14 +65,25 @@ $result = $client->getUser(['id' => '123']);
 
 ## Security
 
-If you discover a security vulnerability within this package, please send an email to security@tidelift.com. All security vulnerabilities will be promptly addressed. Please do not disclose security-related issues publicly until a fix has been announced. Please see [Security Policy](https://github.com/guzzle/guzzle-services/security/policy) for more information.
+If you discover a security vulnerability within this package, please send an
+email to security@tidelift.com. All security vulnerabilities will be promptly
+addressed. Please do not disclose security-related issues publicly until a fix
+has been announced. Please see
+[Security Policy](https://github.com/guzzle/guzzle-services/security/policy) for
+more information.
 
 ## License
 
-Guzzle is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
+Guzzle is made available under the MIT License (MIT). Please see
+[License File](LICENSE) for more information.
 
 ## For Enterprise
 
 Available as part of the Tidelift Subscription
 
-The maintainers of Guzzle and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-guzzlehttp-guzzle-services?utm_source=packagist-guzzlehttp-guzzle-services&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+The maintainers of Guzzle and thousands of other packages are working with
+Tidelift to deliver commercial support and maintenance for the open source
+dependencies you use to build your applications. Save time, reduce risk, and
+improve code health, while paying the maintainers of the exact dependencies you
+use.
+[Learn more.](https://tidelift.com/subscription/pkg/packagist-guzzlehttp-guzzle-services?utm_source=packagist-guzzlehttp-guzzle-services&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
