@@ -138,7 +138,7 @@ class Serializer
             /** @var mixed $method */
             $method = $operation->getHttpMethod() ?: 'GET';
             if (is_string($method)) {
-                $normalizedMethod = strtoupper($method);
+                $normalizedMethod = strtr($method, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
                 if ($method !== $normalizedMethod) {
                     \trigger_deprecation(
                         'guzzlehttp/guzzle-services',
@@ -186,7 +186,7 @@ class Serializer
         /** @var mixed $method */
         $method = $operation->getHttpMethod() ?: 'GET';
         if (is_string($method)) {
-            $normalizedMethod = strtoupper($method);
+            $normalizedMethod = strtr($method, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
             if ($method !== $normalizedMethod) {
                 \trigger_deprecation(
                     'guzzlehttp/guzzle-services',

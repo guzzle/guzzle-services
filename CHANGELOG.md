@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.3 - Upcoming
+
+* Normalize operation HTTP methods with locale-independent ASCII uppercasing
+
 ## 1.7.2 - 2026-07-08
 
 * Require `guzzlehttp/guzzle` ^7.13.3 and `guzzlehttp/psr7` ^2.12.4
