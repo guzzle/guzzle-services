@@ -12,6 +12,7 @@ use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -86,7 +87,7 @@ class GuzzleClient extends ServiceClient
     public function getCommand(string $name, array $args = []): CommandInterface
     {
         if (!$this->description->hasOperation($name)) {
-            $name = ucfirst($name);
+            $name = $name === '' ? '' : Utils::asciiToUpper($name[0]).substr($name, 1);
             if (!$this->description->hasOperation($name)) {
                 throw new \InvalidArgumentException(
                     "No operation found named {$name}"
