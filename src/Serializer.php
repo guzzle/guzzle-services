@@ -14,6 +14,7 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Psr\Http\Message\RequestInterface;
 
@@ -138,7 +139,7 @@ class Serializer
             /** @var mixed $method */
             $method = $operation->getHttpMethod() ?: 'GET';
             if (is_string($method)) {
-                $normalizedMethod = strtr($method, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+                $normalizedMethod = Utils::asciiToUpper($method);
                 if ($method !== $normalizedMethod) {
                     \trigger_deprecation(
                         'guzzlehttp/guzzle-services',
@@ -186,7 +187,7 @@ class Serializer
         /** @var mixed $method */
         $method = $operation->getHttpMethod() ?: 'GET';
         if (is_string($method)) {
-            $normalizedMethod = strtr($method, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+            $normalizedMethod = Utils::asciiToUpper($method);
             if ($method !== $normalizedMethod) {
                 \trigger_deprecation(
                     'guzzlehttp/guzzle-services',

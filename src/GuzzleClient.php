@@ -8,6 +8,7 @@ use GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Utils;
 
 /**
  * Default Guzzle web service client implementation.
@@ -70,7 +71,7 @@ class GuzzleClient extends ServiceClient
     public function getCommand($name, array $args = [])
     {
         if (!$this->description->hasOperation($name)) {
-            $name = $name === '' ? '' : strtr($name[0], 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ').substr($name, 1);
+            $name = Utils::asciiUcFirst($name);
             if (!$this->description->hasOperation($name)) {
                 throw new \InvalidArgumentException(
                     "No operation found named {$name}"
