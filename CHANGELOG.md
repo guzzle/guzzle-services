@@ -2,8 +2,10 @@
 
 ## 1.7.3 - Upcoming
 
+* Require `guzzlehttp/psr7` ^2.13
 * Normalize operation HTTP methods with locale-independent ASCII uppercasing
 * Capitalize magic command names with locale-independent ASCII folding
+* Use the psr7 ASCII case folding helpers
 
 ## 1.7.2 - 2026-07-08
 
