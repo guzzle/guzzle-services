@@ -70,7 +70,7 @@ class GuzzleClient extends ServiceClient
     public function getCommand($name, array $args = [])
     {
         if (!$this->description->hasOperation($name)) {
-            $name = ucfirst($name);
+            $name = $name === '' ? '' : strtr($name[0], 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ').substr($name, 1);
             if (!$this->description->hasOperation($name)) {
                 throw new \InvalidArgumentException(
                     "No operation found named {$name}"

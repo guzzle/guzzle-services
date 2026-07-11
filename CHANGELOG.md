@@ -3,6 +3,7 @@
 ## 1.7.3 - Upcoming
 
 * Normalize operation HTTP methods with locale-independent ASCII uppercasing
+* Capitalize magic command names with locale-independent ASCII folding
 
 ## 1.7.2 - 2026-07-08
 
