@@ -87,7 +87,7 @@ class GuzzleClient extends ServiceClient
     public function getCommand(string $name, array $args = []): CommandInterface
     {
         if (!$this->description->hasOperation($name)) {
-            $name = $name === '' ? '' : Utils::asciiToUpper($name[0]).substr($name, 1);
+            $name = Utils::asciiUcFirst($name);
             if (!$this->description->hasOperation($name)) {
                 throw new \InvalidArgumentException(
                     "No operation found named {$name}"
