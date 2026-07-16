@@ -6,6 +6,7 @@ use GuzzleHttp\Command\Command;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
+use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
@@ -50,6 +51,20 @@ class JsonLocationTest extends TestCase
         $request = $location->after($command, $request, $operation);
         $this->assertEquals('{"foo":"bar","baz":{"bam":[1]}}', $request->getBody()->getContents());
         $this->assertEquals([0 => 'foo'], $request->getHeader('Content-Type'));
+    }
+
+    public function testPreservesJsonEncodingException()
+    {
+        $location = new JsonLocation();
+        $command = new Command('foo', ['foo' => "\xB1\x31"]);
+
+        try {
+            $location->visit($command, new Request('POST', 'http://httbin.org'), new Parameter(['name' => 'foo']));
+            $this->fail('Expected InvalidArgumentException was not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertStringStartsWith('json_encode error:', $e->getMessage());
+            $this->assertNull($e->getPrevious());
+        }
     }
 
     /**

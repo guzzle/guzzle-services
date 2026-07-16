@@ -5,8 +5,8 @@ namespace GuzzleHttp\Command\Guzzle\RequestLocation;
 use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Operation;
 use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Psr7;
-use GuzzleHttp\Utils;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
@@ -45,7 +45,7 @@ class JsonLocation extends AbstractLocation
             $param
         );
 
-        return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($this->jsonData)));
+        return $request->withBody(Psr7\Utils::streamFor(self::encodeJson($this->jsonData)));
     }
 
     /**
@@ -74,6 +74,21 @@ class JsonLocation extends AbstractLocation
             $request = $request->withHeader('Content-Type', $this->jsonContentType);
         }
 
-        return $request->withBody(Psr7\Utils::streamFor(Utils::jsonEncode($data)));
+        return $request->withBody(Psr7\Utils::streamFor(self::encodeJson($data)));
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @return string
+     */
+    private static function encodeJson($data)
+    {
+        $json = \json_encode($data);
+        if (\JSON_ERROR_NONE !== \json_last_error()) {
+            throw new InvalidArgumentException('json_encode error: '.\json_last_error_msg());
+        }
+
+        return $json;
     }
 }

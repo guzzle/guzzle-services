@@ -9,9 +9,9 @@ use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
+use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Utils;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,7 +49,7 @@ class JsonLocationTest extends TestCase
     public function testVisitsWiredArray()
     {
         $json = ['car_models' => ['ferrari', 'aston martin']];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -119,6 +119,19 @@ class JsonLocationTest extends TestCase
         $this->assertEquals([], $result->toArray());
     }
 
+    public function testPreservesJsonDecodingException()
+    {
+        $location = new JsonLocation();
+
+        try {
+            $location->before(new Result(), new Response(200, [], '{'), new Parameter());
+            $this->fail('Expected InvalidArgumentException was not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertStringStartsWith('json_decode error:', $e->getMessage());
+            $this->assertNull($e->getPrevious());
+        }
+    }
+
     public function jsonProvider()
     {
         return [
@@ -138,7 +151,7 @@ class JsonLocationTest extends TestCase
             ['foo' => 'bar'],
             ['baz' => 'bam'],
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -185,7 +198,7 @@ class JsonLocationTest extends TestCase
                 'baz',
             ],
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -326,7 +339,7 @@ class JsonLocationTest extends TestCase
             ],
             'baz' => 'boo',
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -361,7 +374,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -421,7 +434,7 @@ class JsonLocationTest extends TestCase
             'link' => null,
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -465,7 +478,7 @@ class JsonLocationTest extends TestCase
             'extra' => 'value',
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -530,7 +543,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -612,7 +625,7 @@ class JsonLocationTest extends TestCase
     {
         $json = json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}');
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
