@@ -5,7 +5,7 @@ namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
-use GuzzleHttp\Utils;
+use GuzzleHttp\Exception\InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -36,7 +36,13 @@ class JsonLocation extends AbstractLocation
     ) {
         $body = (string) $response->getBody();
         $body = $body ?: '{}';
-        $this->json = Utils::jsonDecode($body, true);
+        $json = \json_decode($body, true);
+        if (\JSON_ERROR_NONE !== \json_last_error()) {
+            throw new InvalidArgumentException('json_decode error: '.\json_last_error_msg());
+        }
+
+        $this->json = $json;
+
         // relocate named arrays, so that they have the same structure as
         //  arrays nested in objects and visit can work on them in the same way
         if ($model->getType() === 'array' && ($name = $model->getName())) {
