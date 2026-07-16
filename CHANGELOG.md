@@ -37,6 +37,7 @@
 ## 1.7.3 - Upcoming
 
 * Require `guzzlehttp/psr7` ^2.13
+* Replace deprecated Guzzle JSON utility methods with native JSON functions
 * Normalize operation HTTP methods with locale-independent ASCII uppercasing
 * Capitalize magic command names with locale-independent ASCII folding
 
