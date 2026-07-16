@@ -54,6 +54,16 @@ class JsonLocationTest extends TestCase
         $this->assertEquals([0 => 'foo'], $request->getHeader('Content-Type'));
     }
 
+    public function testThrowsNativeJsonEncodingException(): void
+    {
+        $location = new JsonLocation();
+        $command = new Command('foo', ['foo' => "\xB1\x31"]);
+
+        $this->expectException(\JsonException::class);
+
+        $location->visit($command, new Request('POST', 'http://httbin.org'), new Parameter(['name' => 'foo']));
+    }
+
     /**
      * @group RequestLocation
      */

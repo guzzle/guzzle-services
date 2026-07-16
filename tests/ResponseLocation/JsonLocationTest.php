@@ -13,7 +13,6 @@ use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Utils;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -51,7 +50,7 @@ class JsonLocationTest extends TestCase
     public function testVisitsWiredArray(): void
     {
         $json = ['car_models' => ['ferrari', 'aston martin']];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -121,6 +120,15 @@ class JsonLocationTest extends TestCase
         $this->assertEquals([], $result->toArray());
     }
 
+    public function testThrowsNativeJsonDecodingException(): void
+    {
+        $location = new JsonLocation();
+
+        $this->expectException(\JsonException::class);
+
+        $location->before(new Result(), new Response(200, [], '{'), new Parameter());
+    }
+
     public static function scalarJsonResponseBodyProvider(): array
     {
         return [
@@ -166,7 +174,7 @@ class JsonLocationTest extends TestCase
             ['foo' => 'bar'],
             ['baz' => 'bam'],
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -213,7 +221,7 @@ class JsonLocationTest extends TestCase
                 'baz',
             ],
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -354,7 +362,7 @@ class JsonLocationTest extends TestCase
             ],
             'baz' => 'boo',
         ];
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -389,7 +397,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -449,7 +457,7 @@ class JsonLocationTest extends TestCase
             'link' => null,
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -493,7 +501,7 @@ class JsonLocationTest extends TestCase
             'extra' => 'value',
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -583,7 +591,7 @@ class JsonLocationTest extends TestCase
      */
     public function testVisitsJsonPropertiesWithMultipleTypes(array $allowedTypes, array $json, array $expected): void
     {
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -641,7 +649,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -711,7 +719,7 @@ class JsonLocationTest extends TestCase
             ],
         ];
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
@@ -791,9 +799,9 @@ class JsonLocationTest extends TestCase
      */
     public function testVisitsNestedArrayOfObjects(): void
     {
-        $json = json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}');
+        $json = \json_decode('{"scalar":"foo","nested":[{"bar":123,"baz":false},{"bar":345,"baz":true},{"bar":678,"baz":true}]}', false, 512, \JSON_THROW_ON_ERROR);
 
-        $body = Utils::jsonEncode($json);
+        $body = \json_encode($json, \JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $body);
         $mock = new MockHandler([$response]);
 
