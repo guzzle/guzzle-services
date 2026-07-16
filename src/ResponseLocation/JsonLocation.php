@@ -7,7 +7,6 @@ namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
-use GuzzleHttp\Utils;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -32,7 +31,7 @@ class JsonLocation extends AbstractLocation
         Parameter $model
     ): ResultInterface {
         $body = (string) $response->getBody();
-        $decoded = $body !== '' ? Utils::jsonDecode($body, true) : [];
+        $decoded = $body !== '' ? \json_decode($body, true, 512, \JSON_THROW_ON_ERROR) : [];
 
         if (!is_array($decoded)) {
             throw new \RuntimeException(\sprintf('JSON response body must be an object or array; got %s.', get_debug_type($decoded)));

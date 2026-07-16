@@ -150,6 +150,13 @@ throw `RuntimeException`. For endpoints that intentionally return scalar JSON,
 disable response processing with `process: false` and read the raw PSR-7
 response from the result's `response` key.
 
+#### JSON Location Exceptions
+
+Malformed JSON responses and request values that cannot be encoded as JSON now
+throw native `JsonException` directly from their JSON locations. Guzzle Services
+1.x exposed `GuzzleHttp\Exception\InvalidArgumentException` from Guzzle's JSON
+utility methods.
+
 #### Null Schema Values
 
 Schema parameters with `type` set to `'null'` now match only actual `null`
