@@ -2,7 +2,8 @@
 
 ## 1.7.3 - Upcoming
 
-* Require `guzzlehttp/guzzle` ^7.15, `guzzlehttp/psr7` ^2.13, and `guzzlehttp/command` ^1.5.3
+* Require `guzzlehttp/guzzle` ^7.15 and `guzzlehttp/psr7` ^2.13
+* Require `guzzlehttp/command` ^1.5.3 and `guzzlehttp/uri-template` ^1.0.10
 * Replace deprecated Guzzle JSON utility methods with native JSON functions
 * Normalize operation HTTP methods with locale-independent ASCII uppercasing
 * Capitalize magic command names with locale-independent ASCII folding
