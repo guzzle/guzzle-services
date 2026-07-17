@@ -35,9 +35,10 @@
 * Mark `Operation`, `ValidatedDescriptionHandler`, and `Rfc3986Serializer` as soft-final with `@final` annotations
 * Trim XML response text nodes with XML whitespace characters only
 
-## 1.7.3 - Upcoming
+## 1.7.3 - 2026-07-17
 
-* Require `guzzlehttp/psr7` ^2.13
+* Require `guzzlehttp/guzzle` ^7.15 and `guzzlehttp/psr7` ^2.13
+* Require `guzzlehttp/command` ^1.5.3 and `guzzlehttp/uri-template` ^1.0.10
 * Replace deprecated Guzzle JSON utility methods with native JSON functions
 * Normalize operation HTTP methods with locale-independent ASCII uppercasing
 * Capitalize magic command names with locale-independent ASCII folding
