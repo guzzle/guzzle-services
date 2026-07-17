@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GuzzleHttp\Command\Guzzle;
 
+use GuzzleHttp\Psr7\DiagnosticValue;
 use GuzzleHttp\Psr7\Uri;
 
 /**
@@ -93,7 +94,7 @@ class Description implements DescriptionInterface
         if (isset($config['operations'])) {
             foreach ($config['operations'] as $name => $operation) {
                 if (!is_array($operation)) {
-                    throw new \InvalidArgumentException(\sprintf('Operation "%s" must be an array; got %s.', (string) $name, get_debug_type($operation)));
+                    throw new \InvalidArgumentException(\sprintf('Operation "%s" must be an array; got %s.', DiagnosticValue::escape((string) $name), get_debug_type($operation)));
                 }
                 $this->operations[$name] = $operation;
             }
@@ -155,7 +156,7 @@ class Description implements DescriptionInterface
     public function getOperation(string $name): Operation
     {
         if (!$this->hasOperation($name)) {
-            throw new \InvalidArgumentException("No operation found named $name");
+            throw new \InvalidArgumentException(\sprintf('No operation found named %s', DiagnosticValue::escape($name)));
         }
 
         // Lazily create operations as they are retrieved
@@ -177,7 +178,7 @@ class Description implements DescriptionInterface
     public function getModel(string $id): Parameter
     {
         if (!$this->hasModel($id)) {
-            throw new \InvalidArgumentException("No model found named $id");
+            throw new \InvalidArgumentException(\sprintf('No model found named %s', DiagnosticValue::escape($id)));
         }
 
         // Lazily create models as they are retrieved

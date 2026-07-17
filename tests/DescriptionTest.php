@@ -126,6 +126,16 @@ class DescriptionTest extends TestCase
         ]);
     }
 
+    public function testEscapesUnsafeOperationNamesInDescriptionErrors(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Operation "bad\\xFF" must be an array; got stdClass.');
+
+        new Description([
+            'operations' => ["bad\xFF" => new \stdClass()],
+        ]);
+    }
+
     public function testDoesNotUseLegacyBaseUrl(): void
     {
         $description = new Description(['baseUrl' => 'http://foo.com']);

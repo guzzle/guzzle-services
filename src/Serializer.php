@@ -13,6 +13,7 @@ use GuzzleHttp\Command\Guzzle\RequestLocation\MultiPartLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\QueryLocation;
 use GuzzleHttp\Command\Guzzle\RequestLocation\RequestLocationInterface;
 use GuzzleHttp\Command\Guzzle\RequestLocation\XmlLocation;
+use GuzzleHttp\Psr7\DiagnosticValue;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
@@ -95,7 +96,7 @@ class Serializer
                 continue;
             }
             if (!isset($this->locations[$location])) {
-                throw new \RuntimeException("No location registered for $name");
+                throw new \RuntimeException(\sprintf('No location registered for %s', DiagnosticValue::escape((string) $name)));
             }
             $visitedLocations[$location] = true;
             $request = $this->locations[$location]->visit($command, $request, $param);

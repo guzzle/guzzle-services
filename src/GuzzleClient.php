@@ -12,6 +12,7 @@ use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\DiagnosticValue;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -89,9 +90,7 @@ class GuzzleClient extends ServiceClient
         if (!$this->description->hasOperation($name)) {
             $name = Utils::asciiUcFirst($name);
             if (!$this->description->hasOperation($name)) {
-                throw new \InvalidArgumentException(
-                    "No operation found named {$name}"
-                );
+                throw new \InvalidArgumentException(\sprintf('No operation found named %s', DiagnosticValue::escape($name)));
             }
         }
 
@@ -222,7 +221,7 @@ class GuzzleClient extends ServiceClient
         throw new \InvalidArgumentException(\sprintf(
             'Passing %s to GuzzleClient config option "%s" is invalid; expected %s.',
             get_debug_type($value),
-            $option,
+            DiagnosticValue::escape($option),
             $expected
         ));
     }
