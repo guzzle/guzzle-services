@@ -11,6 +11,7 @@ use GuzzleHttp\Command\Guzzle\NonSerializableTrait;
 use GuzzleHttp\Command\Guzzle\SchemaValidator;
 use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\DiagnosticValue;
 
 /**
  * Handler used to validate command input against a service description.
@@ -80,7 +81,11 @@ class ValidatedDescriptionHandler
             }
 
             if ($errors) {
-                throw new CommandException('Validation errors: '.implode("\n", $errors), $command);
+                $diagnosticErrors = array_map(static function (string $error): string {
+                    return DiagnosticValue::escape($error);
+                }, $errors);
+
+                throw new CommandException(\sprintf('Validation errors: %s', implode('; ', $diagnosticErrors)), $command);
             }
 
             return $handler($command);

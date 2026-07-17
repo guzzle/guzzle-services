@@ -280,8 +280,8 @@ class DeserializerTest extends TestCase
 
     public function testCreateExceptionWithExactMatchOfReasonPhrase(): void
     {
-        $this->expectException(CustomCommandException::class);
-        $response = new Response(404, [], null, '1.1', 'Bar');
+        $reasonPhrase = "Bad \u{0080}";
+        $response = new Response(404, [], null, '1.1', $reasonPhrase);
         $mock = new MockHandler([$response]);
 
         $description = new Description([
@@ -301,7 +301,7 @@ class DeserializerTest extends TestCase
                         ],
                     ],
                     'errorResponses' => [
-                        ['code' => 404, 'phrase' => 'Bar', 'class' => CustomCommandException::class],
+                        ['code' => 404, 'phrase' => $reasonPhrase, 'class' => CustomCommandException::class],
                     ],
                 ],
             ],
@@ -317,7 +317,13 @@ class DeserializerTest extends TestCase
 
         $httpClient = new HttpClient(['handler' => $mock]);
         $client = new GuzzleClient($httpClient, $description);
-        $client->foo(['bar' => 'baz']);
+        try {
+            $client->foo(['bar' => 'baz']);
+            self::fail('Expected a custom command exception.');
+        } catch (CustomCommandException $e) {
+            self::assertSame('Bad \\x80', $e->getMessage());
+            self::assertSame($response, $e->getResponse());
+        }
     }
 
     public function testFavourMostPreciseMatch(): void

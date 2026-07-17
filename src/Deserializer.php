@@ -14,6 +14,7 @@ use GuzzleHttp\Command\Guzzle\ResponseLocation\StatusCodeLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
 use GuzzleHttp\Command\Result;
 use GuzzleHttp\Command\ResultInterface;
+use GuzzleHttp\Psr7\DiagnosticValue;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -133,7 +134,7 @@ class Deserializer
         array &$context
     ): ResultInterface {
         if (!isset($this->responseLocations[$location])) {
-            throw new \RuntimeException("Unknown location: $location");
+            throw new \RuntimeException(\sprintf('Unknown location: %s', DiagnosticValue::escape($location)));
         }
 
         $context['visitors'][$location] = $this->responseLocations[$location];
@@ -257,7 +258,7 @@ class Deserializer
         }
 
         if (null !== $bestException) {
-            throw new $bestException($response->getReasonPhrase(), $command, null, $request, $response);
+            throw new $bestException(DiagnosticValue::escape($response->getReasonPhrase()), $command, null, $request, $response);
         }
 
         // If we reach here, no exception could be match from descriptor, and Guzzle exception will propagate if

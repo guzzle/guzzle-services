@@ -18,6 +18,7 @@
 * Support JSON response fields with multiple allowed `type` values
 * Reject scalar top-level JSON response bodies
 * Let native `JsonException` report JSON location encoding and decoding failures
+* Escape unsafe service metadata and response values in generated exceptions
 * Require custom implementations and subclasses of public service APIs to match native method signatures
 * Require custom parameter filters and extension points to accept exact value types instead of relying on scalar coercion
 * Validate cast integer values against string enum, pattern, and length constraints

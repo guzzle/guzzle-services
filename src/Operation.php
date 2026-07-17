@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\Command\ToArrayInterface;
+use GuzzleHttp\Psr7\DiagnosticValue;
 
 /**
  * Guzzle operation
@@ -274,7 +275,7 @@ class Operation implements ToArrayInterface
     private function resolveExtends(string $name, array $config): array
     {
         if (!$this->description->hasOperation($name)) {
-            throw new \InvalidArgumentException('No operation named '.$name);
+            throw new \InvalidArgumentException(\sprintf('No operation named %s', DiagnosticValue::escape($name)));
         }
 
         // Merge parameters together one level deep
@@ -299,8 +300,8 @@ class Operation implements ToArrayInterface
                 throw new \InvalidArgumentException(\sprintf(
                     'Passing %s as operation parameter "%s.%s" is invalid; expected array.',
                     get_debug_type($param),
-                    $this->config['name'],
-                    $name
+                    DiagnosticValue::escape((string) $this->config['name']),
+                    DiagnosticValue::escape((string) $name)
                 ));
             }
             $param['name'] = $name;
