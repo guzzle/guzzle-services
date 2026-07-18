@@ -472,8 +472,10 @@ class Parameter implements ToArrayInterface
      * @throws \RuntimeException when trying to format when no service
      *                           description is available.
      */
-    public function filter($value)
-    {
+    public function filter(
+        #[\SensitiveParameter]
+        $value
+    ) {
         // Formats are applied exclusively and supersed filters
         if ($this->format) {
             if (!$this->serviceDescription) {

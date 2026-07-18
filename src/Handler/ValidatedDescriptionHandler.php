@@ -44,7 +44,10 @@ class ValidatedDescriptionHandler
      */
     public function __invoke(callable $handler): \Closure
     {
-        return function (CommandInterface $command) use ($handler): PromiseInterface {
+        return function (
+            #[\SensitiveParameter]
+            CommandInterface $command
+        ) use ($handler): PromiseInterface {
             $errors = [];
             $operation = $this->description->getOperation($command->getName());
 

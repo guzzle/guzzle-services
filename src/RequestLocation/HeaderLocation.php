@@ -23,7 +23,9 @@ class HeaderLocation extends AbstractLocation
     }
 
     public function visit(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request,
         Parameter $param
     ): RequestInterface {
@@ -33,7 +35,9 @@ class HeaderLocation extends AbstractLocation
     }
 
     public function after(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request,
         Operation $operation
     ): RequestInterface {
@@ -54,8 +58,10 @@ class HeaderLocation extends AbstractLocation
      *
      * @return string|string[]
      */
-    private static function prepareHeaderValue($value)
-    {
+    private static function prepareHeaderValue(
+        #[\SensitiveParameter]
+        $value
+    ) {
         if (is_string($value)) {
             return $value;
         }

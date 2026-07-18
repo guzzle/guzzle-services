@@ -21,8 +21,10 @@ class Rfc3986Serializer implements QuerySerializerInterface
     /**
      * {@inheritDoc}
      */
-    public function aggregate(array $queryParams): string
-    {
+    public function aggregate(
+        #[\SensitiveParameter]
+        array $queryParams
+    ): string {
         NonFiniteFloats::assertAllFinite($queryParams, 'a query location value');
         $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
 

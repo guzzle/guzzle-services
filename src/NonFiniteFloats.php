@@ -26,8 +26,11 @@ final class NonFiniteFloats
         }
     }
 
-    public static function assertAllFinite(array $values, string $context): void
-    {
+    public static function assertAllFinite(
+        #[\SensitiveParameter]
+        array $values,
+        string $context
+    ): void {
         foreach ($values as $value) {
             if (is_array($value)) {
                 self::assertAllFinite($value, $context);

@@ -47,8 +47,10 @@ class Serializer
         $this->description = $description;
     }
 
-    public function __invoke(CommandInterface $command): RequestInterface
-    {
+    public function __invoke(
+        #[\SensitiveParameter]
+        CommandInterface $command
+    ): RequestInterface {
         $request = $this->createRequest($command);
 
         try {
@@ -81,7 +83,9 @@ class Serializer
      * @throws \RuntimeException If a location cannot be handled
      */
     protected function prepareRequest(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request
     ): RequestInterface {
         $visitedLocations = [];
@@ -126,8 +130,10 @@ class Serializer
      *
      * @throws \RuntimeException
      */
-    protected function createRequest(CommandInterface $command): RequestInterface
-    {
+    protected function createRequest(
+        #[\SensitiveParameter]
+        CommandInterface $command
+    ): RequestInterface {
         $operation = $this->description->getOperation($command->getName());
 
         // If command does not specify a template, assume the client's base URL.
@@ -148,6 +154,7 @@ class Serializer
      */
     private function createCommandWithUri(
         Operation $operation,
+        #[\SensitiveParameter]
         CommandInterface $command
     ): RequestInterface {
         // Get the path values and use the client config settings

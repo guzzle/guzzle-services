@@ -45,8 +45,11 @@ abstract class AbstractLocation implements RequestLocationInterface
      *
      * @return array|mixed
      */
-    protected function prepareValue($value, Parameter $param)
-    {
+    protected function prepareValue(
+        #[\SensitiveParameter]
+        $value,
+        Parameter $param
+    ) {
         return is_array($value)
             ? $this->resolveRecursively($value, $param)
             : $param->filter($value);
@@ -60,8 +63,11 @@ abstract class AbstractLocation implements RequestLocationInterface
      *
      * @return array Returns the mapped array
      */
-    protected function resolveRecursively(array $value, Parameter $param): array
-    {
+    protected function resolveRecursively(
+        #[\SensitiveParameter]
+        array $value,
+        Parameter $param
+    ): array {
         foreach ($value as $name => &$v) {
             switch ($param->getType()) {
                 case 'object':

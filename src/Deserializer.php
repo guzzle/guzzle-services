@@ -70,8 +70,14 @@ class Deserializer
     /**
      * Deserialize the response into the specified result representation
      */
-    public function __invoke(ResponseInterface $response, RequestInterface $request, CommandInterface $command): ResultInterface
-    {
+    public function __invoke(
+        #[\SensitiveParameter]
+        ResponseInterface $response,
+        #[\SensitiveParameter]
+        RequestInterface $request,
+        #[\SensitiveParameter]
+        CommandInterface $command
+    ): ResultInterface {
         $name = $command->getName();
         $operation = $this->description->getOperation($name);
         $process = $operation->getProcess() ?? $this->process;
@@ -226,8 +232,11 @@ class Deserializer
      * around a CommandException
      */
     protected function handleErrorResponses(
+        #[\SensitiveParameter]
         ResponseInterface $response,
+        #[\SensitiveParameter]
         RequestInterface $request,
+        #[\SensitiveParameter]
         CommandInterface $command,
         Operation $operation
     ): void {

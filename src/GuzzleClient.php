@@ -67,6 +67,7 @@ class GuzzleClient extends ServiceClient
         ?callable $commandToRequestTransformer = null,
         ?callable $responseToResultTransformer = null,
         ?HandlerStack $commandHandlerStack = null,
+        #[\SensitiveParameter]
         array $config = []
     ) {
         self::assertConfigOptionTypes($config);
@@ -85,8 +86,11 @@ class GuzzleClient extends ServiceClient
      *
      * @throws \InvalidArgumentException
      */
-    public function getCommand(string $name, array $args = []): CommandInterface
-    {
+    public function getCommand(
+        string $name,
+        #[\SensitiveParameter]
+        array $args = []
+    ): CommandInterface {
         if (!$this->description->hasOperation($name)) {
             $name = Utils::asciiUcFirst($name);
             if (!$this->description->hasOperation($name)) {
@@ -152,8 +156,11 @@ class GuzzleClient extends ServiceClient
             : (isset($this->config[$option]) ? $this->config[$option] : []);
     }
 
-    public function setConfig($option, $value): void
-    {
+    public function setConfig(
+        $option,
+        #[\SensitiveParameter]
+        $value
+    ): void {
         if (is_int($option) || is_string($option)) {
             self::assertConfigOptionType((string) $option, $value);
         }
@@ -164,8 +171,10 @@ class GuzzleClient extends ServiceClient
     /**
      * @return void
      */
-    private static function assertConfigOptionTypes(array $config)
-    {
+    private static function assertConfigOptionTypes(
+        #[\SensitiveParameter]
+        array $config
+    ) {
         foreach ($config as $option => $value) {
             self::assertConfigOptionType((string) $option, $value);
         }
@@ -176,8 +185,11 @@ class GuzzleClient extends ServiceClient
      *
      * @return void
      */
-    private static function assertConfigOptionType(string $option, $value)
-    {
+    private static function assertConfigOptionType(
+        string $option,
+        #[\SensitiveParameter]
+        $value
+    ) {
         if ($option === 'defaults' && !is_array($value)) {
             self::invalidConfigOptionType($option, 'array', $value);
 
@@ -216,8 +228,12 @@ class GuzzleClient extends ServiceClient
      *
      * @return void
      */
-    private static function invalidConfigOptionType(string $option, string $expected, $value)
-    {
+    private static function invalidConfigOptionType(
+        string $option,
+        string $expected,
+        #[\SensitiveParameter]
+        $value
+    ) {
         throw new \InvalidArgumentException(\sprintf(
             'Passing %s to GuzzleClient config option "%s" is invalid; expected %s.',
             get_debug_type($value),
@@ -231,8 +247,10 @@ class GuzzleClient extends ServiceClient
      *
      * @param array $config Constructor config as an array
      */
-    protected function processConfig(array $config): void
-    {
+    protected function processConfig(
+        #[\SensitiveParameter]
+        array $config
+    ): void {
         // set defaults as an array if not provided
         if (!isset($config['defaults'])) {
             $config['defaults'] = [];
