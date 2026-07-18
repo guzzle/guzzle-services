@@ -24,7 +24,9 @@ class BodyLocation extends AbstractLocation
     }
 
     public function visit(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request,
         Parameter $param
     ): RequestInterface {

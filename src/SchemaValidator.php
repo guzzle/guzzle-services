@@ -30,8 +30,11 @@ class SchemaValidator
         $this->castIntegerToStringType = $castIntegerToStringType;
     }
 
-    public function validate(Parameter $param, &$value): bool
-    {
+    public function validate(
+        Parameter $param,
+        #[\SensitiveParameter]
+        &$value
+    ): bool {
         $this->errors = [];
         $this->recursiveProcess($param, $value);
 
@@ -105,6 +108,7 @@ class SchemaValidator
      */
     protected function recursiveProcess(
         Parameter $param,
+        #[\SensitiveParameter]
         &$value,
         string $path = '',
         int $depth = 0

@@ -38,7 +38,9 @@ class XmlLocation extends AbstractLocation
     }
 
     public function visit(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request,
         Parameter $param
     ): RequestInterface {
@@ -55,7 +57,9 @@ class XmlLocation extends AbstractLocation
     }
 
     public function after(
+        #[\SensitiveParameter]
         CommandInterface $command,
+        #[\SensitiveParameter]
         RequestInterface $request,
         Operation $operation
     ): RequestInterface {

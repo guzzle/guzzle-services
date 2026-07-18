@@ -381,6 +381,18 @@ before upgrading.
 no longer support native PHP `serialize()` or `unserialize()`. Persist service
 description arrays or configuration instead of runtime pipeline objects.
 
+#### Sensitive Parameters and Backtraces
+
+Guzzle Services 2.0 marks API-key-bearing configuration, command, request, and
+response parameters as sensitive. On PHP 8.2 and later, exception traces and
+backtraces replace those argument values with `SensitiveParameterValue`
+objects. PHP 7.4 through 8.1 retain the original trace arguments.
+
+This does not redact exception messages, application logs, HTTP traffic,
+properties, captured variables, return values, or the separate `$this` object
+in an explicit backtrace. Custom serializers, deserializers, filters, and
+request locations must mark their own sensitive parameters.
+
 1.0 from 0.6
 ------------
 

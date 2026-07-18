@@ -9,6 +9,7 @@
 * Reject non-string and non-stringable `baseUri` service-description values before URI construction
 * Remove the legacy `responseClass` operation option; use `responseModel` instead
 * Reject native PHP serialization of runtime client pipeline objects
+* Redact API-key-bearing command and HTTP arguments from PHP 8.2+ backtraces
 * Default operations without an `httpMethod` to `GET`, preserve explicit `httpMethod` casing, and reject invalid `httpMethod` values
 * Require header location values to be strings or non-empty arrays of strings
 * Reject non-finite float command values in request locations
