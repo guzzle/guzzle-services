@@ -21,8 +21,6 @@ Guzzle Services 2.0 also requires
 [Guzzle 8.x](https://github.com/guzzle/guzzle/blob/8.0/UPGRADING.md),
 [Guzzle PSR-7 3.x](https://github.com/guzzle/psr7/blob/3.0/UPGRADING.md), and
 [Guzzle URI Template 2.x](https://github.com/guzzle/uri-template/blob/2.0/UPGRADING.md).
-Guzzle Services 1.x supported Guzzle Command `^1.5`, Guzzle `^7.11`, Guzzle
-PSR-7 `^2.11`, and Guzzle URI Template `^1.0.6`.
 
 If your application still supports PHP 7.2 or 7.3, or still uses the Guzzle 7
 dependency stack, continue using Guzzle Services 1.x until your minimum PHP and

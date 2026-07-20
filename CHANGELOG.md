@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## 2.0.0 - UPCOMING
+## 2.0.0 - 2026-07-20
 
 * Drop support for PHP 7.2 and 7.3
-* Require `guzzlehttp/guzzle` ^8.0 and `guzzlehttp/psr7` ^3.0
+* Require `guzzlehttp/guzzle` ^8.0, `guzzlehttp/promises` ^3.0, and `guzzlehttp/psr7` ^3.0
 * Require `guzzlehttp/command` ^2.0 and `guzzlehttp/uri-template` ^2.0
 * Remove the legacy `baseUrl` service description option; use `baseUri` instead
 * Reject non-string and non-stringable `baseUri` service-description values before URI construction
