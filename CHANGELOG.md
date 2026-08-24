@@ -1,9 +1,11 @@
 # CHANGELOG
 
-## 1.7.4 - Upcoming
+## 1.7.4 - 2026-08-24
 
 * Add support for PHP 8.6
 * Replace the deprecated is_integer() in schema validation for PHP 8.6
+* Require `guzzlehttp/guzzle` ^7.15.5 and `guzzlehttp/psr7` ^2.13.1
+* Require `guzzlehttp/command` ^1.5.4 and `guzzlehttp/uri-template` ^1.0.11
 
 ## 1.7.3 - 2026-07-17
 
