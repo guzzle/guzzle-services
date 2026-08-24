@@ -21,8 +21,8 @@ composer require guzzlehttp/guzzle-services
 
 | Version | Status       | PHP Version  |
 |---------|--------------|--------------|
-| 2.0     | Latest       | >=7.4,<8.6   |
-| 1.7     | Maintenance  | >=7.2.5,<8.6 |
+| 2.0     | Latest       | >=7.4,<8.7   |
+| 1.7     | Maintenance  | >=7.2.5,<8.7 |
 
 ## Quick Start
 

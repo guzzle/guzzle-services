@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.1 - Upcoming
+
+* Add PHP 8.6 to the supported and tested versions
+
 ## 2.0.0 - 2026-07-20
 
 * Drop support for PHP 7.2 and 7.3
