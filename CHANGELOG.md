@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.1 - Upcoming
+
+* Add support for PHP 8.6
+
 ## 2.0.0 - 2026-07-20
 
 * Drop support for PHP 7.2 and 7.3
