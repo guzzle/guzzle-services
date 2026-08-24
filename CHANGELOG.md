@@ -2,7 +2,7 @@
 
 ## 1.7.4 - Upcoming
 
-* Add PHP 8.6 to the tested versions
+* Add support for PHP 8.6
 * Replace the deprecated is_integer() in schema validation for PHP 8.6
 
 ## 1.7.3 - 2026-07-17
