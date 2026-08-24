@@ -75,7 +75,7 @@ class SchemaValidator
                 return 'object';
             } elseif ($t == 'array' && is_array($value)) {
                 return 'array';
-            } elseif ($t == 'integer' && is_integer($value)) {
+            } elseif ($t == 'integer' && is_int($value)) {
                 return 'integer';
             } elseif ($t == 'boolean' && is_bool($value)) {
                 return 'boolean';
@@ -236,7 +236,7 @@ class SchemaValidator
         if ($type && (!$type = $this->determineType($type, $value))) {
             if ($this->castIntegerToStringType
                 && $param->getType() == 'string'
-                && is_integer($value)
+                && is_int($value)
             ) {
                 $value = (string) $value;
             } else {
