@@ -26,10 +26,10 @@
     ],
     "require": {
         "php": "^7.2.5 || ^8.0",
-        "guzzlehttp/command": "^1.5.3",
-        "guzzlehttp/guzzle": "^7.15",
-        "guzzlehttp/psr7": "^2.13",
-        "guzzlehttp/uri-template": "^1.0.10",
+        "guzzlehttp/command": "^1.5.4",
+        "guzzlehttp/guzzle": "^7.15.5",
+        "guzzlehttp/psr7": "^2.13.1",
+        "guzzlehttp/uri-template": "^1.0.11",
         "symfony/deprecation-contracts": "^2.5 || ^3.0",
         "symfony/polyfill-php80": "^1.25"
     },
