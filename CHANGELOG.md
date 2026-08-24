@@ -3,6 +3,8 @@
 ## 2.0.1 - Upcoming
 
 * Add support for PHP 8.6
+* Require `guzzlehttp/guzzle` ^8.1, `guzzlehttp/promises` ^3.0.2, and `guzzlehttp/psr7` ^3.1
+* Require `guzzlehttp/command` ^2.0.1 and `guzzlehttp/uri-template` ^2.0.1
 
 ## 2.0.0 - 2026-07-20
 
