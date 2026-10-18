@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0 - Upcoming
+
+* Require `guzzlehttp/psr7` ^3.3 and use `Message::modifyRequest()` instead of the deprecated `Utils::modifyRequest()`
+
 ## 2.0.1 - 2026-08-24
 
 * Add support for PHP 8.6

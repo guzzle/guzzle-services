@@ -69,6 +69,6 @@ class FormParamLocation extends AbstractLocation
         $modify['body'] = Psr7\Utils::streamFor($body);
         $modify['set_headers']['Content-Type'] = $this->contentType;
 
-        return Psr7\Utils::modifyRequest($request, $modify);
+        return Psr7\Message::modifyRequest($request, $modify);
     }
 }
