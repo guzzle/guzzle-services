@@ -29,7 +29,7 @@
         "guzzlehttp/command": "^2.0.1",
         "guzzlehttp/guzzle": "^8.1",
         "guzzlehttp/promises": "^3.0.2",
-        "guzzlehttp/psr7": "^3.1",
+        "guzzlehttp/psr7": "^3.3@dev",
         "guzzlehttp/uri-template": "^2.0.1",
         "symfony/polyfill-php80": "^1.25",
         "symfony/polyfill-php82": "^1.27"
