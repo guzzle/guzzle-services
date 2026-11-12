@@ -100,8 +100,7 @@ class XmlLocationTest extends TestCase
         $internalErrors = null;
         $body = Psr7\FnStream::decorate(Psr7\Utils::streamFor(''), [
             '__toString' => static function () use (&$internalErrors) {
-                $internalErrors = libxml_use_internal_errors(true);
-                libxml_use_internal_errors($internalErrors);
+                $internalErrors = libxml_use_internal_errors();
 
                 return '<w><vim>bar</vim></w>';
             },
