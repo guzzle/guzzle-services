@@ -11,7 +11,10 @@ use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Command\Result;
+use GuzzleHttp\Command\ResultInterface;
 use GuzzleHttp\Command\ServiceClientInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -20,6 +23,7 @@ use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\CustomCommandException;
 use GuzzleHttp\Tests\Command\Guzzle\Asset\Exception\OtherCustomCommandException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @covers \GuzzleHttp\Command\Guzzle\Deserializer
@@ -165,6 +169,132 @@ class DeserializerTest extends TestCase
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(['foo' => 'bar'], $result->toArray());
+    }
+
+    public static function nestedResponseProvider(): array
+    {
+        return [
+            'json' => ['json', '{"owner":"42","title":"Report"}', '{"name":"Alice","title":"Dr"}'],
+            'xml' => ['xml', '<d><owner>42</owner><title>Report</title></d>', '<u><name>Alice</name><title>Dr</title></u>'],
+        ];
+    }
+
+    /**
+     * @dataProvider nestedResponseProvider
+     */
+    public function testFilterCanDeserializeAnotherResponse(string $location, string $document, string $user): void
+    {
+        $mock = new MockHandler([
+            new Response(200, [], $document),
+            new Response(200, [], $user),
+        ]);
+
+        $client = null;
+        $description = new Description([
+            'operations' => [
+                'getDocument' => [
+                    'uri' => 'http://httpbin.org/document',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'Document',
+                ],
+                'getUser' => [
+                    'uri' => 'http://httpbin.org/user',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'User',
+                ],
+            ],
+            'models' => [
+                'Document' => [
+                    'type' => 'object',
+                    'location' => $location,
+                    'properties' => [
+                        'owner' => [
+                            'type' => 'string',
+                            'filters' => [
+                                [
+                                    'method' => function () use (&$client): string {
+                                        return $client->getUser()['name'];
+                                    },
+                                    'args' => [],
+                                ],
+                            ],
+                        ],
+                        'title' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+                'User' => [
+                    'type' => 'object',
+                    'location' => $location,
+                    'properties' => [
+                        'name' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $client = new GuzzleClient(new HttpClient(['handler' => $mock]), $description);
+
+        $result = $client->getDocument();
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(['owner' => 'Alice', 'title' => 'Report'], $result->toArray());
+    }
+
+    public function testResponseLocationSubclassIsUsedAsRegistered(): void
+    {
+        $location = new class extends JsonLocation {
+            public int $visited = 0;
+
+            public function visit(
+                ResultInterface $result,
+                ResponseInterface $response,
+                Parameter $param
+            ): ResultInterface {
+                ++$this->visited;
+
+                return parent::visit($result, $response, $param);
+            }
+        };
+
+        $mock = new MockHandler([new Response(200, [], '{"foo":"bar"}')]);
+
+        $description = new Description([
+            'operations' => [
+                'getItem' => [
+                    'uri' => 'http://httpbin.org/item',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'Item',
+                ],
+            ],
+            'models' => [
+                'Item' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'foo' => [
+                            'type' => 'string',
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $client = new GuzzleClient(
+            new HttpClient(['handler' => $mock]),
+            $description,
+            null,
+            null,
+            null,
+            ['response_locations' => ['json' => $location]]
+        );
+
+        $client->getItem();
+
+        $this->assertSame(1, $location->visited);
     }
 
     public function testRejectsInvalidResponseModelType(): void

@@ -143,9 +143,16 @@ class Deserializer
             throw new \RuntimeException(\sprintf('Unknown location: %s', DiagnosticValue::escape($location)));
         }
 
-        $context['visitors'][$location] = $this->responseLocations[$location];
+        $visitor = $this->responseLocations[$location];
 
-        $result = $this->responseLocations[$location]->before(
+        // Both hold the parsed body; a subclass may rely on its own instance.
+        if (in_array(get_class($visitor), [JsonLocation::class, XmlLocation::class], true)) {
+            $visitor = clone $visitor;
+        }
+
+        $context['visitors'][$location] = $visitor;
+
+        $result = $visitor->before(
             $result,
             $response,
             $model
@@ -193,7 +200,7 @@ class Deserializer
 
         // Actually visit each response element
         foreach ($visitProperties as $property) {
-            $result = $this->responseLocations[$property[0]]->visit($result, $response, $property[1]);
+            $result = $context['visitors'][$property[0]]->visit($result, $response, $property[1]);
         }
 
         return $result;
@@ -219,7 +226,7 @@ class Deserializer
         }
 
         // Visit each item in the response
-        $result = $this->responseLocations[$location]->visit($result, $response, $model);
+        $result = $context['visitors'][$location]->visit($result, $response, $model);
 
         return $result;
     }
