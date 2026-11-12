@@ -2,7 +2,7 @@
 
 ## 2.1.0 - Upcoming
 
-* Deserialize each response with its own clone of each response location
+* Fix overlapping JSON and XML deserialization reading the wrong response
 
 ## 2.0.2 - 2026-11-12
 

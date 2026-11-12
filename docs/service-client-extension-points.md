@@ -111,13 +111,7 @@ A custom response location implements
 `GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface`.
 `before()` is called once before visiting matching model properties, `visit()`
 is called for each matching property, and `after()` is called after all matching
-properties are visited. Each response is deserialized with its own shallow clone
-of each registered location it needs, so `before()`, `visit()`, and `after()`
-are never called on the registered instance itself. Values a location assigns to
-its own properties are discarded with the clone, while objects and resources
-those properties reference are shared by the registered instance and every
-clone. A location that needs its own copy of a referenced object can implement
-`__clone()`.
+properties are visited.
 
 ## Custom Serializer and Deserializer
 
