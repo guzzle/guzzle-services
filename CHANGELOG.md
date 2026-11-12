@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.7.5 - Upcoming
+## 1.7.5 - 2026-11-12
 
 * Fix overlapping XML response body reads leaving libxml internal errors enabled
 
