@@ -97,6 +97,31 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testReadsResponseBodyBeforeEnablingLibxmlInternalErrors(): void
+    {
+        $internalErrors = null;
+        $body = Psr7\FnStream::decorate(Psr7\Utils::streamFor(''), [
+            '__toString' => static function () use (&$internalErrors): string {
+                $internalErrors = libxml_use_internal_errors(true);
+                libxml_use_internal_errors($internalErrors);
+
+                return '<w><vim>bar</vim></w>';
+            },
+        ]);
+        $previous = libxml_use_internal_errors(false);
+
+        try {
+            (new XmlLocation())->before(new Result(), new Response(200, [], $body), new Parameter());
+        } finally {
+            libxml_use_internal_errors($previous);
+        }
+
+        $this->assertFalse($internalErrors);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testVisitRequiresParsedXmlResponse(): void
     {
         $location = new XmlLocation();
