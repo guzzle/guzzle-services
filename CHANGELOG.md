@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.5 - Upcoming
+
+* Read XML response bodies before enabling libxml internal errors, so overlapping reads cannot leave them enabled
+
 ## 1.7.4 - 2026-08-24
 
 * Add support for PHP 8.6
