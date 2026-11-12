@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.2 - Upcoming
+
+* Fix overlapping XML response body reads leaving libxml internal errors enabled
+
 ## 2.0.1 - 2026-08-24
 
 * Add support for PHP 8.6

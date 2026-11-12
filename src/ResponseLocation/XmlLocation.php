@@ -43,11 +43,14 @@ class XmlLocation extends AbstractLocation
     ): ResultInterface {
         $this->xml = null;
 
+        // Reading the body can run other code, so do it before changing libxml state.
+        $body = (string) $response->getBody();
+
         $previous = libxml_use_internal_errors(true);
         libxml_clear_errors();
 
         try {
-            $xml = simplexml_load_string((string) $response->getBody());
+            $xml = simplexml_load_string($body);
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($previous);
