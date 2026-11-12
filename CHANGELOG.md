@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.1.0 - Upcoming
+## 2.1.0 - 2026-11-12
 
 * Fix overlapping JSON and XML deserialization reading the wrong response
 
