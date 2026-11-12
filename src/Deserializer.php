@@ -30,6 +30,14 @@ use Psr\Http\Message\ResponseInterface;
  * are visited, the ``after()`` method is called on each visitor. This is the
  * place in which you should handle things like additionalProperties with
  * custom locations (i.e., this is how it is handled in the JSON visitor).
+ *
+ * Each response is deserialized with its own shallow clone of each registered
+ * location it needs, so ``before()``, ``visit()``, and ``after()`` are never
+ * called on the registered instance itself. Values a location assigns to its
+ * own properties are discarded with the clone, while objects and resources
+ * those properties reference are shared by the registered instance and every
+ * clone. A location that needs its own copy of a referenced object can
+ * implement ``__clone()``.
  */
 class Deserializer
 {
@@ -143,9 +151,9 @@ class Deserializer
             throw new \RuntimeException(\sprintf('Unknown location: %s', DiagnosticValue::escape($location)));
         }
 
-        $context['visitors'][$location] = $this->responseLocations[$location];
+        $context['visitors'][$location] = clone $this->responseLocations[$location];
 
-        $result = $this->responseLocations[$location]->before(
+        $result = $context['visitors'][$location]->before(
             $result,
             $response,
             $model
@@ -193,7 +201,7 @@ class Deserializer
 
         // Actually visit each response element
         foreach ($visitProperties as $property) {
-            $result = $this->responseLocations[$property[0]]->visit($result, $response, $property[1]);
+            $result = $context['visitors'][$property[0]]->visit($result, $response, $property[1]);
         }
 
         return $result;
@@ -219,7 +227,7 @@ class Deserializer
         }
 
         // Visit each item in the response
-        $result = $this->responseLocations[$location]->visit($result, $response, $model);
+        $result = $context['visitors'][$location]->visit($result, $response, $model);
 
         return $result;
     }

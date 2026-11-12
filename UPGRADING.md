@@ -285,6 +285,23 @@ and `process` must be booleans, and `response_locations` must be an array of
 `ResponseLocationInterface` instances. Guzzle Services 1.7 deprecated these
 values and passed them through.
 
+#### Response Location Clones
+
+From Guzzle Services 2.1, each response is deserialized with its own shallow
+clone of each registered location it needs, so `before()`, `visit()`, and
+`after()` are never called on the registered instance itself. This applies to
+locations passed to the `Deserializer` constructor and to the
+`response_locations` client option. Guzzle Services 1.x and 2.0 called those
+methods on the registered instances, which let one response's result be filled
+from another response deserialized between those calls.
+
+Custom response locations must be cloneable. Values a location assigns to its
+own properties, such as counters or collected data, are discarded with the clone
+and no longer appear on the registered instance, while objects and resources
+those properties reference are shared by the registered instance and every
+clone. Keep data that is read after deserialization in a referenced object, and
+implement `__clone()` when a location needs its own copy of a referenced object.
+
 #### Native Signatures
 
 Guzzle Services 2.0 adds native parameter, property, and return types across

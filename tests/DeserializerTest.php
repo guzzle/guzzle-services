@@ -167,6 +167,76 @@ class DeserializerTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $result->toArray());
     }
 
+    public function testFilterCanDeserializeAnotherResponse(): void
+    {
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], '{"owner":"42","title":"Report"}'),
+            new Response(200, ['Content-Type' => 'application/json'], '{"name":"Alice","title":"Dr"}'),
+        ]);
+
+        $client = null;
+        $description = new Description([
+            'operations' => [
+                'getDocument' => [
+                    'uri' => 'http://httpbin.org/document',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'Document',
+                ],
+                'getUser' => [
+                    'uri' => 'http://httpbin.org/users/{id}',
+                    'httpMethod' => 'GET',
+                    'responseModel' => 'User',
+                    'parameters' => [
+                        'id' => [
+                            'type' => 'string',
+                            'required' => true,
+                            'location' => 'uri',
+                        ],
+                    ],
+                ],
+            ],
+            'models' => [
+                'Document' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'owner' => [
+                            'type' => 'string',
+                            'location' => 'json',
+                            'filters' => [
+                                [
+                                    'method' => function (string $id) use (&$client): string {
+                                        return $client->getUser(['id' => $id])['name'];
+                                    },
+                                    'args' => ['@value'],
+                                ],
+                            ],
+                        ],
+                        'title' => [
+                            'type' => 'string',
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
+                'User' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'name' => [
+                            'type' => 'string',
+                            'location' => 'json',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $client = new GuzzleClient(new HttpClient(['handler' => $mock]), $description);
+
+        $result = $client->getDocument();
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(['owner' => 'Alice', 'title' => 'Report'], $result->toArray());
+    }
+
     public function testRejectsInvalidResponseModelType(): void
     {
         $mock = new MockHandler([

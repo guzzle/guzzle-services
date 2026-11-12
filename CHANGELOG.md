@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0 - Upcoming
+
+* Deserialize each response with its own clone of each response location
+
 ## 2.0.2 - 2026-11-12
 
 * Fix overlapping XML response body reads leaving libxml internal errors enabled
