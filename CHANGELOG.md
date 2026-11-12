@@ -2,7 +2,7 @@
 
 ## 1.7.5 - Upcoming
 
-* Read XML response bodies before enabling libxml internal errors, so overlapping reads cannot leave them enabled
+* Fix overlapping XML response body reads leaving libxml internal errors enabled
 
 ## 1.7.4 - 2026-08-24
 
