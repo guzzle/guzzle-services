@@ -2,7 +2,7 @@
 
 ## 2.2.0 - Upcoming
 
-* Require `guzzlehttp/psr7` ^3.3 and use `Message::modifyRequest()` instead of the deprecated `Utils::modifyRequest()`
+* Require `guzzlehttp/psr7` ^3.4 and use `Message::modifyRequest()` instead of the deprecated `Utils::modifyRequest()`
 
 ## 2.1.0 - 2026-11-12
 
