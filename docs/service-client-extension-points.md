@@ -5,9 +5,9 @@ to service descriptions. It supplies default request serialization, response
 deserialization, validation middleware, and client configuration, while leaving
 each part replaceable. This page covers extension points specific to Guzzle
 Services; the base command client concepts are documented in
-[Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md)
+[Guzzle Command service clients](https://github.com/guzzle/command/blob/3.0/docs/service-clients.md)
 and
-[Guzzle Command middleware](https://github.com/guzzle/command/blob/2.0/docs/middleware-extending-the-client.md).
+[Guzzle Command middleware](https://github.com/guzzle/command/blob/3.0/docs/middleware-extending-the-client.md).
 
 ## Constructor Extension Points
 
@@ -207,5 +207,5 @@ config or pass your own response transformer.
 - [Cookbook](cookbook.md)
 - [Upgrade Guide](../UPGRADING.md)
 - [Changelog](../CHANGELOG.md)
-- [Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md)
-- [Guzzle Command middleware](https://github.com/guzzle/command/blob/2.0/docs/middleware-extending-the-client.md)
+- [Guzzle Command service clients](https://github.com/guzzle/command/blob/3.0/docs/service-clients.md)
+- [Guzzle Command middleware](https://github.com/guzzle/command/blob/3.0/docs/middleware-extending-the-client.md)
