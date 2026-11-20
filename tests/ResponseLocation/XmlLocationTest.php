@@ -810,6 +810,23 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testConvertsTextOnlyObjectsToArrays(): void
+    {
+        $param = new Parameter([
+            'name' => 'foo',
+            'type' => 'object',
+            'properties' => [
+                'bar' => ['type' => 'object'],
+            ],
+        ]);
+
+        $this->xmlTest($param, '<xml><foo>baz</foo></xml>', ['foo' => ['baz']]);
+        $this->xmlTest($param, '<xml><foo><bar>baz</bar></foo></xml>', ['foo' => ['bar' => ['baz']]]);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testUnderstandsNamespaces(): void
     {
         $param = new Parameter([
