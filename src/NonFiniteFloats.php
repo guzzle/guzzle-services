@@ -16,10 +16,7 @@ final class NonFiniteFloats
     {
     }
 
-    /**
-     * @param mixed $value
-     */
-    public static function assertFinite($value, string $context): void
+    public static function assertFinite(mixed $value, string $context): void
     {
         if (is_float($value) && !is_finite($value)) {
             throw new \InvalidArgumentException(sprintf('Non-finite floats are not supported for %s.', $context));

@@ -314,10 +314,8 @@ class SchemaValidator
     /**
      * Describe an enum entry for an error message without casting values,
      * such as booleans and non-finite floats, that cannot round-trip.
-     *
-     * @param mixed $value
      */
-    private function describeEnumValue($value): string
+    private function describeEnumValue(mixed $value): string
     {
         if (is_string($value)) {
             return '"'.addslashes($value).'"';
