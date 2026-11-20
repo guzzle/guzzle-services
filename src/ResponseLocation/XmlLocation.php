@@ -144,14 +144,12 @@ class XmlLocation extends AbstractLocation
      *
      * @param Parameter         $param API parameter being processed
      * @param \SimpleXMLElement $node  Node being processed
-     *
-     * @return array
      */
     private function recursiveProcess(
         Parameter $param,
         \SimpleXMLElement $node,
         int $nesting
-    ) {
+    ): mixed {
         $this->guardDepth($nesting);
 
         $result = [];
@@ -293,14 +291,12 @@ class XmlLocation extends AbstractLocation
 
     /**
      * Convert an XML document to an array.
-     *
-     * @return array|string
      */
     private function xmlToArray(
         \SimpleXMLElement $xml,
         ?string $ns = null,
         int $nesting = 0
-    ) {
+    ): array|string {
         $this->guardDepth($nesting);
 
         $result = [];
