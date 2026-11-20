@@ -117,7 +117,7 @@ class JsonLocation extends AbstractLocation
      *
      * @return mixed|null
      */
-    private function recurse(Parameter $param, $value)
+    private function recurse(Parameter $param, mixed $value): mixed
     {
         if (!is_array($value)) {
             return $param->filter($value);

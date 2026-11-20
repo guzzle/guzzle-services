@@ -261,11 +261,8 @@ class Parameter implements ToArrayInterface
 
     /**
      * @param string|int $key
-     * @param mixed      $value
-     *
-     * @return mixed
      */
-    private static function normalizeParameterDataValue($key, $value)
+    private static function normalizeParameterDataValue($key, mixed $value): mixed
     {
         switch ($key) {
             case 'name':
@@ -306,10 +303,7 @@ class Parameter implements ToArrayInterface
         }
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeStringValue(string $key, $value): ?string
+    private static function normalizeStringValue(string $key, mixed $value): ?string
     {
         if ($value === null || is_string($value)) {
             return $value;
@@ -318,10 +312,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('%s must be a string or null; got %s.', $key, get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeBooleanValue(string $key, $value): bool
+    private static function normalizeBooleanValue(string $key, mixed $value): bool
     {
         if (is_bool($value)) {
             return $value;
@@ -330,10 +321,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('%s must be a boolean; got %s.', $key, get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeIntegerValue(string $key, $value): ?int
+    private static function normalizeIntegerValue(string $key, mixed $value): ?int
     {
         if ($value === null || is_int($value)) {
             return $value;
@@ -342,10 +330,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('%s must be an integer or null; got %s.', $key, get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeFiltersValue($value): array
+    private static function normalizeFiltersValue(mixed $value): array
     {
         if (is_array($value)) {
             return $value;
@@ -354,10 +339,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('filters must be an array; got %s.', get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizePropertiesValue($value): array
+    private static function normalizePropertiesValue(mixed $value): array
     {
         $value = self::normalizeArrayValue('properties', $value);
         foreach ($value as $property) {
@@ -369,10 +351,7 @@ class Parameter implements ToArrayInterface
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeArrayValue(string $key, $value): array
+    private static function normalizeArrayValue(string $key, mixed $value): array
     {
         if (is_array($value)) {
             return $value;
@@ -381,10 +360,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('%s must be an array; got %s.', $key, get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private static function normalizeNullableArrayValue(string $key, $value): ?array
+    private static function normalizeNullableArrayValue(string $key, mixed $value): ?array
     {
         if ($value === null || is_array($value)) {
             return $value;
@@ -393,12 +369,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('%s must be an array or null; got %s.', $key, get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array|bool|Parameter|null
-     */
-    private static function normalizeAdditionalPropertiesValue($value)
+    private static function normalizeAdditionalPropertiesValue(mixed $value): array|bool|Parameter|null
     {
         if ($value === null || is_bool($value) || is_array($value) || $value instanceof self) {
             return $value;
@@ -407,12 +378,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('additionalProperties must be a boolean, array, Parameter, or null; got %s.', get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array|Parameter|null
-     */
-    private static function normalizeItemsValue($value)
+    private static function normalizeItemsValue(mixed $value): array|Parameter|null
     {
         if ($value === null || is_array($value) || $value instanceof self) {
             return $value;
@@ -421,12 +387,7 @@ class Parameter implements ToArrayInterface
         throw new \InvalidArgumentException(\sprintf('items must be an array, Parameter, or null; got %s.', get_debug_type($value)));
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string|array|null
-     */
-    private static function normalizeTypeValue($value)
+    private static function normalizeTypeValue(mixed $value): string|array|null
     {
         if ($value === null || is_string($value)) {
             return $value;
@@ -798,7 +759,7 @@ class Parameter implements ToArrayInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function addFilter($filter): self
+    private function addFilter(mixed $filter): self
     {
         if (is_string($filter)) {
             $this->filters[] = $filter;

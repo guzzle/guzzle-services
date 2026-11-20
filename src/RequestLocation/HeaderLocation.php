@@ -54,14 +54,12 @@ class HeaderLocation extends AbstractLocation
     }
 
     /**
-     * @param mixed $value
-     *
      * @return string|string[]
      */
     private static function prepareHeaderValue(
         #[\SensitiveParameter]
-        $value
-    ) {
+        mixed $value
+    ): string|array {
         if (is_string($value)) {
             return $value;
         }

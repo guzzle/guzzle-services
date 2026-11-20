@@ -309,7 +309,7 @@ class XmlLocation extends AbstractLocation
     }
 
     private function visitWithValue(
-        $value,
+        mixed $value,
         Parameter $param,
         Operation $operation
     ): void {

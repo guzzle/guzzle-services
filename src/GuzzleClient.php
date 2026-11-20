@@ -168,28 +168,20 @@ class GuzzleClient extends ServiceClient
         $this->config[$option] = $value;
     }
 
-    /**
-     * @return void
-     */
     private static function assertConfigOptionTypes(
         #[\SensitiveParameter]
         array $config
-    ) {
+    ): void {
         foreach ($config as $option => $value) {
             self::assertConfigOptionType((string) $option, $value);
         }
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return void
-     */
     private static function assertConfigOptionType(
         string $option,
         #[\SensitiveParameter]
-        $value
-    ) {
+        mixed $value
+    ): void {
         if ($option === 'defaults' && !is_array($value)) {
             self::invalidConfigOptionType($option, 'array', $value);
 
@@ -223,17 +215,12 @@ class GuzzleClient extends ServiceClient
         }
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return void
-     */
     private static function invalidConfigOptionType(
         string $option,
         string $expected,
         #[\SensitiveParameter]
-        $value
-    ) {
+        mixed $value
+    ): void {
         throw new \InvalidArgumentException(\sprintf(
             'Passing %s to GuzzleClient config option "%s" is invalid; expected %s.',
             get_debug_type($value),
