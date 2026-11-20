@@ -6,6 +6,10 @@
 * Require `guzzlehttp/guzzle` ^9.0, `guzzlehttp/promises` ^4.0, and `guzzlehttp/psr7` ^4.0
 * Require `guzzlehttp/command` ^3.0 and `guzzlehttp/uri-template` ^3.0
 
+## 2.1.1 - Upcoming
+
+* Fix XML response objects that contain only text throwing a `TypeError`
+
 ## 2.1.0 - 2026-11-12
 
 * Fix overlapping JSON and XML deserialization reading the wrong response
