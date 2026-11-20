@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.1 - Upcoming
+
+* Fix XML response objects that contain only text throwing a `TypeError`
+
 ## 2.1.0 - 2026-11-12
 
 * Fix overlapping JSON and XML deserialization reading the wrong response

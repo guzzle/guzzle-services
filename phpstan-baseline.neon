@@ -61,12 +61,6 @@ parameters:
 			path: src/ResponseLocation/HeaderLocation.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/ResponseLocation/XmlLocation.php
-
-		-
 			message: '#^Variable \$result in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1

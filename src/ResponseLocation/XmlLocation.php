@@ -274,7 +274,7 @@ class XmlLocation extends AbstractLocation
         } elseif ($additional === null || $additional === true) {
             // Blindly transform the XML into an array preserving as much data
             // as possible. Remove processed, aliased properties.
-            $array = array_diff_key($this->xmlToArray($node, null, $nesting), $knownProps);
+            $array = array_diff_key((array) $this->xmlToArray($node, null, $nesting), $knownProps);
             // Remove @attributes that were explicitly plucked from the
             // attributes list.
             if (isset($array['@attributes']) && $knownAttributes) {
@@ -294,7 +294,7 @@ class XmlLocation extends AbstractLocation
     /**
      * Convert an XML document to an array.
      *
-     * @return array
+     * @return array|string
      */
     private function xmlToArray(
         \SimpleXMLElement $xml,
