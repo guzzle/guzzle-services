@@ -6,7 +6,7 @@ and `Deserializer`. They describe an API in terms of named commands, how command
 input becomes an HTTP request, and how an HTTP response becomes a command
 result. This page covers the Guzzle Services description format; the lower-level
 command client lifecycle is documented in
-[Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md).
+[Guzzle Command service clients](https://github.com/guzzle/command/blob/3.0/docs/service-clients.md).
 
 ```php
 use GuzzleHttp\Client;
@@ -165,9 +165,9 @@ expansion.
 ```
 
 See
-[URI Template usage](https://github.com/guzzle/uri-template/blob/2.0/docs/uri-template-usage.md)
+[URI Template usage](https://github.com/guzzle/uri-template/blob/3.0/docs/uri-template-usage.md)
 for supported RFC 6570 expressions and
-[URI Template input contract](https://github.com/guzzle/uri-template/blob/2.0/docs/input-contract.md)
+[URI Template input contract](https://github.com/guzzle/uri-template/blob/3.0/docs/input-contract.md)
 for accepted variable values.
 
 ## Parameters and Models
@@ -334,6 +334,6 @@ HTTP errors can still be raised by the underlying Guzzle HTTP client when
 - [Service Client Extension Points](service-client-extension-points.md)
 - [Upgrade Guide](../UPGRADING.md)
 - [Changelog](../CHANGELOG.md)
-- [Guzzle Command service clients](https://github.com/guzzle/command/blob/2.0/docs/service-clients.md)
-- [URI Template usage](https://github.com/guzzle/uri-template/blob/2.0/docs/uri-template-usage.md)
-- [URI Template input contract](https://github.com/guzzle/uri-template/blob/2.0/docs/input-contract.md)
+- [Guzzle Command service clients](https://github.com/guzzle/command/blob/3.0/docs/service-clients.md)
+- [URI Template usage](https://github.com/guzzle/uri-template/blob/3.0/docs/uri-template-usage.md)
+- [URI Template input contract](https://github.com/guzzle/uri-template/blob/3.0/docs/input-contract.md)

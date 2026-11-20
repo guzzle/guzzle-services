@@ -1,14 +1,14 @@
 # Guzzle Services
 
 `guzzlehttp/guzzle-services` builds service-description-driven clients on top of
-[`guzzlehttp/command`](https://github.com/guzzle/command/blob/2.0/README.md). A
+[`guzzlehttp/command`](https://github.com/guzzle/command/blob/3.0/README.md). A
 service description maps named operations and parameters to HTTP requests, then
 maps responses into result data.
 
 Use this package when you are building an SDK-style client for an API and want
 operations described in arrays instead of hand-writing every request serializer.
 If you only need to send HTTP requests directly, install
-[`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle/blob/8.0/README.md)
+[`guzzlehttp/guzzle`](https://github.com/guzzle/guzzle/blob/9.0/README.md)
 instead.
 
 ## Installation
@@ -21,6 +21,7 @@ composer require guzzlehttp/guzzle-services
 
 | Version | Status       | PHP Version  |
 |---------|--------------|--------------|
+| 3.0     | Experimental | >=8.0,<8.7   |
 | 2.2     | Latest       | >=7.4,<8.7   |
 | 1.7     | Maintenance  | >=7.2.5,<8.7 |
 
