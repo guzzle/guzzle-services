@@ -268,6 +268,27 @@ class XmlLocationTest extends TestCase
     /**
      * @group ResponseLocation
      */
+    public function testRejectsUndefinedPropertiesBeyondConfiguredDepth(): void
+    {
+        $location = new XmlLocation('xml', 2);
+        $parameter = new Parameter([
+            'name' => 'one',
+            'type' => 'object',
+            'location' => 'xml',
+        ]);
+        $response = new Response(200, [], Psr7\Utils::streamFor('<root><one><two>value</two></one></root>'));
+
+        $location->before(new Result(), $response, new Parameter());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('XML response exceeds maximum depth of 2');
+
+        $location->visit(new Result(), $response, $parameter);
+    }
+
+    /**
+     * @group ResponseLocation
+     */
     public function testEnsuresFlatArraysAreFlat(): void
     {
         $param = new Parameter([
