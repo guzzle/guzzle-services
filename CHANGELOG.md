@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.1.1 - Upcoming
+## 2.1.1 - 2026-11-21
 
 * Fix XML response objects that contain only text throwing a `TypeError`
 
