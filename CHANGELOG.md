@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.1.2 - Upcoming
+## 2.1.2 - 2026-11-22
 
 * Fix `query` parameters replacing a `Host` header set by a `header` parameter
 
