@@ -46,7 +46,7 @@ class QueryLocation extends AbstractLocation
 
         $uri = $uri->withQuery($this->querySerializer->aggregate($query));
 
-        return $request->withUri($uri);
+        return $request->withUri($uri, true);
     }
 
     public function after(
@@ -69,7 +69,7 @@ class QueryLocation extends AbstractLocation
                     );
 
                     $uri = $uri->withQuery($this->querySerializer->aggregate($query));
-                    $request = $request->withUri($uri);
+                    $request = $request->withUri($uri, true);
                 }
             }
         }
