@@ -4,8 +4,9 @@ Guzzle Services Upgrade Guide
 3.0 from 2.x
 ------------
 
-Guzzle Services 3.0 is a major release that raises the minimum PHP version and
-updates the Guzzle dependency stack.
+Guzzle Services 3.0 is a major release that raises the minimum PHP version,
+updates the Guzzle dependency stack, and no longer accepts service description
+URIs that Guzzle PSR-7 4.x rejects.
 
 #### PHP Version and Dependencies
 
@@ -24,6 +25,30 @@ dependency stack, continue using Guzzle Services 2.x until your minimum PHP and
 dependency versions are raised.
 
 Guzzle Services 3.0 no longer requires `symfony/polyfill-php80`.
+
+#### Service Description URIs
+
+Guzzle PSR-7 4.x rejects a URI whose host has non-ASCII data and a URI string
+that starts with a host and port. A `baseUri` of either kind now fails with a
+`GuzzleHttp\Psr7\Exception\MalformedUriException` when the `Description` is
+created, and an operation `uri` that expands to one fails with a
+`CommandException` when the command is executed. Guzzle Services 2.x accepted
+both.
+
+Start a `baseUri` that names a host and port with a scheme or with two slashes,
+and convert an internationalized host to A-labels first, for example with
+`GuzzleHttp\Psr7\Idna::uriFor()`. The `idn_conversion` request option cannot do
+that here, because the description is rejected before a request exists.
+
+```php
+// 2.x, no longer accepted in 3.0
+$description = new Description(['baseUri' => 'localhost:8080']);
+$description = new Description(['baseUri' => 'https://bücher.example']);
+
+// 3.0
+$description = new Description(['baseUri' => 'http://localhost:8080']);
+$description = new Description(['baseUri' => Idna::uriFor('https://bücher.example')]);
+```
 
 2.0 from 1.x
 ------------
