@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.2 - Upcoming
+
+* Fix `query` parameters replacing a `Host` header set by a `header` parameter
+
 ## 2.1.1 - 2026-11-21
 
 * Fix XML response objects that contain only text throwing a `TypeError`
