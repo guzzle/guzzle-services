@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.6 - Upcoming
+
+* Fix `query` parameters replacing a `Host` header set by a `header` parameter
+
 ## 1.7.5 - 2026-11-12
 
 * Fix overlapping XML response body reads leaving libxml internal errors enabled
