@@ -63,6 +63,20 @@ class QueryLocationTest extends TestCase
     /**
      * @group RequestLocation
      */
+    public function testVisitsLocationPreservesHostHeader(): void
+    {
+        $location = new QueryLocation();
+        $command = new Command('foo', ['foo' => 'bar']);
+        $request = new Request('POST', 'http://httbin.org', ['Host' => 'example.com']);
+        $param = new Parameter(['name' => 'foo']);
+        $request = $location->visit($command, $request, $param);
+
+        $this->assertSame('example.com', $request->getHeaderLine('Host'));
+    }
+
+    /**
+     * @group RequestLocation
+     */
     public function testAddsAdditionalProperties(): void
     {
         $location = new QueryLocation();
@@ -77,5 +91,24 @@ class QueryLocationTest extends TestCase
         $request = $location->after($command, $request, $operation);
 
         $this->assertEquals('props', Psr7\Query::parse($request->getUri()->getQuery())['add']);
+    }
+
+    /**
+     * @group RequestLocation
+     */
+    public function testAdditionalPropertiesPreserveHostHeader(): void
+    {
+        $location = new QueryLocation();
+        $command = new Command('foo', ['foo' => 'bar']);
+        $command['add'] = 'props';
+        $operation = new Operation([
+            'additionalParameters' => [
+                'location' => 'query',
+            ],
+        ]);
+        $request = new Request('POST', 'http://httbin.org', ['Host' => 'example.com']);
+        $request = $location->after($command, $request, $operation);
+
+        $this->assertSame('example.com', $request->getHeaderLine('Host'));
     }
 }
